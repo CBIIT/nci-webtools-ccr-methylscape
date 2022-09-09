@@ -14,17 +14,32 @@ async function getSampleCoordinates(connection, query) {
 
 async function getallproject(connection) {
   const sampleColumns = [
-    connection.raw(`"samplePlate" as project`),
     connection.raw(`count(distinct "sample") as sampleCount`),
     connection.raw(`count(distinct "sentrixId") as experimentCount`),
+    connection.raw(`"unifiedSamplePlate"`),
     connection.raw(`string_agg(distinct "piCollaborator", ', ' ) as Investigators`),
   ];
   const query = await connection
     .select(sampleColumns)
     .from("sample")
     .whereNotNull("samplePlate")
-    .groupBy("samplePlate")
-    .orderBy("samplePlate");
+    .groupBy("unifiedSamplePlate");
+  return query;
+}
+
+async function getUnifiedProject(connection) {
+  const sampleColumns = [
+    connection.raw(`count(distinct "sample") as sampleCount`),
+    connection.raw(`"samplePlate" as project`),
+    connection.raw(`"unifiedSamplePlate"`),
+  ];
+  const query = await connection
+    .select(sampleColumns)
+    .from("sample")
+    .whereNotNull("samplePlate")
+    .groupBy("unifiedSamplePlate")
+    .groupBy("samplePlate");
+
   return query;
 }
 
@@ -46,6 +61,7 @@ async function getAllSamples(connection) {
     connection.raw(`"batchDate"as sampleDate`),
     connection.raw(`"surgeryDate" as 	experimentDate`),
     connection.raw(`"lpCpNumber"`),
+    connection.raw(`"unifiedSamplePlate"`),
   ];
   const query = await connection.select(sampleColumns).from("sample").whereNotNull("samplePlate");
 
@@ -54,20 +70,20 @@ async function getAllSamples(connection) {
 
 async function getExperiments(connection) {
   const experimentColumns = [
-    connection.raw(`"samplePlate" as project`),
     connection.raw(`"piCollaborator" as 	Investigator`),
     connection.raw(`"surgeryDate" as 	experimentDate`),
     connection.raw(`count(distinct "sample") as sampleCount`),
     connection.raw(`"sentrixId" as experiment`),
+    connection.raw(`"unifiedSamplePlate"`),
   ];
   const query = await connection
     .select(experimentColumns)
     .from("sample")
     .whereNotNull("samplePlate")
     .groupBy("sentrixId")
+    .groupBy("unifiedSamplePlate")
     .groupBy("piCollaborator")
     .groupBy("surgeryDate")
-    .groupBy("samplePlate")
     .orderBy("sentrixId");
   return query;
 }
@@ -166,4 +182,5 @@ module.exports = {
   getallproject,
   getExperiments,
   getAllSamples,
+  getUnifiedProject,
 };

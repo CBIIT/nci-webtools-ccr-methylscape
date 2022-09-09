@@ -10,6 +10,7 @@ const {
   getallproject,
   getExperiments,
   getAllSamples,
+  getUnifiedProject,
 } = require("../query");
 
 const { getSurvivalData } = require("../R/r");
@@ -41,6 +42,15 @@ router.get(
   withAsync(async (request, response) => {
     const { connection } = request.app.locals;
     const results = await getallproject(connection);
+    response.json(results);
+  })
+);
+
+router.get(
+  "/unifiedproject",
+  withAsync(async (request, response) => {
+    const { connection } = request.app.locals;
+    const results = await getUnifiedProject(connection);
     response.json(results);
   })
 );
