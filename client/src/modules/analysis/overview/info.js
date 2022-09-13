@@ -1,7 +1,5 @@
-import { PieChart, Building, ClipboardData } from "react-bootstrap-icons";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import Card from "react-bootstrap/Card";
 import Plot from "react-plotly.js";
 import { useRecoilValue } from "recoil";
 import { overviewState } from "./overview.state";

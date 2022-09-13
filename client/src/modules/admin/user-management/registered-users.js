@@ -7,7 +7,6 @@ import Form from "react-bootstrap/Form";
 import { groupBy } from "lodash";
 import { useRecoilValue, useRecoilRefresher_UNSTABLE } from "recoil";
 import { rolesSelector, usersSelector } from "./user-management.state";
-import { ConeStriped } from "react-bootstrap-icons";
 
 export default function RegisterUsers() {
   const [alerts, setAlerts] = useState([]);

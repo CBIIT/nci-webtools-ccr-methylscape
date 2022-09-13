@@ -12,7 +12,6 @@ import MetadataSA from "./modules/metadataStandalone/metadataSA";
 import Projects from "./modules/reports/projects/projects";
 import Experiments from "./modules/reports/experiments/experiments";
 import Samples from "./modules/reports/samples/samples";
-import QCI from "./modules/qciReport/qci";
 import Admin from "./modules/admin/admin";
 import DataImport from "./modules/admin/data-import/data-import";
 import AdminUserManagement from "./modules/admin/user-management/admin-user-management";
@@ -137,14 +136,6 @@ export default function App() {
                   />
                 </Route>
                 <Route path="about" element={<About />} />
-                <Route
-                  path="qci/*"
-                  element={
-                    <RequirePolicy action="GetPage">
-                      <QCI />
-                    </RequirePolicy>
-                  }
-                />
                 <Route
                   path="admin"
                   element={

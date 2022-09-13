@@ -2,12 +2,12 @@ import { Container, Row, Col, Button } from "react-bootstrap";
 import { useRecoilValue } from "recoil";
 import axios from "axios";
 import { saveAs } from "file-saver";
-import { Link, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import { experimentsTableData } from "./experiments.state";
 import Table from "../../components/table";
 
 export default function Experiments() {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const tableData = useRecoilValue(experimentsTableData);
 
   const columns = [
@@ -15,13 +15,11 @@ export default function Experiments() {
       id: "project",
       accessor: "project",
       Header: "Project",
-   
     },
     {
       id: "experiment",
       accessor: "experiment",
       Header: "Experiment",
-   
     },
     {
       id: "investigator",
@@ -32,13 +30,12 @@ export default function Experiments() {
       id: "samplesCount",
       accessor: "samplecount",
       Header: "# of Samples",
-
     },
     {
       id: "date",
       accessor: "experimentdate",
       Header: "Experiment Date",
-    }
+    },
   ];
   const options = {
     initialState: {
