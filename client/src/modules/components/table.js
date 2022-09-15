@@ -2,8 +2,6 @@ import { useMemo, forwardRef, useRef, useEffect, Fragment } from "react";
 import BootstrapTable from "react-bootstrap/Table";
 import { Form, InputGroup, Pagination, Row, Col, Dropdown, Button } from "react-bootstrap";
 import { useTable, useFilters, usePagination, useSortBy, useRowSelect, useExpanded } from "react-table";
-import { ChevronUp, ChevronDown, ChevronExpand } from "react-bootstrap-icons";
-import Papa from "papaparse";
 import "./table.scss";
 
 export function TextFilter({ column: { filterValue, setFilter, placeholder, aria } }) {
@@ -53,7 +51,7 @@ const IndeterminateRadio = forwardRef(({ indeterminate, ...rest }, ref) => {
 });
 
 function handleSaveCSV(data, filename) {
-  const csv = Papa.unparse(data);
+  const csv = getCsv(data);
 
   const blob = new Blob([csv], { type: "text/csv" });
   // Create an anchor element and dispatch a click event on it
@@ -68,6 +66,13 @@ function handleSaveCSV(data, filename) {
   });
   a.dispatchEvent(clickEvt);
   a.remove();
+}
+function getCsv(data) {
+  const headers = Object.keys(data[0]);
+  const quote = (str) => `"${str}"`;
+  const csv = [headers.map(quote).join(",")];
+  for (const row of data) csv.push(headers.map((header) => quote(row[header])).join(","));
+  return csv.join("\r\n");
 }
 
 export default function Table({ columns, data, options = {}, customOptions = {}, renderRowSubComponent = false }) {
@@ -169,12 +174,12 @@ export default function Table({ columns, data, options = {}, customOptions = {},
                     {column.render("Header")}
                     {column.isSorted ? (
                       column.isSortedDesc ? (
-                        <ChevronDown />
+                        <i class="bi bi-chevron-down" />
                       ) : (
-                        <ChevronUp />
+                        <i class="bi bi-chevron-up" />
                       )
                     ) : (
-                      !column.disableSortBy && <ChevronExpand className="ms-1" />
+                      !column.disableSortBy && <i class="bi bi-chevron-expand ms-1" />
                     )}
                   </td>
                 ))}

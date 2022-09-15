@@ -5,7 +5,6 @@ import { useRecoilValue } from "recoil";
 import axios from "axios";
 import { saveAs } from "file-saver";
 import { samplesTableData } from "./samples.state";
-import { PlusSquare, DashSquare } from "react-bootstrap-icons";
 import Table from "../../components/table";
 
 export default function Samples() {
@@ -19,7 +18,9 @@ export default function Samples() {
       aria: "",
       disableSortBy: true,
       Cell: ({ row }) => (
-        <span {...row.getToggleRowExpandedProps()}>{row.isExpanded ? <DashSquare /> : <PlusSquare />}</span>
+        <span {...row.getToggleRowExpandedProps()}>
+          {row.isExpanded ? <i class="bi bi-plus-square-dotted" /> : <i class="bi bi-plus-square" />}
+        </span>
       ),
     },
     {
@@ -113,8 +114,6 @@ export default function Samples() {
               </Col>
               <Col>{original.mc}</Col>
             </Row>
-           
-            
           </Col>
           <Col md className="table table-bordered detail-table detail-table-divider mx-1 my-1">
             <Row>
@@ -134,7 +133,7 @@ export default function Samples() {
                 <b>MGMT SCORES:</b>
               </Col>
               <Col className="text-primary small">
-              <Col>{original.mgmt_status}</Col>
+                <Col>{original.mgmt_status}</Col>
               </Col>
             </Row>
             <Row>
@@ -143,7 +142,6 @@ export default function Samples() {
               </Col>
               <Col>{original.notes}</Col>
             </Row>
-
           </Col>
         </Row>
 
@@ -274,9 +272,8 @@ export default function Samples() {
     );
   }, []);
 
-  function convertDate(data){
+  function convertDate(data) {
     return data;
-
   }
 
   async function download(id, file) {

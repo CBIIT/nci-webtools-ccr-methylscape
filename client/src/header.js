@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Row, Col, Container, InputGroup, FormControl } from "react-bootstrap";
-import { Search } from "react-bootstrap-icons";
 
 export default function Header() {
   const [search, setSearch] = useState("");
@@ -38,7 +37,7 @@ export default function Header() {
                 onKeyDown={handleKeyDown}
               />
               <InputGroup.Text onClick={() => handleSearch(search)}>
-                <Search />
+                <i className="bi bi-search" />
               </InputGroup.Text>
             </InputGroup>
           </Col>

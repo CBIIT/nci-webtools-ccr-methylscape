@@ -1,5 +1,5 @@
 import { atom, selector } from "recoil";
-import { json2xml, xml2js } from "xml-js";
+import { xml2js } from "xml-js";
 import axios from "axios";
 
 export const defaultQCIState = {

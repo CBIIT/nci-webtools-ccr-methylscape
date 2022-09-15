@@ -4,7 +4,6 @@ import { useRecoilValue } from "recoil";
 import CountUp from "react-countup";
 import { methylscapeData } from "./data.state";
 import { NavLink } from "react-router-dom";
-import { PieChartFill, ClipboardData, PeopleFill } from "react-bootstrap-icons";
 import { Outlet } from "react-router-dom";
 
 import Alert from "react-bootstrap/Alert";
@@ -17,7 +16,7 @@ import SampleImg from "../home/images/SampleImage.png";
 import { Row, Col } from "react-bootstrap";
 
 export default function Data() {
-  const { data, projectsCount, experimentsCount, samplesCount,sampleData } = useRecoilValue(methylscapeData);
+  const { data, projectsCount, experimentsCount, samplesCount, sampleData } = useRecoilValue(methylscapeData);
 
   return (
     <>

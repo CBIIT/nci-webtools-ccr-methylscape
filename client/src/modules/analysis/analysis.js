@@ -6,17 +6,11 @@ import Card from "react-bootstrap/Card";
 import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
 import Button from "react-bootstrap/Button";
-import { Fullscreen, FullscreenExit, BoxArrowUpRight } from "react-bootstrap-icons";
 import { useRecoilState } from "recoil";
 import Overview from "./overview/overview";
-import SampleQuality from "./sampleQuality/sampleQuality";
 import CopyNumber from "./copyNumber/copyNumber";
-import PromoterMethylation from "./promoterMethylation/promoterMethylation";
-import CohortAnalysis from "./cohortAnalysis/cohortAnalysis";
 import Survival from "./survival/survival";
 import Table from "./table/table";
-import SubgroupAnalysis from "./subgroupAnalysis/subgroupAnalysis";
-import Methodology from "./methodology/methodology";
 import { MemoizedMetadata } from "./metadata/metadata";
 import { analysisState } from "./analysis.state";
 
@@ -46,10 +40,11 @@ export default function Analysis() {
                   aria-label="Open Metadata in new tab"
                   href="/metadata"
                   target="_blank">
-                  <BoxArrowUpRight /> View Metadata
+                  <i class="bi bi-box-arrow-in-up-right" />
+                  View Metadata
                 </Button>
                 <Button id="expandLayout" aria-label="Expand" onClick={() => setExpand(!expand)}>
-                  {expand ? <FullscreenExit /> : <Fullscreen />}
+                  {expand ? <i class="bi bi-fullscreen-exit" /> : <i className="bi bi-fullscreen" />}
                 </Button>
               </div>
             </Card.Body>
