@@ -174,12 +174,12 @@ export default function Table({ columns, data, options = {}, customOptions = {},
                     {column.render("Header")}
                     {column.isSorted ? (
                       column.isSortedDesc ? (
-                        <i class="bi bi-chevron-down" />
+                        <i className="bi bi-chevron-down" />
                       ) : (
-                        <i class="bi bi-chevron-up" />
+                        <i className="bi bi-chevron-up" />
                       )
                     ) : (
-                      !column.disableSortBy && <i class="bi bi-chevron-expand ms-1" />
+                      !column.disableSortBy && <i className="bi bi-chevron-expand ms-1" />
                     )}
                   </td>
                 ))}

@@ -60,7 +60,7 @@ export default function SessionRefreshModal({ warningThresholds = [300, 180, 60]
           <Modal.Title>Warning: Session Timeout</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <div class="p-5">Your session will expire in {formatTime(remainingTime)}. Please select an option below.</div>
+          <div className="p-5">Your session will expire in {formatTime(remainingTime)}. Please select an option below.</div>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={(_) => setShowWarning(false)}>

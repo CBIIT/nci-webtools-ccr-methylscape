@@ -19,7 +19,7 @@ export default function Samples() {
       disableSortBy: true,
       Cell: ({ row }) => (
         <span {...row.getToggleRowExpandedProps()}>
-          {row.isExpanded ? <i class="bi bi-plus-square-dotted" /> : <i class="bi bi-plus-square" />}
+          {row.isExpanded ? <i className="bi bi-plus-square-dotted" /> : <i className="bi bi-plus-square" />}
         </span>
       ),
     },
