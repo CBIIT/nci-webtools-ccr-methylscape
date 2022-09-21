@@ -149,10 +149,10 @@ export default function AdminOrganizationManagement() {
     <>
       <Container fluid="xxl" className="my-3 text-white rounded">
         <Row>
-          <div class="col-sm-10 col-xs-12 col-12">
+          <div className="col-sm-10 col-xs-12 col-12">
             <h1 className="h2">Manage Organizations/ Institutions</h1>
           </div>
-          <div class="col-sm-2 col-xs-12 col-12 mb-2">
+          <div className="col-sm-2 col-xs-12 col-12 mb-2">
             <Button className="btn btn-success pull-right" onClick={(e) => openAddOrgModal()}>
               Add Organization
             </Button>

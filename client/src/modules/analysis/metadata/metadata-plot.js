@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useRecoilValue, useSetRecoilState, useRecoilCallback } from "recoil";
 import cloneDeep from "lodash/cloneDeep";
 import { plotState, selectedPoints } from "./metadata-plot.state";
@@ -6,12 +7,11 @@ import { selectSampleState } from "../copyNumber/copyNumber.state";
 import { tableForm } from "../table/table.state";
 import Plot from "react-plotly.js";
 
-export default function MatdataPlot() {
+export default function MetdataPlot() {
   let { data, layout, config } = useRecoilValue(plotState);
   const setSelectedPoints = useSetRecoilState(selectedPoints);
   const setTabs = useSetRecoilState(analysisState);
   const setSample = useSetRecoilState(selectSampleState);
-
   const selectedGroup = useRecoilCallback(
     ({ snapshot }) =>
       () => {
@@ -20,9 +20,10 @@ export default function MatdataPlot() {
       },
     []
   );
+  const [traces, setTraces] = useState(cloneDeep(data));
 
   function handleSelect(e) {
-    if (e) {
+    if (e?.points.length) {
       setSelectedPoints((state) => {
         let points = state.points.slice();
         points[selectedGroup()] = e.points;
@@ -39,6 +40,8 @@ export default function MatdataPlot() {
           return state;
         }
       });
+      // rerender with new traces to clear select box
+      setTraces(cloneDeep(data));
     }
   }
 
@@ -62,7 +65,7 @@ export default function MatdataPlot() {
 
   return (
     <Plot
-      data={cloneDeep(data)}
+      data={traces}
       className="w-100"
       style={{ height: "800px" }}
       layout={cloneDeep(layout)}

@@ -11,10 +11,10 @@
     "plotly.js": "^2.14.0",
     "react": "^18.2.0",
     "react-bootstrap": "^2.5.0",
-    "react-countup": "^6.2.0",
     "react-chartkick": "^0.5.2",
+    "react-countup": "^6.2.0",
     "react-dom": "^18.2.0",
-    "react-plotly.js": "^2.5.1",
+    "react-plotly.js": "^2.6.0",
     "react-router-dom": "^6.3.0",
     "react-select": "^5.3.2",
     "react-table": "^7.8.0",
@@ -25,16 +25,20 @@
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.3.0",
     "@testing-library/user-event": "^13.5.0",
+    "assert": "^2.0.0",
+    "buffer": "^6.0.3",
     "http-proxy-middleware": "^2.0.6",
+    "react-app-rewired": "^2.2.1",
     "react-scripts": "^5.0.1",
-    "sass": "^1.54.4"
+    "sass": "^1.54.4",
+    "stream-browserify": "^3.0.0"
   },
   "scripts": {
-    "start": "react-scripts --max_old_space_size=4096 start",
-    "start:sudo": "sudo react-scripts --max_old_space_size=4096 start",
-    "build": "react-scripts --max_old_space_size=4096 build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "start": "react-app-rewired --max_old_space_size=4096 start",
+    "start:sudo": "sudo react-app-rewired --max_old_space_size=4096 start",
+    "build": "react-app-rewired --max_old_space_size=4096 build",
+    "test": "react-app-rewired test",
+    "eject": "react-app-rewired eject"
   },
   "eslintConfig": {
     "extends": [

@@ -40,11 +40,11 @@ export default function Analysis() {
                   aria-label="Open Metadata in new tab"
                   href="/metadata"
                   target="_blank">
-                  <i class="bi bi-box-arrow-in-up-right" />
+                  <i className="bi bi-box-arrow-in-up-right" />
                   View Metadata
                 </Button>
                 <Button id="expandLayout" aria-label="Expand" onClick={() => setExpand(!expand)}>
-                  {expand ? <i class="bi bi-fullscreen-exit" /> : <i className="bi bi-fullscreen" />}
+                  {expand ? <i className="bi bi-fullscreen-exit" /> : <i className="bi bi-fullscreen" />}
                 </Button>
               </div>
             </Card.Body>
