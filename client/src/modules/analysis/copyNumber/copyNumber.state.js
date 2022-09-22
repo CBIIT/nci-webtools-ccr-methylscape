@@ -158,10 +158,13 @@ export const plotState = selector({
 
     // determine y coordinates for each bin
     const yCoordinates = bins.map((bin) => bin.medianValue);
-    const [yMin, yMax] = getRange(yCoordinates);
+    let [yMin, yMax] = getRange(yCoordinates);
     const yAbsMax = Math.max(Math.abs(yMin), Math.abs(yMax));
     const yClamped = yAbsMax * 0.2; // approximates the majority of points
-    const colorScale = createScale([-yClamped, yClamped], [0, 1], true);
+    const colorScale = createScale([-yAbsMax, yAbsMax], [0, 1], true);
+    const yRange = Math.max(1.2, yClamped);
+    const yRangeValues = [-yRange, yRange];
+    [yMin, yMax] = yRangeValues;
 
     // determine top points
     const sortedBins = [...bins].sort((a, b) => a.medianValue - b.medianValue);
@@ -233,7 +236,7 @@ export const plotState = selector({
         // zerolinecolor: '#eee',
         dtick: 0.25,
         ticks: "outside",
-        fixedrange: true,
+        range: yRangeValues,
       },
       annotations: [...binAnnotations, ...searchAnnotations],
       shapes: [
