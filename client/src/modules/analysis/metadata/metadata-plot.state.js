@@ -3,6 +3,7 @@ import axios from "axios";
 import groupBy from "lodash/groupBy";
 import meanBy from "lodash/meanBy";
 import isNumber from "lodash/isNumber";
+import mapValues from "lodash/mapValues";
 import colors from "./colors.json";
 import nciMetricColors from "./nciMetricColors";
 
@@ -117,7 +118,7 @@ export const plotState = selector({
         "Sample: %{customdata.sample}",
         "Metric: %{customdata.nciMetric}",
         "Diagnosis: %{customdata.diagnosisProvided}",
-        "Sex: %{customdata.customSex}",
+        "Sex: %{customdata.sex}",
         "RF Purity (Absolute): %{customdata.customRfPurityAbsolute}",
         "Age: %{customdata.customAge}",
       ].join("<br>") + "<extra></extra>";
@@ -148,10 +149,9 @@ export const plotState = selector({
       x: data.map((e) => e.x),
       y: data.map((e) => e.y),
       customdata: data.map((d) => ({
-        ...d,
-        customSex: d.sex ?? "N/A",
-        customRfPurityAbsolute: toFixed(d.rfPurityAbsolute, 2) ?? "N/A",
-        customAge: toFixed(d.age, 2) ?? "N/A",
+        ...mapValues(d, (v) => v ?? "N/A"),
+        customRfPurityAbsolute: +toFixed(d.rfPurityAbsolute, 2) ?? "N/A",
+        customAge: +toFixed(d.age, 1) ?? "N/A",
       })),
       mode: "markers",
       hovertemplate: hovertemplate,
