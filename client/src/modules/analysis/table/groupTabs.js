@@ -1,7 +1,6 @@
-import { Button, Tabs, Tab } from "react-bootstrap";
-import { useRecoilState, useResetRecoilState, useRecoilValue } from "recoil";
-import { tableForm, tableData } from "./table.state";
-import ReactTable from "../../components/table";
+import { Button } from "react-bootstrap";
+import { useRecoilState, useResetRecoilState } from "recoil";
+import { tableForm } from "./table.state";
 import { selectedPoints } from "../metadata/metadata-plot.state";
 
 export default function GroupTabs() {
@@ -9,15 +8,10 @@ export default function GroupTabs() {
   const setForm = (newState) => setState({ ...formState, ...newState });
   const resetForm = useResetRecoilState(tableForm);
   const resetPoints = useResetRecoilState(selectedPoints);
-  const tables = useRecoilValue(tableData);
   const [umapPoints, setUmapPoints] = useRecoilState(selectedPoints);
 
-  function handleSelect(e) {
-    setForm({ group: e });
-  }
-
   function addTab() {
-    let points = umapPoints.points.slice();
+    let points = umapPoints?.points ? umapPoints.points.slice() : [];
     if (points.length < 3) {
       points = [...points, []];
       setUmapPoints({ ...umapPoints, points });
@@ -26,7 +20,7 @@ export default function GroupTabs() {
   }
 
   function removeTab(index) {
-    let points = umapPoints.points.slice();
+    let points = umapPoints?.points ? umapPoints.points.slice() : [];
     if (points.length > 1) {
       points.splice(index, 1);
       setUmapPoints({ ...umapPoints, points });
