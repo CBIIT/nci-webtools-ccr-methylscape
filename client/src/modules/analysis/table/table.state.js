@@ -47,6 +47,7 @@ export const tableData = selector({
       {
         accessor: "age",
         Header: "Age",
+        Cell: (c) => c.value?.toFixed(1),
         show: true,
       },
       {
@@ -137,6 +138,7 @@ export const tableData = selector({
       {
         accessor: "MCF1_v11b6_score",
         Header: "MCF1_v11b6_score",
+        Cell: (c) => c.value?.toFixed(2),
         show: false,
       },
       {
@@ -147,6 +149,7 @@ export const tableData = selector({
       {
         accessor: "SC1_v11b6_score",
         Header: "SC1_v11b6_score",
+        Cell: (c) => c.value?.toFixed(2),
         show: false,
       },
       {
@@ -218,16 +221,19 @@ export const tableData = selector({
       {
         accessor: "rfPurityAbsolute",
         Header: "RF Purity (Absolute)",
+        Cell: (c) => c.value?.toFixed(2),
         show: false,
       },
       {
         accessor: "rfPurityEstimate",
         Header: "RF Purity (Estimate)",
+        Cell: (c) => c.value?.toFixed(2),
         show: false,
       },
       {
         accessor: "lump",
         Header: "LUMP",
+        Cell: (c) => c.value?.toFixed(2),
         show: false,
       },
       {
@@ -238,6 +244,7 @@ export const tableData = selector({
       {
         accessor: "mcfScore",
         Header: "MCF Score",
+        Cell: (c) => c.value?.toFixed(2),
         show: false,
       },
       {
@@ -248,6 +255,7 @@ export const tableData = selector({
       {
         accessor: "subclassScore",
         Header: "Subclass Score",
+        Cell: (c) => c.value?.toFixed(2),
         show: false,
       },
       {
@@ -258,6 +266,7 @@ export const tableData = selector({
       {
         accessor: "CNSv12b6_score",
         Header: "CNSv12b6 Score",
+        Cell: (c) => c.value?.toFixed(2),
         show: false,
       },
       {
@@ -268,6 +277,7 @@ export const tableData = selector({
       {
         accessor: "CNSv12b6_superfamily_score",
         Header: "CNSv12b6 Superfamily Score",
+        Cell: (c) => c.value?.toFixed(2),
         show: false,
       },
       {
@@ -278,6 +288,7 @@ export const tableData = selector({
       {
         accessor: "CNSv12b6_family_score",
         Header: "CNSv12b6 Family Score",
+        Cell: (c) => c.value?.toFixed(2),
         show: false,
       },
       {
@@ -288,6 +299,7 @@ export const tableData = selector({
       {
         accessor: "CNSv12b6_class_score",
         Header: "CNSv12b6 Class Score",
+        Cell: (c) => c.value?.toFixed(2),
         show: false,
       },
       {
@@ -298,6 +310,7 @@ export const tableData = selector({
       {
         accessor: "CNSv12b6_subclass1_score",
         Header: "CNSv12b6 Subclass 1 Score",
+        Cell: (c) => c.value?.toFixed(2),
         show: false,
       },
       {
@@ -308,6 +321,7 @@ export const tableData = selector({
       {
         accessor: "CNSv12b6_subclass2_score",
         Header: "CNSv12b6 Subclass 2 Score",
+        Cell: (c) => c.value?.toFixed(2),
         show: false,
       },
       {
@@ -318,6 +332,7 @@ export const tableData = selector({
       {
         accessor: "mgmtEstimated",
         Header: "MGMT Estimated",
+        Cell: (c) => c.value?.toFixed(2),
         show: false,
       },
       {
@@ -333,6 +348,7 @@ export const tableData = selector({
       {
         accessor: "SARv12b6_score",
         Header: "SARv12b6 Score",
+        Cell: (c) => c.value?.toFixed(2),
         show: false,
       },
       {
@@ -348,6 +364,7 @@ export const tableData = selector({
       {
         accessor: "SARv12b6_second_score",
         Header: "SARv12b6 Second Score",
+        Cell: (c) => c.value?.toFixed(2),
         show: false,
       },
       {
@@ -363,6 +380,7 @@ export const tableData = selector({
       {
         accessor: "SARv12b6_third_score",
         Header: "SARv12b6 Third Score",
+        Cell: (c) => c.value?.toFixed(2),
         show: false,
       },
     ];
