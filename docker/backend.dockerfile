@@ -1,15 +1,11 @@
-FROM ${BASE_IMAGE:-quay.io/centos/centos:stream8}
+FROM public.ecr.aws/amazonlinux/amazonlinux:2022
 
 RUN dnf -y update \
- && dnf -y install \
-    dnf-plugins-core \
-    epel-release \
- && dnf config-manager --set-enabled powertools \
- && curl -fsSL https://rpm.nodesource.com/setup_16.x | bash - \
  && dnf -y install \
     make \
     gcc-c++ \
     nodejs \
+    npm \
     python3-devel \
     R \
     cmake \
@@ -22,17 +18,17 @@ RUN mkdir -p /app/server
 
 WORKDIR /app/server
 
-COPY server/install.R .
+COPY server/renv.lock ./
 
-RUN Rscript install.R
+RUN R -e "\
+    options(Ncpus=parallel::detectCores()); \
+    install.packages('renv', repos = 'https://cloud.r-project.org/'); \
+    renv::restore();"
 
-COPY server/package.json .
+COPY server/package.json server/package-lock.json ./
 
 RUN npm install
 
-COPY server .
+COPY server ./
 
 CMD npm start
-
-
-
