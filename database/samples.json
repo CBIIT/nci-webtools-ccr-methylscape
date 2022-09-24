@@ -42,7 +42,7 @@
     "command": "importTable",
     "description": "Import anno_sarcoma.txt to staging table",
     "source": "anno_sarcoma.txt",
-    "target": "stage.sampleCoordinateSarcoma",
+    "target": "stage.sampleCoordinateBoneAndSoftTissue",
     "options": { "delimiter": "\t" }
   },
   {
@@ -248,12 +248,12 @@
   },
   {
     "command": "copyTable",
-    "description": "Import sample coordinates (sarcoma, densmap) from staging table",
-    "source": "stage.sampleCoordinateSarcoma",
+    "description": "Import sample coordinates (boneAndSoftTissue, densmap) from staging table",
+    "source": "stage.sampleCoordinateBoneAndSoftTissue",
     "target": "sampleCoordinate",
     "columns": [
       { "sourceName": "idat_filename", "name": "sampleIdatFilename" },
-      { "sourceValue": "sarcoma", "name": "organSystem" },
+      { "sourceValue": "boneAndSoftTissue", "name": "organSystem" },
       { "sourceValue": "densmap", "name": "embedding" },
       { "sourceName": "densmap_x", "name": "x" },
       { "sourceName": "densmap_y", "name": "y" }
@@ -261,12 +261,12 @@
   },
   {
     "command": "copyTable",
-    "description": "Import sample coordinates (sarcoma, umap) from staging table",
-    "source": "stage.sampleCoordinateSarcoma",
+    "description": "Import sample coordinates (boneAndSoftTissue, umap) from staging table",
+    "source": "stage.sampleCoordinateBoneAndSoftTissue",
     "target": "sampleCoordinate",
     "columns": [
       { "sourceName": "idat_filename", "name": "sampleIdatFilename" },
-      { "sourceValue": "sarcoma", "name": "organSystem" },
+      { "sourceValue": "boneAndSoftTissue", "name": "organSystem" },
       { "sourceValue": "umap", "name": "embedding" },
       { "sourceName": "umap_x", "name": "x" },
       { "sourceName": "umap_y", "name": "y" }
