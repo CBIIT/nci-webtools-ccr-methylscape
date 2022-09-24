@@ -1,10 +1,10 @@
 import { useRecoilState } from "recoil";
-import { formState } from "./metadata-plot.state";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import MultiSearch from "../../components/multi-search";
-import GroupSelect from "../../components/group-select";
+import { formState } from "./metadata-plot.state";
+import colorOptions from "./color-options.json";
 
 export default function MetadataForm({ className, onSelect }) {
   const [form, setForm] = useRecoilState(formState);
@@ -12,36 +12,15 @@ export default function MetadataForm({ className, onSelect }) {
 
   function handleChange(event) {
     let { name, value, checked, type } = event.target;
-    mergeForm({
-      [name]: type === "checkbox" ? checked : value,
-    });
+    if (type === "checkbox") {
+      value = checked;
+    }
+    mergeForm({ [name]: value });
   }
 
   function handleSearch(e) {
     mergeForm({ search: e });
   }
-
-  const colorOptions = [
-    {
-      label: "Categorical",
-      options: [
-        { label: "NCI Metric", value: "nciMetric", type: "categorical" },
-        { label: "Sex", value: "sex", type: "categorical" },
-      ],
-    },
-    {
-      label: "Continuous",
-      options: [
-        {
-          label: "RF Purity (Absolute)",
-          value: "rfPurityAbsolute",
-          type: "continuous",
-          dtick: 0.05,
-        },
-        { label: "Age", value: "age", type: "continuous", dtick: 5 },
-      ],
-    },
-  ];
 
   return (
     <Form className={className}>
@@ -56,23 +35,6 @@ export default function MetadataForm({ className, onSelect }) {
               <option value="renal">Renal</option>
               <option value="panCancer">Pan-Cancer</option>
             </Form.Select>
-            {/* <DropdownButton
-              name="organSystem"
-              value={form.organSystem}
-              onClick={handleChange}
-              className="source"
-              title="Select"
-            >
-              <Dropdown.Item value="centralNervousSystem">
-                Central Nervous System
-              </Dropdown.Item>
-              <Dropdown.Item value="boneAndSoftTissue">
-                Bone and Soft Tissue
-              </Dropdown.Item>
-              <Dropdown.Item value="hematopoietic">Hematopoietic</Dropdown.Item>
-              <Dropdown.Item value="renal">Renal</Dropdown.Item>
-              <Dropdown.Item value="panCancer">Pan-Cancer</Dropdown.Item>
-            </DropdownButton> */}
           </Form.Group>
         </Col>
         <Col md="auto">
@@ -87,12 +49,17 @@ export default function MetadataForm({ className, onSelect }) {
         <Col md="2">
           <Form.Group id="color" className="mb-3">
             <Form.Label>Color By</Form.Label>
-            <GroupSelect
-              name="color"
-              defaultValue={colorOptions[0].options[0]}
-              options={colorOptions}
-              onChange={(e) => mergeForm({ color: e })}
-            />
+            <Form.Select name="color" value={form.color} onChange={handleChange}>
+              {colorOptions.map((group) => (
+                <optgroup key={group.label} label={group.label}>
+                  {group.options.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </optgroup>
+              ))}
+            </Form.Select>
           </Form.Group>
         </Col>
         <Col md="3">

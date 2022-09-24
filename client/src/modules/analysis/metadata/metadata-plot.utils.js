@@ -2,6 +2,7 @@ import axios from "axios";
 import groupBy from "lodash/groupBy";
 import isNumber from "lodash/isNumber";
 import mapValues from "lodash/mapValues";
+import colorOptions from "./color-options.json";
 import colors from "./colors.json";
 import nciMetricColors from "./nci-metric-colors.json";
 import { defaultPlotState } from "./metadata-plot.state";
@@ -25,8 +26,12 @@ export async function getMetadataPlot({ organSystem, embedding, search, showAnno
   const weeklyAnnotations = getWeeklyAnnotations(sampleCoordinates);
   const searchAnnotations = getSearchAnnotations(sampleCoordinates, searchQueries);
 
+  const colorOption = colorOptions
+    .map((c) => c.options)
+    .flat()
+    .find((c) => c.value === color);
   const getCategoricalMarker = createCategoricalMarker(nciMetricColors, colors);
-  const getContinuousMarker = createContinousMarker(color);
+  const getContinuousMarker = createContinousMarker(colorOption);
 
   // Sort these keywords to the top so that their traces are rendered first and overlapped by others
   const priorityKeywords = ["No_match", "Unclassified", "NotAvailable", "null"];
@@ -34,7 +39,7 @@ export async function getMetadataPlot({ organSystem, embedding, search, showAnno
 
   // generate data traces from sample coordinates
   const data =
-    color.type === "categorical"
+    colorOption.type === "categorical"
       ? Object.entries(groupBy(sampleCoordinates, (e) => e[color.value]))
           .sort(compareCategories)
           .map(([name, sampleCoordinates]) => ({
@@ -51,7 +56,7 @@ export async function getMetadataPlot({ organSystem, embedding, search, showAnno
 
   const title = `${organSystemLabels[organSystem] || organSystem} (n=${sampleCoordinates.length})`;
   const annotations = searchAnnotations.concat(showAnnotations ? weeklyAnnotations : []);
-  const uirevision = organSystem + embedding + color.value + search + showAnnotations;
+  const uirevision = organSystem + embedding + colorOption.value + search + showAnnotations;
 
   const layout = {
     title,
@@ -59,7 +64,7 @@ export async function getMetadataPlot({ organSystem, embedding, search, showAnno
     uirevision,
     xaxis: { title: `${embedding} x` },
     yaxis: { title: `${embedding} y` },
-    legend: { title: { text: color.label } },
+    legend: { title: { text: colorOption.label } },
     autosize: true,
     dragmode: "zoom",
   };

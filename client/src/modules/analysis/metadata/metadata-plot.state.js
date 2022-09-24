@@ -6,7 +6,7 @@ export const defaultFormState = {
   embedding: "umap",
   search: [],
   showAnnotations: true,
-  color: { label: "NCI Metric", value: "nciMetric", type: "categorical" },
+  color: "nciMetric",
 };
 
 export const formState = atom({
