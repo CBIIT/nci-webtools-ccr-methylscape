@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import { sessionState } from "./session.state";
 import { getRefreshedUserSession, getRemainingTime, formatTime } from "./session.utils";
@@ -60,7 +60,9 @@ export default function SessionRefreshModal({ warningThresholds = [300, 180, 60]
           <Modal.Title>Warning: Session Timeout</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <div className="p-5">Your session will expire in {formatTime(remainingTime)}. Please select an option below.</div>
+          <div className="p-5">
+            Your session will expire in {formatTime(remainingTime)}. Please select an option below.
+          </div>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={(_) => setShowWarning(false)}>

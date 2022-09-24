@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Container, Button, Row, Modal, Form, FormControl } from "react-bootstrap";
 import { useRecoilValue, useRecoilRefresher_UNSTABLE } from "recoil";
 import Table from "../../components/table";
@@ -11,7 +11,6 @@ export default function AdminOrganizationManagement() {
   const [showAddOrgModal, setShowAddOrgModal] = useState(false);
   const [showRenameOrgModal, setShowRenameOrgModal] = useState(false);
   const refreshOrgs = useRecoilRefresher_UNSTABLE(organizationsSelector);
-  const [oldOrgName, setOldOrgName] = useState([]);
 
   async function openAddOrgModal() {
     setShowAddOrgModal(true);
@@ -20,8 +19,6 @@ export default function AdminOrganizationManagement() {
   async function openEditOrgModal(cell) {
     setShowRenameOrgModal(true);
     setForm(cell?.row?.original);
-    setOldOrgName(cell?.row?.original);
-    const { id, name } = cell?.row?.original;
   }
 
   async function addOrganizationChange(e) {
@@ -34,14 +31,6 @@ export default function AdminOrganizationManagement() {
     const { name, value } = e.target;
     setForm((form) => ({ ...form, [name]: value }));
     console.log(form);
-  }
-
-  async function handleRemoveOrgChange(cell) {
-    const { id, name } = cell?.row?.original;
-    console.log(id);
-    console.log(name);
-    //await axios.delete(`/api/organizations/${id}`);
-    //refreshOrgs();
   }
 
   async function handleAddOrgSubmit(e) {
