@@ -56,7 +56,7 @@ export async function getMetadataPlot({ organSystem, embedding, search, showAnno
 
   const title = `${organSystemLabels[organSystem] || organSystem} (n=${sampleCoordinates.length})`;
   const annotations = searchAnnotations.concat(showAnnotations ? weeklyAnnotations : []);
-  const uirevision = organSystem + embedding + colorOption.value + search + showAnnotations;
+  const uirevision = organSystem + embedding + color + search + showAnnotations;
 
   const layout = {
     title,
