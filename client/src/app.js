@@ -19,7 +19,7 @@ import AdminOrganizationManagement from "./modules/admin/organization-management
 import Session from "./modules/session/session";
 import ErrorBoundary from "./modules/components/error-boundary";
 import Header from "./header";
-import UserRegister from "./modules/user/userRegister";
+import UserRegister from "./modules/user/user-registration";
 import RequirePolicy from "./modules/require-policy/require-policy";
 import { isAuthorized } from "./modules/require-policy/require-policy.utils";
 import SessionRefreshModal from "./modules/session/session-refresh-modal";
