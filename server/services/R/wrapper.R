@@ -1,5 +1,3 @@
-require(jsonlite)
-
 # call functions given fn name and capture console output
 wrapper <- function(fn, args, paths) {
   stdout <- vector('character')
@@ -16,7 +14,7 @@ wrapper <- function(fn, args, paths) {
   }, finally = {
     sink(con)
     sink(con)
-    return(toJSON(list(stdout = stdout, output = output), pretty = TRUE, auto_unbox = TRUE))
+    return(jsonlite::toJSON(list(stdout = stdout, output = output), pretty = TRUE, auto_unbox = TRUE))
   })
 }
 
