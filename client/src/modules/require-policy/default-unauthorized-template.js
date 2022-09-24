@@ -12,7 +12,7 @@ export default function DefaultUnauthorizedTemplate() {
       <Card.Body>
         <Container>
           <Row>
-            <Col md lg={{ span: 2, offset: 1 }} className="text-wrap text-end">
+            <Col md lg={{ span: 4 }} className="text-wrap text-end">
               <h1>Unauthorized</h1>
             </Col>
             <Col md lg={6}>
