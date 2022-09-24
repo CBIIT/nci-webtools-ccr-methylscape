@@ -1,70 +1,64 @@
 import axios from "axios";
 import groupBy from "lodash/groupBy";
-import meanBy from "lodash/meanBy";
 import isNumber from "lodash/isNumber";
+import mapValues from "lodash/mapValues";
 import colors from "./colors.json";
-import nciMetricColors from "./nciMetricColors";
+import nciMetricColors from "./nciMetricColors.json";
 import { defaultPlotState } from "./metadata-plot.state";
 
-export async function getMetadataPlot({ organSystem, embedding, search, showAnnotations, color }) {
+export const organSystemLabels = {
+  centralNervousSystem: "Central Nervous System",
+  boneAndSoftTissue: "Bone and Soft Tissue",
+  hematopoietic: "Hematopoietic",
+  renal: "Renal",
+  panCancer: "Pan-Cancer",
+};
+
+export async function getSampleCoordinates({ organSystem, embedding }) {
+  const response = await axios.get("/api/analysis/samples", { params: { organSystem, embedding } });
+  return response.data;
+}
+
+export async function getMetadataPlot({ organSystem, embedding, search, showAnnotations, color }, sampleCoordinates) {
   if (!organSystem || !embedding) return defaultPlotState;
-
-  const { data } = await axios.get("/api/analysis/samples", { params: { embedding, organSystem } });
   const searchQueries = search.map(({ value }) => value.toLowerCase());
-  const colorCategories = color.type == "categorical" ? Object.entries(groupBy(data, (e) => e[color.value])) : [];
-  const weeklyAnnotations = getWeeklyAnnotations(data);
-  const sampleAnnotations = getSearchAnnotations(data, searchQueries);
-  const useWebGl = data.length > 1000;
+  const weeklyAnnotations = getWeeklyAnnotations(sampleCoordinates);
+  const searchAnnotations = getSearchAnnotations(sampleCoordinates, searchQueries);
 
-  const getCategoricalMarker = createCategoricalMarker(await nciMetricColors(), colors);
+  const getCategoricalMarker = createCategoricalMarker(nciMetricColors, colors);
   const getContinuousMarker = createContinousMarker(color);
 
   // Sort these keywords to the top so that their traces are rendered first and overlapped by others
-  const lowPriorityKeywords = ["No_match", "Unclassified", "NotAvailable", "null"];
-  const compareCategoricalData = compareWithLowPriorityKeywords(lowPriorityKeywords);
+  const priorityKeywords = ["No_match", "Unclassified", "NotAvailable", "null"];
+  const compareCategories = compareWithPriorityKeywords(priorityKeywords);
 
-  // transform data to traces
-  const dataTraces =
+  // generate data traces from sample coordinates
+  const data =
     color.type == "categorical"
-      ? colorCategories.sort(compareCategoricalData).map(([name, data]) => ({
-          ...getScatterTrace(data, useWebGl),
-          marker: getCategoricalMarker(name),
-          name,
-        }))
+      ? Object.entries(groupBy(sampleCoordinates, (e) => e[color.value]))
+          .sort(compareCategories)
+          .map(([name, sampleCoordinates]) => ({
+            ...getScatterTrace(sampleCoordinates),
+            marker: getCategoricalMarker(name),
+            name,
+          }))
       : [
           {
-            ...getScatterTrace(data, useWebGl),
-            marker: getContinuousMarker(data),
+            ...getScatterTrace(sampleCoordinates),
+            marker: getContinuousMarker(sampleCoordinates),
           },
         ];
 
-  const organSystemLabels = {
-    centralNervousSystem: "Central Nervous System",
-    boneAndSoftTissue: "Bone and Soft Tissue",
-    hematopoietic: "Hematopoietic",
-    renal: "Renal",
-    panCancer: "Pan-Cancer",
-  };
-  const title = `${organSystemLabels[organSystem] || organSystem} (n=${data.length})`;
+  const title = `${organSystemLabels[organSystem] || organSystem} (n=${sampleCoordinates.length})`;
+  const annotations = searchAnnotations.concat(showAnnotations ? weeklyAnnotations : []);
+  const uirevision = organSystem + embedding + color.value + search + showAnnotations;
 
-  // set layout
   const layout = {
     title,
-    xaxis: {
-      title: `${embedding} x`,
-    },
-    yaxis: {
-      title: `${embedding} y`,
-    },
-    annotations: showAnnotations
-      ? [
-          // ...labelAnnotations,
-          ...sampleAnnotations,
-          // ...classAnnotations
-          ...weeklyAnnotations,
-        ]
-      : [...sampleAnnotations],
-    uirevision: organSystem + embedding + color.value + search + showAnnotations,
+    annotations,
+    uirevision,
+    xaxis: { title: `${embedding} x` },
+    yaxis: { title: `${embedding} y` },
     legend: { title: { text: color.label } },
     autosize: true,
     dragmode: "zoom",
@@ -74,17 +68,10 @@ export async function getMetadataPlot({ organSystem, embedding, search, showAnno
     scrollZoom: true,
   };
 
-  return {
-    data: [
-      ...dataTraces,
-      // classAnnotationTrace,
-    ],
-    layout,
-    config,
-  };
+  return { data, layout, config };
 }
 
-export async function createCategoricalMarker(colorMap, colors) {
+export function createCategoricalMarker(colorMap, colors) {
   let colorCount = 0;
   return (name) => ({
     color: colorMap[name] || colors[colorCount++],
@@ -98,7 +85,7 @@ export function createContinousMarker(color) {
   });
 }
 
-export function compareWithLowPriorityKeywords(keywords) {
+export function compareWithPriorityKeywords(keywords) {
   return ([a], [b]) => (keywords.includes(a) ? -1 : keywords.includes(b) ? 1 : a.localeCompare(b));
 }
 
@@ -108,29 +95,30 @@ function toFixed(num, maxDigits = 2) {
 }
 
 // get scatter traces from data
-function getScatterTrace(data, useWebGl = true) {
+function getScatterTrace(data) {
   const hovertemplate =
     [
       "Sample: %{customdata.sample}",
       "Metric: %{customdata.nciMetric}",
       "Diagnosis: %{customdata.diagnosisProvided}",
-      "Sex: %{customdata.customSex}",
+      "Sex: %{customdata.sex}",
       "RF Purity (Absolute): %{customdata.customRfPurityAbsolute}",
       "Age: %{customdata.customAge}",
     ].join("<br>") + "<extra></extra>";
 
+  const customdata = data.map((d) => ({
+    ...mapValues(d, (v) => v ?? "N/A"),
+    customRfPurityAbsolute: toFixed(d.rfPurityAbsolute, 2) ?? "N/A",
+    customAge: toFixed(d.age, 1) ?? "N/A",
+  }));
+
   return {
-    x: data.map((e) => e.x),
-    y: data.map((e) => e.y),
-    customdata: data.map((d) => ({
-      ...d,
-      customSex: d.sex ?? "N/A",
-      customRfPurityAbsolute: toFixed(d.rfPurityAbsolute, 2) ?? "N/A",
-      customAge: toFixed(d.age, 2) ?? "N/A",
-    })),
+    x: data.map((d) => d.x),
+    y: data.map((d) => d.y),
     mode: "markers",
+    type: "scattergl",
+    customdata,
     hovertemplate,
-    type: useWebGl ? "scattergl" : "scatter",
   };
 }
 
@@ -141,8 +129,9 @@ function createSearchQueryFilter(searchQueries) {
 }
 
 export function getWeeklyAnnotations(data) {
-  const weeklyThreshold = Date.now() - 1000 * 60 * 60 * 24 * 7;
-  const isWeeklyAnnotation = ({ batchDate }) => batchDate && new Date(batchDate).getTime() > weeklyThreshold;
+  const weeklyThreshold = Date.now() - 1000 * 60 * 60 * 24 * 10;
+  const isWeeklyAnnotation = (d) =>
+    d.batchDate && new Date(d.batchDate).getTime() > weeklyThreshold && d.samplePlate === "Clinical Testing";
   const weeklyAnnotations = data.filter(isWeeklyAnnotation).map((value) => ({
     text: value.sample,
     x: value.x,
@@ -158,7 +147,6 @@ export function getSearchAnnotations(data, searchQueries) {
         text: e.sample || e.idatFilename,
         x: e.x,
         y: e.y,
-        // showarrow: false,
       }))
     : [];
 }
