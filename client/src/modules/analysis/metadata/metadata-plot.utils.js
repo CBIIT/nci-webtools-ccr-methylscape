@@ -3,7 +3,7 @@ import groupBy from "lodash/groupBy";
 import isNumber from "lodash/isNumber";
 import mapValues from "lodash/mapValues";
 import colors from "./colors.json";
-import nciMetricColors from "./nciMetricColors.json";
+import nciMetricColors from "./nci-metric-colors.json";
 import { defaultPlotState } from "./metadata-plot.state";
 
 export const organSystemLabels = {

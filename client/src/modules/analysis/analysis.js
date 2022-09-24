@@ -8,7 +8,7 @@ import Tabs from "react-bootstrap/Tabs";
 import Button from "react-bootstrap/Button";
 import { useRecoilState } from "recoil";
 import Overview from "./overview/overview";
-import CopyNumber from "./copyNumber/copyNumber";
+import CopyNumber from "./copy-number/copy-number";
 import Survival from "./survival/survival";
 import Table from "./table/table";
 import { MemoizedMetadata } from "./metadata/metadata";

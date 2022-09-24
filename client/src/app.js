@@ -8,7 +8,7 @@ import Reports from "./modules/reports/data";
 import About from "./modules/about/about";
 import Home from "./modules/home/home";
 import Analysis from "./modules/analysis/analysis";
-import MetadataSA from "./modules/metadataStandalone/metadataSA";
+import MetadataSA from "./modules/analysis/metadata/metadata-standalone";
 import Projects from "./modules/reports/projects/projects";
 import Experiments from "./modules/reports/experiments/experiments";
 import Samples from "./modules/reports/samples/samples";

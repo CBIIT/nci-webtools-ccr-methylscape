@@ -2,7 +2,7 @@ import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { formState, geneOptionsSelector, preFormState } from "./copyNumber.state";
+import { formState, geneOptionsSelector, preFormState } from "./copy-number.state";
 import MultiSearch from "../../components/multi-search";
 
 export default function CopyNumberForm() {

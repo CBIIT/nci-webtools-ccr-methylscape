@@ -1,6 +1,6 @@
-import { Metadata } from "../analysis/metadata/metadata";
+import { Metadata } from "./metadata";
 import { Card, Container } from "react-bootstrap";
-export default function MeatadataSA() {
+export default function MeatadataStandalone() {
   return (
     <Container fluid className="my-4">
       <Card>

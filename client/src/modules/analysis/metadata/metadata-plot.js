@@ -3,7 +3,7 @@ import { useRecoilValue, useSetRecoilState, useRecoilCallback } from "recoil";
 import cloneDeep from "lodash/cloneDeep";
 import { plotState, selectedPoints } from "./metadata-plot.state";
 import { analysisState } from "../analysis.state";
-import { selectSampleState } from "../copyNumber/copyNumber.state";
+import { selectSampleState } from "../copy-number/copy-number.state";
 import Plot from "react-plotly.js";
 
 export default function MetdataPlot() {

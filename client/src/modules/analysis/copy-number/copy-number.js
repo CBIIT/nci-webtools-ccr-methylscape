@@ -2,8 +2,8 @@ import { Suspense } from "react";
 import Alert from "react-bootstrap/Alert";
 import Loader from "../../components/loader";
 import ErrorBoundary from "../../components/error-boundary";
-import CopyNumberForm from "./cn-form";
-import CopyNumberPlot from "./cn-plot";
+import CopyNumberForm from "./copy-number-form";
+import CopyNumberPlot from "./copy-number-plot";
 
 export default function CopyNumber({ className }) {
   return (

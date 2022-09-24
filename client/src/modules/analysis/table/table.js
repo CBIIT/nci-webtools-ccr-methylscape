@@ -1,12 +1,12 @@
 import { Container } from "react-bootstrap";
-import GroupTabs from "./groupTabs";
-import GroupTables from "./groupTables";
+import TableGroupControls from "./table-group-controls";
+import TableGroups from "./table-groups";
 
 export default function Table() {
   return (
     <Container fluid>
-      <GroupTabs />
-      <GroupTables />
+      <TableGroupControls />
+      <TableGroups />
     </Container>
   );
 }
