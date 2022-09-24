@@ -1,48 +1,36 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useRecoilValue, useSetRecoilState, useRecoilCallback } from "recoil";
 import cloneDeep from "lodash/cloneDeep";
 import { plotState, selectedPoints } from "./metadata-plot.state";
 import { analysisState } from "../analysis.state";
 import { selectSampleState } from "../copyNumber/copyNumber.state";
-import { tableForm } from "../table/table.state";
 import Plot from "react-plotly.js";
 
 export default function MetdataPlot() {
-  let { data, layout, config } = useRecoilValue(plotState);
+  const [revision, setRevision] = useState(0);
+  const plot = useRecoilValue(plotState);
   const setSelectedPoints = useSetRecoilState(selectedPoints);
   const setTabs = useSetRecoilState(analysisState);
   const setSample = useSetRecoilState(selectSampleState);
-  const selectedGroup = useRecoilCallback(
-    ({ snapshot }) =>
-      () => {
-        const { group } = snapshot.getLoadable(tableForm).contents;
-        return group;
-      },
-    []
-  );
-  const [traces, setTraces] = useState(cloneDeep(data));
 
   function handleSelect(e) {
     if (e?.points.length) {
       setSelectedPoints((state) => {
-        let points = state.points.slice();
-        points[selectedGroup()] = e.points;
-        return {
-          ...state,
-          points,
-        };
+        const points = state.points.slice();
+        points[state.selectedGroup] = e.points;
+        return { ...state, points };
       });
       setTabs((state) => {
         const { currentTab } = state;
-        if (currentTab != "table" && currentTab != "survival") {
+        if (!["table", "survival"].includes(currentTab)) {
           return { ...state, currentTab: "table" };
         } else {
           return state;
         }
       });
-      // rerender with new traces to clear select box
-      setTraces(cloneDeep(data));
     }
+    // rerender with new traces to clear select box
+    setRevision((r) => r + 1);
   }
 
   function handleClick(e) {
@@ -65,13 +53,12 @@ export default function MetdataPlot() {
 
   return (
     <Plot
-      data={traces}
+      {...cloneDeep(plot)}
       className="w-100"
       style={{ height: "800px" }}
-      layout={cloneDeep(layout)}
-      config={cloneDeep(config)}
       onClick={handleClick}
       onSelected={handleSelect}
+      revision={revision}
       useResizeHandler
     />
   );
