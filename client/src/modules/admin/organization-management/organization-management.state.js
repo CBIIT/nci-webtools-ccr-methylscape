@@ -1,4 +1,4 @@
-import { atom, selector } from "recoil";
+import { selector } from "recoil";
 import axios from "axios";
 
 export const organizationsSelector = selector({

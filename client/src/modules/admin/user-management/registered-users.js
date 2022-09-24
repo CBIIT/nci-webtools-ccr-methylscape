@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState } from "react";
 import { Container, Button, Modal } from "react-bootstrap";
 import Table from "../../components/table";
 import axios from "axios";

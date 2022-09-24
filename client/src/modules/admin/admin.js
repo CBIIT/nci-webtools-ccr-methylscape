@@ -1,4 +1,4 @@
-import { Container, Col, Row, Card, Tabs, Tab } from "react-bootstrap";
+import { Container, Col, Row, Card } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
 export default function Admin() {

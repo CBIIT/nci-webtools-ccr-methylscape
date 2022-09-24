@@ -1,4 +1,4 @@
-import { useRecoilValue, useRecoilState, useResetRecoilState } from "recoil";
+import { useRecoilValue } from "recoil";
 import Plot from "react-plotly.js";
 import ReactTable from "../../components/table";
 import { survivalDataSelector } from "../table/table.state";

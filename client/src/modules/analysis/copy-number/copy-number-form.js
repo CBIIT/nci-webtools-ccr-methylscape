@@ -7,7 +7,7 @@ import MultiSearch from "../../components/multi-search";
 
 export default function CopyNumberForm() {
   const [form, setForm] = useRecoilState(formState);
-  const [preForm, setPreForm] = useRecoilState(preFormState);
+  const [preForm] = useRecoilState(preFormState);
   const geneOptions = useRecoilValue(geneOptionsSelector);
   const mergeForm = (state) => setForm({ ...form, ...state });
 
@@ -17,11 +17,6 @@ export default function CopyNumberForm() {
 
   function handleAnnotations() {
     setForm({ ...form, annotations: !form.annotations });
-  }
-
-  function handleSignificant() {
-    if (preForm.significant) setForm({ ...form, annotations: false });
-    setPreForm({ significant: !preForm.significant });
   }
 
   function filterGenes(inputValue = "", limit = 100) {

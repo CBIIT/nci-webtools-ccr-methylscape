@@ -34,7 +34,7 @@ export async function getMetadataPlot({ organSystem, embedding, search, showAnno
 
   // generate data traces from sample coordinates
   const data =
-    color.type == "categorical"
+    color.type === "categorical"
       ? Object.entries(groupBy(sampleCoordinates, (e) => e[color.value]))
           .sort(compareCategories)
           .map(([name, sampleCoordinates]) => ({

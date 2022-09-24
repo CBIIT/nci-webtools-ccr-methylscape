@@ -30,7 +30,7 @@ export default function GroupTabs() {
       <Button size="sm" variant="outline-danger" onClick={resetPoints} className="ms-3">
         Reset
       </Button>
-      {umapPoints.selectedGroup != 0 && (
+      {+umapPoints.selectedGroup !== 0 && (
         <Button size="sm" variant="danger" onClick={() => removeTab(umapPoints.selectedGroup)} className="ms-3">
           - Group
         </Button>

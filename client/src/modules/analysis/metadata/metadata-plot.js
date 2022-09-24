@@ -1,5 +1,5 @@
-import { useState, useRef } from "react";
-import { useRecoilValue, useSetRecoilState, useRecoilCallback } from "recoil";
+import { useState } from "react";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import cloneDeep from "lodash/cloneDeep";
 import { plotState, selectedPoints } from "./metadata-plot.state";
 import { analysisState } from "../analysis.state";
@@ -42,7 +42,7 @@ export default function MetdataPlot() {
       }));
       setTabs((state) => {
         const { currentTab } = state;
-        if (currentTab != "copyNumber") {
+        if (currentTab !== "copyNumber") {
           return { ...state, currentTab: "copyNumber" };
         } else {
           return state;
