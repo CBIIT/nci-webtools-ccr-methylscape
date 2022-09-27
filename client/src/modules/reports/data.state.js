@@ -58,6 +58,12 @@ export const methylscapeData = selector({
           obj.sex = "N/A";
         }
 
+        if (obj.age == null) {
+          obj.age = "N/A";
+        } else {
+          obj.age = round(obj.age);
+        }
+
         if (obj.sampledate != null) {
           obj.sampledate = obj.sampledate.split("T")[0];
         }
@@ -137,4 +143,9 @@ function max(list, maxItem) {
     }
   }
   return tmpItem.project;
+}
+
+function round(value) {
+  var multiplier = Math.pow(10, 1 || 0);
+  return Math.round(value * multiplier) / multiplier;
 }
