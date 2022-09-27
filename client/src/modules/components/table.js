@@ -245,7 +245,7 @@ export default function Table({ columns, data, options = {}, customOptions = {},
               aria-label="Select page size"
               value={pageSize}
               onChange={(e) => setPageSize(Number(e.target.value))}>
-              {[10, 25, 50, 100].map((pageSize) => (
+              {[100, 200, 250].map((pageSize) => (
                 <option key={pageSize} value={pageSize}>
                   Show {pageSize}
                 </option>

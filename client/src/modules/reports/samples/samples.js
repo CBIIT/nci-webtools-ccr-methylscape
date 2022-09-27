@@ -81,6 +81,7 @@ export default function Samples() {
         { id: "project", value: searchParams.get("project") || "" },
         { id: "experiment", value: searchParams.get("experiment") || "" },
       ],
+      pageSize: 100,
     },
   };
 
@@ -301,6 +302,7 @@ export default function Samples() {
               data={tableData}
               columns={columns}
               options={options}
+              defaultPageSize={100}
               customOptions={{ expanded: true, hideColumns: true }}
               renderRowSubComponent={renderRowSubComponent}
             />

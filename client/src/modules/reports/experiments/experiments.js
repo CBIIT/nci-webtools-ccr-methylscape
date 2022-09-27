@@ -43,6 +43,7 @@ export default function Experiments() {
         { id: "project", value: searchParams.get("project") || "" },
         { id: "experiment", value: searchParams.get("experiment") || "" },
       ],
+      pageSize: 100,
     },
   };
 
@@ -65,7 +66,11 @@ export default function Experiments() {
   return (
     <Container fluid>
       <Row>
-        <Col>{tableData && tableData.length > 0 && <Table data={tableData} columns={columns} options={options} />}</Col>
+        <Col>
+          {tableData && tableData.length > 0 && (
+            <Table data={tableData} columns={columns} defaultPageSize={100} options={options} />
+          )}
+        </Col>
       </Row>
     </Container>
   );
