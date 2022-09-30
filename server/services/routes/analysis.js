@@ -39,6 +39,7 @@ router.post(
 
 router.get(
   "/allproject",
+  requiresRouteAccessPolicy("AccessApi"),
   withAsync(async (request, response) => {
     const { connection } = request.app.locals;
     const results = await getallproject(connection);
@@ -48,6 +49,7 @@ router.get(
 
 router.get(
   "/unifiedproject",
+  requiresRouteAccessPolicy("AccessApi"),
   withAsync(async (request, response) => {
     const { connection } = request.app.locals;
     const results = await getUnifiedProject(connection);

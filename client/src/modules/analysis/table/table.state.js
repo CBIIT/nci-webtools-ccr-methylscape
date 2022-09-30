@@ -153,11 +153,6 @@ export const tableData = selector({
         show: false,
       },
       {
-        accessor: "dkfzBrainTumorClassifier",
-        Header: "DKFZ Brain Tumor Classifier",
-        show: false,
-      },
-      {
         accessor: "primaryStudy",
         Header: "Primary Study",
         show: false,
