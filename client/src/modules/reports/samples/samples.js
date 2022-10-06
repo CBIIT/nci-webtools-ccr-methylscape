@@ -50,12 +50,6 @@ export default function Samples() {
       aria: "Sample Date",
     },
     {
-      id: "surgical_case",
-      accessor: "lpCpNumber",
-      Header: "Surgical Case",
-      aria: "Surgical Case",
-    },
-    {
       id: "gender",
       accessor: "gender",
       Header: "Gender",
