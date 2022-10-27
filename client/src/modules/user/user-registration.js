@@ -125,7 +125,7 @@ export default function UserRegister() {
               placeholder="Enter email"
               value={form.email}
               onChange={handleChange}
-              pattern={form.accountType === "NIH" ? ".+@(nci\\.)?nih.gov" : null}
+              pattern={form.accountType === "NIH" ? ".+.nih.gov" : null}
               required
             />
             {form.accountType === "NIH" && (
