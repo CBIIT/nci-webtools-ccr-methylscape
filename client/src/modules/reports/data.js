@@ -3,8 +3,7 @@ import Container from "react-bootstrap/Container";
 import { useRecoilValue } from "recoil";
 import CountUp from "react-countup";
 import { methylscapeData } from "./data.state";
-import { NavLink } from "react-router-dom";
-import { Outlet } from "react-router-dom";
+import { NavLink, Outlet, useLocation } from "react-router-dom";
 
 import Alert from "react-bootstrap/Alert";
 import Loader from "../components/loader";
@@ -17,12 +16,13 @@ import { Row, Col } from "react-bootstrap";
 
 export default function Data() {
   const { data, projectsCount, experimentsCount, samplesCount, sampleData } = useRecoilValue(methylscapeData);
+  const location = useLocation().pathname.split("/").slice(-1);
 
   return (
     <>
       <Container>
         <Row className="m-3">
-          <h1 className="text-white">Samples</h1>
+          <h1 className="text-white text-capitalize">{location}</h1>
         </Row>
       </Container>
       <Container fluid="xxl" className="d-flex bg-light justify-content-center">
