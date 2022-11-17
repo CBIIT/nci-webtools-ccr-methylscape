@@ -293,6 +293,7 @@ export default function Samples() {
         <Col>
           {tableData && tableData.length > 0 && (
             <Table
+              name="Samples"
               data={tableData}
               columns={columns}
               options={options}
