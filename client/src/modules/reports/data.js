@@ -1,9 +1,9 @@
-import { Suspense } from "react";
+import { Suspense, useEffect } from "react";
 import Container from "react-bootstrap/Container";
 import { useRecoilValue } from "recoil";
 import CountUp from "react-countup";
 import { methylscapeData } from "./data.state";
-import { NavLink, Outlet, useLocation } from "react-router-dom";
+import { NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
 
 import Alert from "react-bootstrap/Alert";
 import Loader from "../components/loader";
@@ -17,6 +17,15 @@ import { Row, Col } from "react-bootstrap";
 export default function Data() {
   const { data, projectsCount, experimentsCount, samplesCount, sampleData } = useRecoilValue(methylscapeData);
   const location = useLocation().pathname.split("/").slice(-1);
+  const navigate = useNavigate();
+
+  const navClass = "text-decoration-none d-flex";
+  const activeNavClass = " border-bottom border-5 border-warning";
+
+  // automatically redirect to one of the reports tabs, samples by default
+  useEffect(() => {
+    if (location == "reports") navigate("samples");
+  }, [location]);
 
   return (
     <>
@@ -35,8 +44,10 @@ export default function Data() {
           }>
           <Suspense fallback={<Loader message="Loading Samples" />}>
             <Row className="vw-100 border-bottom justify-content-md-center">
-              <Col md={2} className="border-end header-img">
-                <NavLink to={"projects"} className="text-decoration-none d-flex">
+              <Col md={2}>
+                <NavLink
+                  to={"projects"}
+                  className={({ isActive }) => (isActive ? navClass + activeNavClass : navClass)}>
                   {/* <PieChartFill className="stat-icon" /> */}
                   <img src={ProjectImg} className="stat-icon" alt="Project" />
                   <div className="data-text-project">
@@ -49,8 +60,10 @@ export default function Data() {
                   </div>
                 </NavLink>
               </Col>
-              <Col md={2} className="border-end">
-                <NavLink to={"experiments"} className="text-decoration-none d-flex ms-4 border-left">
+              <Col md={2} className="border-start border-end">
+                <NavLink
+                  to={"experiments"}
+                  className={({ isActive }) => (isActive ? navClass + activeNavClass : navClass)}>
                   {/* <ClipboardData className="stat-icon" /> */}
                   <img src={ExperimentImg} className="stat-icon" alt="Experiment" />
                   <div className="data-text-experiment">
@@ -64,7 +77,7 @@ export default function Data() {
                 </NavLink>
               </Col>
               <Col md={2}>
-                <NavLink to={"samples"} className="text-decoration-none d-flex ms-4">
+                <NavLink to={"samples"} className={({ isActive }) => (isActive ? navClass + activeNavClass : navClass)}>
                   {/* <PeopleFill className="stat-icon" /> */}
                   <img src={SampleImg} className="stat-icon" alt="Samples" />
                   <div className="data-text-sample">
