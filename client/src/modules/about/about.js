@@ -12,10 +12,11 @@ export default function About() {
       <Card.Body>
         <Container>
           <Row>
-            <Col md lg={{ span: 2, offset: 1 }} className="text-wrap text-end">
-              <h1>About Methylscape Analysis</h1>
+            <Col md lg={4} className="text-wrap text-end">
+              {/* <h1>About Methylscape Analysis</h1> */}
             </Col>
-            <Col md lg={6}>
+            <Col md lg={8}>
+              <h1>About Methylscape Analysis</h1>
               <div id="aboutpage-scroll">
                 <p>
                   The NCI Laboratory of Pathology has implemented a novel clinically-reportable assay that uses
