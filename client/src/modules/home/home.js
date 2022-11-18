@@ -13,8 +13,8 @@ export default function Home() {
     <Container fluid className="cover-image" style={{ backgroundImage: `url(${backgroundImage})` }}>
       <Row className="my-9">
         <Col md={{ span: 4, offset: 1 }} className="text-white text-md-end">
-          <h1 className="h1">Methylscape</h1>
-          <h2 className="h2 mb-4">Analysis</h2>
+          <h1>Methylscape</h1>
+          <h1 className="mb-4">Analysis</h1>
           <p className="mb-4 lead">
             Explore the clinically-reportable assay that uses genome-wide DNA methylation profiling as a diagnostic tool
             for tumores of the central nervous system.
