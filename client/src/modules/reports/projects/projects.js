@@ -80,7 +80,13 @@ export default function Projects() {
       <Row>
         <Col>
           {tableData.length > 0 && (
-            <Table data={tableData} columns={columns} options={options} customOptions={{ rowSelectRadio: true }} />
+            <Table
+              name="Projects"
+              data={tableData}
+              columns={columns}
+              options={options}
+              customOptions={{ rowSelectRadio: true }}
+            />
           )}
         </Col>
       </Row>

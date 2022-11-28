@@ -68,7 +68,7 @@ export default function Experiments() {
       <Row>
         <Col>
           {tableData && tableData.length > 0 && (
-            <Table data={tableData} columns={columns} defaultPageSize={100} options={options} />
+            <Table name="Experiments" data={tableData} columns={columns} defaultPageSize={100} options={options} />
           )}
         </Col>
       </Row>

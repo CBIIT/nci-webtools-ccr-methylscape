@@ -34,7 +34,7 @@ export default function App() {
         show: (session) => isAuthorized(session, "GetPage", "/analysis"),
       },
       {
-        path: "reports/samples",
+        path: "reports",
         title: "Samples",
         show: (session) => isAuthorized(session, "GetPage", "/reports"),
       },
