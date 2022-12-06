@@ -22,11 +22,17 @@ services:
     ports:
       - "3000:80"
 
+  # to test locally, run:
+  # curl -XPOST "http://localhost:8080/2015-03-31/functions/function/invocations" -d '{}'
   data-import:
     build:
       context: "."
       dockerfile: "./docker/data-import.dockerfile"
-    env_file: server/.env
+    env_file: database/.env
+    environment:
+      - DATABASE_HOST=database
+    ports:
+      - "8080:8080"
 
   # to start only the database container, run:
   # docker compose up database
