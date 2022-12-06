@@ -116,7 +116,7 @@ export async function getCnvBins(connection, { idatFilename }) {
   }
 
   if (idatFilename) {
-    const s3Response = await getFile(`analysis/CNV/bins/${idatFilename}.bins.txt`);
+    const s3Response = await getFile(`CNV/bins/${idatFilename}.bins.txt`);
     const parser = getTxtParser(["id", "chromosome", "start", "end", "feature", "medianValue"]);
     const results = [];
     for await (const record of s3Response.Body.pipe(parser)) {
@@ -134,7 +134,7 @@ export async function getCnvBins(connection, { idatFilename }) {
 
 export async function getCnvSegments(connection, { idatFilename }) {
   if (idatFilename) {
-    const s3Response = await getFile(`analysis/CNV/segments/${idatFilename}.seg.txt`);
+    const s3Response = await getFile(`CNV/segments/${idatFilename}.seg.txt`);
     const parser = getTxtParser([
       "id",
       "sampleIdatFilename",
