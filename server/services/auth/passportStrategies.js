@@ -1,10 +1,10 @@
-const axios = require("axios");
-const { Issuer, Strategy, generators } = require("openid-client");
+import axios from "axios";
+import { Issuer, Strategy, generators } from "openid-client";
 const { codeVerifier, codeChallenge, nonce } = generators;
 
 // Broadcom OAuth Toolkit does not implement the standard OpenID end_session_endpoint
 // and instead provides a custom endpoint
-async function logoutOAuthToolkitSession({ baseUrl, clientId, clientSecret, tokenSet }) {
+export async function logoutOAuthToolkitSession({ baseUrl, clientId, clientSecret, tokenSet }) {
   const url = baseUrl + "/connect/session/logout";
   const auth = { username: clientId, password: clientSecret };
   const { id_token, id_token_type } = tokenSet;
@@ -13,7 +13,7 @@ async function logoutOAuthToolkitSession({ baseUrl, clientId, clientSecret, toke
   return response.data;
 }
 
-async function createOAuthStrategy({ baseUrl, clientId, clientSecret, redirectUris, params }) {
+export async function createOAuthStrategy({ baseUrl, clientId, clientSecret, redirectUris, params }) {
   const { Client } = await Issuer.discover(baseUrl);
 
   const client = new Client({
@@ -30,7 +30,7 @@ async function createOAuthStrategy({ baseUrl, clientId, clientSecret, redirectUr
   });
 }
 
-async function createPkceStrategy({ baseUrl, clientId, redirectUris, params }) {
+export async function createPkceStrategy({ baseUrl, clientId, redirectUris, params }) {
   const { Client } = await Issuer.discover(baseUrl);
 
   const client = new Client({
@@ -48,13 +48,8 @@ async function createPkceStrategy({ baseUrl, clientId, redirectUris, params }) {
   };
 
   return new Strategy({ client, params }, async (tokenSet, done) => {
+    console.log(tokenSet);
     const user = await client.userinfo(tokenSet);
     done(null, user);
   });
 }
-
-module.exports = {
-  logoutOAuthToolkitSession,
-  createOAuthStrategy,
-  createPkceStrategy,
-};

@@ -1,16 +1,14 @@
-const { enqueue } = require("./queue");
+import knex from "knex";
 
-async function createImportRequest(connection, queueName, params = {}) {
-  const ids = await connection("importLog").returning("id").insert({ status: "PENDING" });
-  const message = {
-    timestamp: Date.now(),
-    importLogId: ids[0].id,
-    type: "importData",
-    ...params,
-  };
-  return await enqueue(queueName, message);
+export function createConnection(env = process.env) {
+  return knex({
+    client: "pg",
+    connection: {
+      host: env.DATABASE_HOST,
+      port: env.DATABASE_PORT,
+      user: env.DATABASE_USER,
+      password: env.DATABASE_PASSWORD,
+      database: env.DATABASE_NAME,
+    },
+  });
 }
-
-module.exports = {
-  createImportRequest,
-};

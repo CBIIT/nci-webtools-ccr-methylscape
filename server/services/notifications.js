@@ -1,10 +1,33 @@
-const fsp = require("fs/promises");
-const path = require("path");
-const { createTransport } = require("nodemailer");
-const { template, groupBy } = require("lodash");
-const config = require("../config.json");
+import fsp from "fs/promises";
+import path from "path";
+import { createTransport } from "nodemailer";
+import template from "lodash/template.js";
+import groupBy from "lodash/groupBy.js";
 
-async function sendNotification({
+/**
+ * Retrieves the SMTP configuration from the environment.
+ * @param {any} env
+ * @returns {any} SMTP configuration
+ */
+export function getSmtpConfig(env = process.env) {
+  const { EMAIL_SMTP_HOST, EMAIL_SMTP_PORT, EMAIL_SMTP_USER, EMAIL_SMTP_PASSWORD } = env;
+
+  let config = {
+    host: EMAIL_SMTP_HOST,
+    port: EMAIL_SMTP_PORT,
+  };
+
+  if (EMAIL_SMTP_USER && EMAIL_SMTP_PASSWORD) {
+    config.auth = {
+      user: EMAIL_SMTP_USER,
+      pass: EMAIL_SMTP_PASSWORD,
+    };
+  }
+
+  return config;
+}
+
+export async function sendNotification({
   userManager,
   from,
   to = [],
@@ -56,7 +79,7 @@ async function renderTemplate(templateName, params, basePath = "templates") {
   return template(templateSource)(params);
 }
 
-async function sendMail(params, smtp = config.email.smtp) {
+async function sendMail(params, smtp = getSmtpConfig(process.env)) {
   const transport = createTransport(smtp);
   return await transport.sendMail(params);
 }
@@ -73,5 +96,3 @@ async function getValidNotificationEmails(emails, userManager) {
 function asArray(values = []) {
   return Array.isArray(values) ? values : [values];
 }
-
-module.exports = { sendNotification };

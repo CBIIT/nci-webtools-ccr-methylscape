@@ -1,7 +1,7 @@
-const { getAnalysisFile } = require("./aws");
-const { getTxtParser, parseChromosome } = require("./utils");
+import { getFile } from "./aws.js";
+import { getTxtParser, parseChromosome } from "./utils.js";
 
-async function getSampleCoordinates(connection, query) {
+export async function getSampleCoordinates(connection, query) {
   if (query.embedding && query.organSystem) {
     return await connection("sample")
       .join("sampleCoordinate", "sample.idatFilename", "sampleCoordinate.sampleIdatFilename")
@@ -12,7 +12,7 @@ async function getSampleCoordinates(connection, query) {
   }
 }
 
-async function getallproject(connection) {
+export async function getallproject(connection) {
   const sampleColumns = [
     connection.raw(`count(distinct "sample") as sampleCount`),
     connection.raw(`count(distinct "sentrixId") as experimentCount`),
@@ -27,7 +27,7 @@ async function getallproject(connection) {
   return query;
 }
 
-async function getUnifiedProject(connection) {
+export async function getUnifiedProject(connection) {
   const sampleColumns = [
     connection.raw(`count(distinct "sample") as sampleCount`),
     connection.raw(`"samplePlate" as project`),
@@ -43,7 +43,7 @@ async function getUnifiedProject(connection) {
   return query;
 }
 
-async function getAllSamples(connection) {
+export async function getAllSamples(connection) {
   const sampleColumns = [
     connection.raw(`"samplePlate" as project`),
     connection.raw(`"sample"`),
@@ -68,7 +68,7 @@ async function getAllSamples(connection) {
   return query;
 }
 
-async function getExperiments(connection) {
+export async function getExperiments(connection) {
   const experimentColumns = [
     connection.raw(`"piCollaborator" as 	Investigator`),
     connection.raw(`"surgeryDate" as 	experimentDate`),
@@ -88,7 +88,7 @@ async function getExperiments(connection) {
   return query;
 }
 
-async function getSamples(connection, query) {
+export async function getSamples(connection, query) {
   const { columns, conditions, offset, limit, orderBy } = query;
 
   let sqlQuery = connection("sample")
@@ -104,19 +104,19 @@ async function getSamples(connection, query) {
   return await sqlQuery;
 }
 
-async function getGeneMap(connection) {
+export async function getGeneMap(connection) {
   const keyColumn = connection.raw(`concat_ws('-', "chromosome", "start", "end") as key`);
   const genes = await connection.select(keyColumn, "gene").from("gene").options({ rowMode: "array" });
   return Object.fromEntries(genes.map(([k, v]) => [k, v?.split(";")]));
 }
 
-async function getCnvBins(connection, { idatFilename }) {
+export async function getCnvBins(connection, { idatFilename }) {
   if (!this.geneMap) {
     this.geneMap = await getGeneMap(connection);
   }
 
   if (idatFilename) {
-    const s3Response = await getAnalysisFile(`CNV/bins/${idatFilename}.bins.txt`);
+    const s3Response = await getFile(`analysis/CNV/bins/${idatFilename}.bins.txt`);
     const parser = getTxtParser(["id", "chromosome", "start", "end", "feature", "medianValue"]);
     const results = [];
     for await (const record of s3Response.Body.pipe(parser)) {
@@ -132,9 +132,9 @@ async function getCnvBins(connection, { idatFilename }) {
   }
 }
 
-async function getCnvSegments(connection, { idatFilename }) {
+export async function getCnvSegments(connection, { idatFilename }) {
   if (idatFilename) {
-    const s3Response = await getAnalysisFile(`CNV/segments/${idatFilename}.seg.txt`);
+    const s3Response = await getFile(`analysis/CNV/segments/${idatFilename}.seg.txt`);
     const parser = getTxtParser([
       "id",
       "sampleIdatFilename",
@@ -158,11 +158,11 @@ async function getCnvSegments(connection, { idatFilename }) {
   }
 }
 
-async function getGenes(connection) {
+export async function getGenes(connection) {
   return await connection("gene").select("*");
 }
 
-async function getImportLogs(connection, query) {
+export async function getImportLogs(connection, query) {
   if (query.id) {
     return await connection("importLog").select("*").where("id", query.id);
   } else {
@@ -171,16 +171,3 @@ async function getImportLogs(connection, query) {
       .orderBy("createdAt", "desc");
   }
 }
-
-module.exports = {
-  getGenes,
-  getSamples,
-  getSampleCoordinates,
-  getCnvBins,
-  getCnvSegments,
-  getImportLogs,
-  getallproject,
-  getExperiments,
-  getAllSamples,
-  getUnifiedProject,
-};

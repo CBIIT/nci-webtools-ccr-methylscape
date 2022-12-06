@@ -1,32 +1,26 @@
-const { Router } = require("express");
-const { createImportRequest } = require("../database.js");
-const { getImportLogs } = require("../query.js");
-const { withAsync } = require("../middleware");
-const { requiresRouteAccessPolicy } = require("../auth/policyMiddleware");
-const config = require("../../config.json");
+import Router from "express-promise-router";
+import { LambdaClient, InvokeCommand } from "@aws-sdk/client-lambda";
+import { getImportLogs } from "../query.js";
+import { requiresRouteAccessPolicy } from "../auth/policyMiddleware.js";
+const { LAMBDA_DATA_IMPORT_FUNCTION } = process.env;
 
 const router = Router();
 
-router.get(
-  "/importLogs",
-  requiresRouteAccessPolicy("AccessApi"),
-  withAsync(async (request, response) => {
-    const { connection } = request.app.locals;
-    const results = await getImportLogs(connection, request.query);
-    response.json(results);
-  })
-);
+router.get("/importLogs", requiresRouteAccessPolicy("AccessApi"), async (request, response) => {
+  const { connection } = request.app.locals;
+  const results = await getImportLogs(connection, request.query);
+  response.json(results);
+});
 
-router.post(
-  "/importData",
-  requiresRouteAccessPolicy("AccessApi"),
-  withAsync(async (request, response) => {
-    const { connection } = request.app.locals;
-    const { sqsName } = config.aws;
-    const { forceRecreate } = request.body;
-    const results = await createImportRequest(connection, sqsName, { forceRecreate });
-    response.json(results);
-  })
-);
+router.post("/importData", requiresRouteAccessPolicy("AccessApi"), async (request, response) => {
+  const client = new LambdaClient();
+  const input = {
+    FunctionName: LAMBDA_DATA_IMPORT_FUNCTION,
+    Payload: JSON.stringify(request.body),
+  };
+  const command = new InvokeCommand(input);
+  const results = await client.send(command);
+  response.json(results);
+});
 
-module.exports = router;
+export default router;

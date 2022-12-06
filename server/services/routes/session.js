@@ -1,6 +1,5 @@
-const { Router, request } = require("express");
-const passport = require("passport");
-const config = require("../../config.json");
+import Router from "express-promise-router";
+import passport from "passport";
 
 const router = Router();
 
@@ -8,7 +7,7 @@ router.get(
   "/login",
   (request, response, next) => {
     const destination = request.query.destination || "/";
-    passport.authenticate(config.auth[0].name, {
+    passport.authenticate("default", {
       failureRedirect: "/api/login",
       state: destination,
     })(request, response, next);
@@ -52,4 +51,4 @@ router.post("/session", (request, response) => {
   }
 });
 
-module.exports = router;
+export default router;
