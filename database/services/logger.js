@@ -1,33 +1,30 @@
-import util from "util";
-import { createLogger, format, transports } from "winston";
+import { inspect } from "util";
+import { createLogger as createWinstonLogger, format, transports } from "winston";
+import pick from "lodash/pick.js";
+import isEmpty from "lodash/isEmpty.js";
 
-export function formatObject(obj, opts = {}) {
-  return ["string", "number"].includes(typeof obj)
-    ? obj
-    : util.inspect(obj, { depth: null, compact: true, breakLength: Infinity, ...opts });
+export function formatObject(object) {
+  if (object instanceof Error) {
+    const errorObject = pick(object, ["code", "message", "stack", "stdout", "stderr"]);
+    return formatObject(errorObject);
+  } else if (typeof object === "string" || typeof object === "number") {
+    return String(object);
+  } else if (object === null || object === undefined || isEmpty(object)) {
+    return "";
+  } else {
+    return inspect(object, { depth: null, compact: true, breakLength: Infinity });
+  }
 }
 
-export function formatLogMessage({ label, timestamp, level, message }) {
-  return [
-    [label, process.pid, timestamp, level]
-      .filter(Boolean)
-      .map((s) => `[${s}]`)
-      .join(" "),
-    formatObject(message),
-  ].join(" - ");
-}
-
-export const defaultLogTransports = [new transports.Console()];
-
-export function getLogger(name, level = "info", transports = defaultLogTransports) {
-  return new createLogger({
-    level,
+export function createLogger(name, level = "info") {
+  return new createWinstonLogger({
+    level: level,
     format: format.combine(
       format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
       format.label({ label: name }),
-      format.printf(formatLogMessage)
+      format.printf((e) => `[${e.label}] [${e.timestamp}] [${e.level}] - ${formatObject(e.message)}`)
     ),
-    transports,
+    transports: [new transports.Console()],
     exitOnError: false,
   });
 }

@@ -2,7 +2,7 @@ import { fileURLToPath, pathToFileURL } from "url";
 import { createRequire } from "module";
 import minimist from "minimist";
 import { config } from "dotenv";
-import { getLogger, formatObject } from "./services/logger.js";
+import { createLogger, formatObject } from "./services/logger.js";
 import { CustomTransport } from "./services/transports.js";
 import { createConnection, createPostgresClient } from "./services/utils.js";
 import { sendNotification } from "./services/notifications.js";
@@ -98,7 +98,7 @@ export async function importData(env, schema, sources, sourceProvider, logger) {
 }
 
 export function createCustomLogger(name) {
-  const logger = getLogger(name);
+  const logger = createLogger(name);
   logger.customTransport = new CustomTransport();
   logger.add(logger.customTransport);
   return logger;

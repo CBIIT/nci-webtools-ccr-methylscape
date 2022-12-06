@@ -7,7 +7,7 @@ import { config } from "dotenv";
 import { withDuration } from "./services/utils.js";
 import { LocalProvider } from "./services/providers/localProvider.js";
 import { S3Provider } from "./services/providers/s3Provider.js";
-import { getLogger } from "./services/logger.js";
+import { createLogger } from "./services/logger.js";
 import { S3Client } from "@aws-sdk/client-s3";
 
 // determine if this script was launched from the command line
@@ -24,7 +24,7 @@ if (isMainModule) {
 
   const connection = await createPostgresClient(process.env);
   const sourceProvider = getSourceProvider(providerName, providerArgs);
-  const logger = getLogger("import");
+  const logger = createLogger("import");
   await importDatabase(connection, schema, sources, sourceProvider, logger);
   process.exit(0);
 }
