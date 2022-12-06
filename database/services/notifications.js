@@ -4,8 +4,31 @@ import template from "lodash/template.js";
 import groupBy from "lodash/groupBy.js";
 import { createTransport } from "nodemailer";
 
+/**
+ * Retrieves the SMTP configuration from the environment.
+ * @param {any} env
+ * @returns {any} SMTP configuration
+ */
+export function getSmtpConfig(env = process.env) {
+  const { EMAIL_SMTP_HOST, EMAIL_SMTP_PORT, EMAIL_SMTP_USER, EMAIL_SMTP_PASSWORD } = env;
+
+  let config = {
+    host: EMAIL_SMTP_HOST,
+    port: EMAIL_SMTP_PORT,
+  };
+
+  if (EMAIL_SMTP_USER && EMAIL_SMTP_PASSWORD) {
+    config.auth = {
+      user: EMAIL_SMTP_USER,
+      pass: EMAIL_SMTP_PASSWORD,
+    };
+  }
+
+  return config;
+}
+
 export async function sendNotification({
-  smtpConfig,
+  smtpConfig = getSmtpConfig(process.env),
   userManager,
   from,
   to = [],

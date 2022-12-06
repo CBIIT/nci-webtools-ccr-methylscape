@@ -1,15 +1,14 @@
 {
   "type": "module",
   "scripts": {
-    "start": "node startQueueWorker.js",
-    "createDatabase": "node createDatabase.js",
-    "importDatabase": "node importDatabase.js -- ",
-    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
+    "test": "node -r dotenv/config --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.145.0",
     "@aws-sdk/client-sqs": "^3.145.0",
+    "@aws-sdk/client-ssm": "^3.223.0",
     "csv-parse": "^5.3.0",
+    "dotenv": "^16.0.3",
     "knex": "^2.2.0",
     "lodash": "^4.17.21",
     "minimist": "^1.2.6",

@@ -1,13 +1,13 @@
 const isProduction = process.env.NODE_ENV === "production";
 
-function publicCacheControl(maxAge) {
+export function publicCacheControl(maxAge) {
   return (request, response, next) => {
     if (request.method === "GET") response.set("Cache-Control", `public, max-age=${maxAge}`);
     next();
   };
 }
 
-function logRequests(formatter = (request) => [request.path, { ...request.query, ...request.body }]) {
+export function logRequests(formatter = (request) => [request.path, { ...request.query, ...request.body }]) {
   return (request, response, next) => {
     const { logger } = request.app.locals;
     request.startTime = new Date().getTime();
@@ -16,7 +16,7 @@ function logRequests(formatter = (request) => [request.path, { ...request.query,
   };
 }
 
-function logErrors(error, request, response, next) {
+export function logErrors(error, request, response, next) {
   const { name, message } = error;
   request.app.locals.logger.error(error.stack ? error.stack : error);
 
@@ -25,7 +25,7 @@ function logErrors(error, request, response, next) {
   response.status(500).json(`${name}: ${message}`);
 }
 
-function withAsync(fn) {
+export function withAsync(fn) {
   return async (request, response, next) => {
     try {
       return await fn(request, response, next);
@@ -34,10 +34,3 @@ function withAsync(fn) {
     }
   };
 }
-
-module.exports = {
-  publicCacheControl,
-  logErrors,
-  logRequests,
-  withAsync,
-};

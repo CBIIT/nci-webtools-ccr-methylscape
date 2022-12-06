@@ -1,6 +1,6 @@
 node_modules
 config.json
-*.config.json
+docker.config.json
 database/data
 server/logs
 .DS_Store

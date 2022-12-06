@@ -1,4 +1,4 @@
-class UserManager {
+export default class UserManager {
   database = null;
 
   constructor(database) {
@@ -110,5 +110,3 @@ class UserManager {
       .where({ "user.id": userId });
   }
 }
-
-module.exports = UserManager;

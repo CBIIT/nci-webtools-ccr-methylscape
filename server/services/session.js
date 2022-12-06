@@ -1,22 +1,19 @@
-const session = require("express-session");
-const MemoryStore = require("memorystore")(session);
-const { randomBytes } = require("crypto");
+import session from "express-session";
+import ConnectSessionKnex from "connect-session-knex";
+import { createConnection } from "./database.js";
 
-function createSession({ sessionSecret, maxAge } = {}) {
-  sessionSecret = sessionSecret || randomBytes(16).toString("hex");
-  maxAge = maxAge || 30 * 60 * 1000;
+export const SessionStore = ConnectSessionKnex(session);
 
+export function createSession(env = process.env) {
   return session({
     cookie: {
-      maxAge,
+      maxAge: +env.SESSION_MAX_AGE,
     },
-    store: new MemoryStore({
-      checkPeriod: maxAge,
+    store: new SessionStore({
+      knex: createConnection(env),
     }),
     resave: false,
-    secret: sessionSecret,
+    secret: env.SESSION_SECRET,
     saveUninitialized: true,
   });
 }
-
-module.exports = { createSession };

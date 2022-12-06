@@ -1,47 +1,66 @@
-const express = require("express");
-const knex = require("knex");
-const passport = require("passport");
-const { registerUserSerializers, registerAuthStrategies } = require("./services/auth/passportUtils");
-const { createSession } = require("./services/session");
-const getLogger = require("./services/logger");
-const { apiRouter } = require("./services/api");
-const { logErrors } = require("./services/middleware");
-const UserManager = require("./services/auth/userManager");
-const { loadAwsCredentials } = require("./services/aws");
-const args = require("minimist")(process.argv.slice(2));
-const config = require("./config.json");
+import express from "express";
+import passport from "passport";
+import {
+  createUserSerializer,
+  createUserDeserializer,
+  createDefaultAuthStrategy,
+} from "./services/auth/passportUtils.js";
+import { createSession } from "./services/session.js";
+import { createLogger } from "./services/logger.js";
+import { apiRouter } from "./services/api.js";
+import { isMainModule } from "./services/utils.js";
+import { createConnection } from "./services/database.js";
+import { validateEnvironment } from "./services/environment.js";
+import UserManager from "./services/auth/userManager.js";
 
-if (require.main === module) {
-  createApp(config).then((app) => {
-    const { port } = config.server;
-    app.listen(port, () => app.locals.logger.info(`Application is running on port: ${port}`));
-  });
+// if this module is the main module, start the app
+if (isMainModule(import.meta)) {
+  try {
+    const env = process.env;
+    validateEnvironment(env);
+    await startApp(env);
+  } catch (e) {
+    console.error(e);
+    process.exit(1);
+  }
 }
 
-async function createApp(config) {
+export async function startApp(env) {
+  const { PORT } = env;
+  const app = await createApp(env);
+  const logger = app.locals.logger;
+  logger.debug("Created application, starting server");
+  app.listen(PORT, () => logger.info(`Application is running on port: ${PORT}`));
+}
+
+export async function createApp(env) {
   // create app and register locals/middlware
   const app = express();
-  const connection = knex({
-    client: "pg",
-    connection: config.database,
-  });
 
-  app.locals.config = config;
-  app.locals.logger = getLogger("methylscape-analysis");
+  // create services
+  const logger = createLogger("methylscape", env.LOG_LEVEL);
+  const connection = createConnection(env);
+  const userManager = new UserManager(connection);
+
+  // register services as locals
+  app.locals.logger = logger;
   app.locals.connection = connection;
-  app.locals.userManager = new UserManager(connection);
+  app.locals.userManager = userManager;
 
-  loadAwsCredentials(config.aws);
-  registerUserSerializers(passport, app.locals.userManager);
-  await registerAuthStrategies(passport, config.auth);
+  // configure passport
+  logger.debug("Configuring passport");
+  passport.serializeUser(createUserSerializer());
+  passport.deserializeUser(createUserDeserializer(userManager));
+  passport.use("default", await createDefaultAuthStrategy(env));
 
-  app.use(createSession({ maxAge: config.server.maxSessionAge }));
+  // configure session
+  logger.debug("Configuring session");
+  app.use(createSession(env));
   app.use(passport.initialize());
   app.use(passport.session());
+
+  // register api routes
   app.use("/api", apiRouter);
-  app.use(logErrors); // logErrors should always be last
 
   return app;
 }
-
-module.exports = createApp;

@@ -1,10 +1,10 @@
 import { fileURLToPath, pathToFileURL } from "url";
 import { createRequire } from "module";
-import pickBy from "lodash/pickBy.js";
 import minimist from "minimist";
-import { getLogger, formatObject } from "./services/logger.js";
+import { config } from "dotenv";
+import { createLogger, formatObject } from "./services/logger.js";
 import { CustomTransport } from "./services/transports.js";
-import { loadAwsCredentials, createConnection, createPostgresClient } from "./services/utils.js";
+import { createConnection, createPostgresClient } from "./services/utils.js";
 import { sendNotification } from "./services/notifications.js";
 import { UserManager } from "./services/userManager.js";
 import { importDatabase, getSourceProvider } from "./importDatabase.js";
@@ -12,11 +12,10 @@ import { importDatabase, getSourceProvider } from "./importDatabase.js";
 // determine if this script was launched from the command line
 const isMainModule = process.argv[1] === fileURLToPath(import.meta.url);
 const require = createRequire(import.meta.url);
+config();
 
 if (isMainModule) {
-  const config = require("./config.json");
-  loadAwsCredentials(config.aws);
-
+  const { S3_DATA_BUCKET, S3_DATA_BUCKET_KEY_PREFIX } = process.env;
   const args = minimist(process.argv.slice(2));
   const schema = require(args.schema || "./schema.json");
   const sources = require(args.sources || "./samples.json");
@@ -24,20 +23,21 @@ if (isMainModule) {
   const providerName = args.provider || "s3";
   const defaultProviderArgs = {
     local: ["."],
-    s3: [`s3://${config.aws.s3DataBucket}/${config.aws.s3AnalysisKey}`],
+    s3: [`s3://${S3_DATA_BUCKET}/${S3_DATA_BUCKET_KEY_PREFIX}`],
   }[providerName];
   const providerArgs = args._.length ? args._ : defaultProviderArgs;
   const sourceProvider = getSourceProvider(providerName, providerArgs);
 
   const logger = createCustomLogger("methylscape-data-import");
-  await importData(config, schema, sources, sourceProvider, logger);
+  await importData(process.env, schema, sources, sourceProvider, logger);
   process.exit(0);
 }
 
-export async function importData(config, schema, sources, sourceProvider, logger) {
-  const connection = createConnection(config.database);
-  const dataConnection = await createPostgresClient(config.database);
-  const logConnection = await createPostgresClient(config.database);
+export async function importData(env, schema, sources, sourceProvider, logger) {
+  const { EMAIL_SENDER } = env;
+  const connection = createConnection(env);
+  const dataConnection = await createPostgresClient(env);
+  const logConnection = await createPostgresClient(env);
   const importLog = await getPendingImportLog(connection);
   const userManager = new UserManager(connection);
   const messageLevelCounts = {};
@@ -66,8 +66,7 @@ export async function importData(config, schema, sources, sourceProvider, logger
     await updateImportLog({ status: "COMPLETED" });
     await sendNotification({
       userManager,
-      smtpConfig: config.email.smtp,
-      from: config.email.from,
+      from: EMAIL_SENDER,
       roleName: "admin",
       subject: "Methylscape Data Import Succeeded",
       templateName: "admin-import-success-email.html",
@@ -82,8 +81,7 @@ export async function importData(config, schema, sources, sourceProvider, logger
     await updateImportLog({ status: "FAILED" });
     await sendNotification({
       userManager,
-      smtpConfig: config.email.smtp,
-      from: config.email.from,
+      from: EMAIL_SENDER,
       roleName: "admin",
       subject: "Methylscape Data Import Failed",
       templateName: "admin-import-failure-email.html",
@@ -100,7 +98,7 @@ export async function importData(config, schema, sources, sourceProvider, logger
 }
 
 export function createCustomLogger(name) {
-  const logger = getLogger(name);
+  const logger = createLogger(name);
   logger.customTransport = new CustomTransport();
   logger.add(logger.customTransport);
   return logger;

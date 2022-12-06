@@ -5,18 +5,16 @@ import * as XLSX from "xlsx";
 import knex from "knex";
 import postgres from "pg";
 
-export function createConnection(
-  args = {
-    host: "localhost",
-    port: 5432,
-    user: "methylscape",
-    password: "methylscape",
-    database: "methylscape",
-  }
-) {
+export function createConnection(env = process.env) {
   return knex({
     client: "pg",
-    connection: args,
+    connection: {
+      host: env.DATABASE_HOST || "localhost",
+      port: env.DATABASE_PORT || 5432,
+      user: env.DATABASE_USER || "methylscape",
+      password: env.DATABASE_PASSWORD || "methylscape",
+      database: env.DATABASE_NAME || "methylscape",
+    },
     pool: {
       min: 2,
       max: 20,
@@ -28,35 +26,16 @@ export function createConnection(
   });
 }
 
-export async function createPostgresClient(
-  args = {
-    host: "localhost",
-    port: 5432,
-    user: "methylscape",
-    password: "methylscape",
-    database: "methylscape",
-  }
-) {
-  const client = new postgres.Client(args);
+export async function createPostgresClient(env = process.env) {
+  const client = new postgres.Client({
+    host: env.DATABASE_HOST || "localhost",
+    port: env.DATABASE_PORT || 5432,
+    user: env.DATABASE_USER || "methylscape",
+    password: env.DATABASE_PASSWORD || "methylscape",
+    database: env.DATABASE_NAME || "methylscape",
+  });
   await client.connect();
   return client;
-}
-
-export function loadAwsCredentials(config) {
-  const { region, accessKeyId, secretAccessKey } = config;
-
-  if (region) {
-    process.env.AWS_REGION = region;
-    process.env.AWS_DEFAULT_REGION = region;
-  }
-
-  if (accessKeyId) {
-    process.env.AWS_ACCESS_KEY_ID = accessKeyId;
-  }
-
-  if (secretAccessKey) {
-    process.env.AWS_SECRET_ACCESS_KEY = secretAccessKey;
-  }
 }
 
 export async function recreateTable(connection, name, schemaFn) {

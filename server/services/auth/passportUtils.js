@@ -1,26 +1,32 @@
-const { createOAuthStrategy, createPkceStrategy } = require("./passportStrategies");
+import { createOAuthStrategy } from "./passportStrategies.js";
 
-function getAccountType({ preferred_username }) {
+export function getAccountType({ preferred_username }) {
   const loginDomain = (preferred_username || "").split("@").pop();
   return loginDomain.endsWith("login.gov") ? "Login.gov" : "NIH";
 }
 
-function registerUserSerializers(passport, userManager) {
-  passport.serializeUser((user, done) => done(null, user));
-  passport.deserializeUser(async ({ email, preferred_username }, done) => {
+export function createUserSerializer() {
+  return (user, done) => done(null, user);
+}
+
+export function createUserDeserializer(userManager) {
+  return async ({ email, preferred_username }, done) => {
     const accountType = getAccountType({ preferred_username });
     const user = await userManager.getUserForLogin(email, accountType);
     done(null, user || {});
+  };
+}
+
+export async function createDefaultAuthStrategy(env = process.env) {
+  return await createOAuthStrategy({
+    name: "default",
+    clientId: env.OAUTH2_CLIENT_ID,
+    clientSecret: env.OAUTH2_CLIENT_SECRET,
+    baseUrl: env.OAUTH2_BASE_URL,
+    redirectUris: [env.OAUTH2_REDIRECT_URI],
+    params: {
+      scope: "openid profile email",
+      prompt: "login",
+    },
   });
 }
-
-async function registerAuthStrategies(passport, providers) {
-  for (const provider of providers) {
-    const strategy = provider.clientSecret ? await createOAuthStrategy(provider) : await createPkceStrategy(provider);
-    passport.use(provider.name, strategy);
-  }
-
-  return passport;
-}
-
-module.exports = { registerUserSerializers, registerAuthStrategies };

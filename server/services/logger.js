@@ -1,51 +1,30 @@
-const path = require("path");
-const util = require("util");
-const fs = require("fs");
-const { createLogger, format, transports, info } = require("winston");
-const logConfig = require("../config.json").logs;
-require("winston-daily-rotate-file");
+import { inspect } from "util";
+import { createLogger as createWinstonLogger, format, transports } from "winston";
+import pick from "lodash/pick.js";
+import isEmpty from "lodash/isEmpty.js";
 
-function objectToString(obj) {
-  return ["string", "number"].includes(typeof obj)
-    ? obj
-    : util.inspect(obj, { depth: null, compact: true, breakLength: Infinity });
+export function formatObject(object) {
+  if (object instanceof Error) {
+    const errorObject = pick(object, ["code", "message", "stack", "stdout", "stderr"]);
+    return formatObject(errorObject);
+  } else if (typeof object === "string" || typeof object === "number") {
+    return String(object);
+  } else if (object === null || object === undefined || isEmpty(object)) {
+    return "";
+  } else {
+    return inspect(object, { depth: null, compact: true, breakLength: Infinity });
+  }
 }
 
-function formatLogMessage({ label, timestamp, level, message }) {
-  return [
-    [label, process.pid, timestamp, level]
-      .filter(Boolean)
-      .map((s) => `[${s}]`)
-      .join(" "),
-    objectToString(message),
-  ].join(" - ");
-}
-
-function getLogger(name, config = logConfig) {
-  const { folder, level } = config;
-  fs.mkdirSync(folder, { recursive: true });
-
-  return new createLogger({
-    level: level || "info",
+export function createLogger(name, level = "info") {
+  return new createWinstonLogger({
+    level: level,
     format: format.combine(
       format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
       format.label({ label: name }),
-      format.printf(formatLogMessage)
+      format.printf((e) => `[${e.label}] [${e.timestamp}] [${e.level}] - ${formatObject(e.message)}`)
     ),
-    transports: [
-      new transports.Console(),
-      new transports.DailyRotateFile({
-        filename: path.resolve(folder, `${name}-%DATE%.log`),
-        datePattern: "YYYY-MM-DD-HH",
-        zippedArchive: false,
-        maxSize: "1024m",
-        timestamp: true,
-        maxFiles: "1d",
-        prepend: true,
-      }),
-    ],
+    transports: [new transports.Console()],
     exitOnError: false,
   });
 }
-
-module.exports = getLogger;

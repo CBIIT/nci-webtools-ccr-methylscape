@@ -1,23 +1,18 @@
-const express = require("express");
-const compression = require("compression");
-const { logRequests } = require("./middleware");
-const adminRouter = require("./routes/admin");
-const analysisRouter = require("./routes/analysis");
-const healthcheckRouter = require("./routes/healthcheck");
-const organizationsRouter = require("./routes/organizations");
-const reportsRouter = require("./routes/reports");
-const sessionRouter = require("./routes/session");
-const usersRouter = require("./routes/users");
-const rolesRouter = require("./routes/roles");
-const notificationsRouter = require("./routes/notifications");
+import express from "express";
+import Router from "express-promise-router";
+import { logRequests } from "./middleware.js";
+import adminRouter from "./routes/admin.js";
+import analysisRouter from "./routes/analysis.js";
+import healthcheckRouter from "./routes/healthcheck.js";
+import organizationsRouter from "./routes/organizations.js";
+import sessionRouter from "./routes/session.js";
+import usersRouter from "./routes/users.js";
+import rolesRouter from "./routes/roles.js";
 
-const apiRouter = express.Router();
+export const apiRouter = Router();
 
 // parse json requests
 apiRouter.use(express.json());
-
-// compress all responses
-apiRouter.use(compression());
 
 // log requests
 apiRouter.use(logRequests());
@@ -25,12 +20,8 @@ apiRouter.use(logRequests());
 // register routes
 apiRouter.use("/admin", adminRouter);
 apiRouter.use("/analysis", analysisRouter);
-apiRouter.use("/reports", reportsRouter);
 apiRouter.use(healthcheckRouter);
 apiRouter.use(organizationsRouter);
 apiRouter.use(usersRouter);
 apiRouter.use(rolesRouter);
 apiRouter.use(sessionRouter);
-apiRouter.use(notificationsRouter);
-
-module.exports = { apiRouter };

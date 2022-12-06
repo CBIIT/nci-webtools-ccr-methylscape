@@ -4,10 +4,9 @@ services:
     build:
       context: "."
       dockerfile: "./docker/backend.dockerfile"
-    volumes:
-      - "./server/docker.config.json:/app/server/config.json:ro"
-      - "./server/logs:/app/server/logs"
-      - "~/.aws/credentials:/root/.aws/credentials:ro"
+    env_file: server/.env
+    environment:
+      - DATABASE_HOST=database
     ports:
       - "10000:10000"
 
@@ -23,17 +22,20 @@ services:
     ports:
       - "3000:80"
 
-  database-import:
+  # to test locally, run:
+  # curl -XPOST "http://localhost:8080/2015-03-31/functions/function/invocations" -d '{}'
+  data-import:
     build:
       context: "."
-      dockerfile: "./docker/database.dockerfile"
-    volumes:
-      - "./server/docker.config.json:/app/database/config.json:ro"
-      - "./database/logs:/app/database/logs"
-      - "~/.aws/credentials:/root/.aws/credentials:ro"
+      dockerfile: "./docker/data-import.dockerfile"
+    env_file: database/.env
+    environment:
+      - DATABASE_HOST=database
+    ports:
+      - "8080:8080"
 
   # to start only the database container, run:
-  # docker compose --profile database up database
+  # docker compose up database
   database:
     image: postgres
     environment:
@@ -42,5 +44,3 @@ services:
       POSTGRES_DB: methylscape
     ports:
       - "5432:5432"
-    profiles:
-      - database
