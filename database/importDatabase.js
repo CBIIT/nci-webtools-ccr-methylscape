@@ -3,7 +3,8 @@ import { runTask } from "./services/pipeline.js";
 import { fileURLToPath } from "url";
 import { createRequire } from "module";
 import minimist from "minimist";
-import { loadAwsCredentials, withDuration } from "./services/utils.js";
+import { config } from "dotenv";
+import { withDuration } from "./services/utils.js";
 import { LocalProvider } from "./services/providers/localProvider.js";
 import { S3Provider } from "./services/providers/s3Provider.js";
 import { getLogger } from "./services/logger.js";
@@ -12,17 +13,16 @@ import { S3Client } from "@aws-sdk/client-s3";
 // determine if this script was launched from the command line
 const isMainModule = process.argv[1] === fileURLToPath(import.meta.url);
 const require = createRequire(import.meta.url);
+config();
 
 if (isMainModule) {
   const args = minimist(process.argv.slice(2));
-  const { aws, database } = require("./config.json");
   const schema = require(args.schema || "./schema.json");
   const sources = require(args.sources || "./samples.json");
   const providerName = args.provider || "local";
   const providerArgs = [...args._];
-  loadAwsCredentials(aws);
 
-  const connection = await createPostgresClient(database);
+  const connection = await createPostgresClient(process.env);
   const sourceProvider = getSourceProvider(providerName, providerArgs);
   const logger = getLogger("import");
   await importDatabase(connection, schema, sources, sourceProvider, logger);
