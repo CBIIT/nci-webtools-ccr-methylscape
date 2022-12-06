@@ -111,11 +111,8 @@ export async function getGeneMap(connection) {
 }
 
 export async function getCnvBins(connection, { idatFilename }) {
-  if (!this.geneMap) {
-    this.geneMap = await getGeneMap(connection);
-  }
-
   if (idatFilename) {
+    const geneMap = await getGeneMap(connection);
     const s3Response = await getFile(`CNV/bins/${idatFilename}.bins.txt`);
     const parser = getTxtParser(["id", "chromosome", "start", "end", "feature", "medianValue"]);
     const results = [];
@@ -123,7 +120,7 @@ export async function getCnvBins(connection, { idatFilename }) {
       const key = [record.chromosome, record.start, record.end].join("-");
       const chromosome = parseChromosome(record.chromosome);
       const medianValue = record.medianValue || 0;
-      const gene = this.geneMap[key] || [];
+      const gene = geneMap[key] || [];
       results.push({ ...record, chromosome, medianValue, gene });
     }
     return results;
