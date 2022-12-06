@@ -28,7 +28,7 @@ export async function handler(event) {
 }
 
 function createCustomLogger(name, env = process.env) {
-  const { LOG_LEVEL, LOG_ENDPOINT_HOST, LOG_ENDPOINT_URI, LOG_ENDPOINT_PORT } = process.env;
+  const { TIER, LOG_LEVEL, LOG_ENDPOINT_HOST, LOG_ENDPOINT_URI, LOG_ENDPOINT_PORT } = process.env;
   const customTransport = new CustomTransport();
   const logger = createLogger(name, LOG_LEVEL, [
     customTransport,
@@ -38,6 +38,9 @@ function createCustomLogger(name, env = process.env) {
         host: LOG_ENDPOINT_HOST,
         port: LOG_ENDPOINT_PORT,
         path: LOG_ENDPOINT_URI,
+        headers: {
+          "X-Sumo-Category": `analysistools/${TIER}/methylscape/data-import`,
+        },
       }),
   ]);
   logger.customTransport = customTransport;

@@ -13,6 +13,4 @@ RUN npm install
 
 COPY database ${LAMBDA_TASK_ROOT}
 
-ENV NODE_ENV=production
-
 CMD ["app.handler"]
