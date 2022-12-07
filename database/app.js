@@ -50,7 +50,8 @@ function createCustomLogger(name, env = process.env) {
 async function loadConfig(keyPrefixes) {
   for (const keyPrefix of keyPrefixes) {
     const parameters = await getParameters(ssmClient, keyPrefix);
-    for (let parameter of parameters) {
+    for (const parameter of parameters) {
+      console.log("Loaded parameter: " + Name);
       const { Name, Value } = parameter;
       const key = Name.replace(keyPrefix, "").toUpperCase();
       process.env[key] = Value;
