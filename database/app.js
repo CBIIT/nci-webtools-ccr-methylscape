@@ -1,6 +1,6 @@
 import { createRequire } from "module";
 import { S3Client } from "@aws-sdk/client-s3";
-import { SSMClient, GetParametersByPathCommand, paginateGetParametersByPath } from "@aws-sdk/client-ssm";
+import { SSMClient, paginateGetParametersByPath } from "@aws-sdk/client-ssm";
 import { transports } from "winston";
 import { importData } from "./startDatabaseImport.js";
 import { createLogger } from "./services/logger.js";
@@ -53,7 +53,6 @@ async function loadConfig(keyPrefixes) {
     for (const parameter of parameters) {
       const { Name, Value } = parameter;
       const key = Name.replace(keyPrefix, "").toUpperCase();
-      console.log("Loaded parameter: " + key);
       process.env[key] = Value;
     }
   }
@@ -62,7 +61,7 @@ async function loadConfig(keyPrefixes) {
 async function getParameters(client, prefix) {
   const paginatorConfig = { client, pageSize: 10 };
   const commandParams = { Path: prefix, Recursive: true, WithDecryption: true };
-  const paginator = paginateListTables(paginatorConfig, commandParams);
+  const paginator = paginateGetParametersByPath(paginatorConfig, commandParams);
   const results = [];
   for await (const page of paginator) {
     results.push(...page.Parameters);
