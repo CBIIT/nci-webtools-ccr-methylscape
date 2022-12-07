@@ -28,7 +28,7 @@ export async function handler(event) {
 }
 
 function createCustomLogger(name, env = process.env) {
-  const { TIER, LOG_LEVEL, LOG_ENDPOINT_HOST, LOG_ENDPOINT_URI, LOG_ENDPOINT_PORT } = process.env;
+  const { TIER, LOG_LEVEL, LOG_ENDPOINT_HOST, LOG_ENDPOINT_URI, LOG_ENDPOINT_PORT } = env;
   const customTransport = new CustomTransport();
   const logger = createLogger(name, LOG_LEVEL, [
     customTransport,
@@ -51,9 +51,9 @@ async function loadConfig(keyPrefixes) {
   for (const keyPrefix of keyPrefixes) {
     const parameters = await getParameters(ssmClient, keyPrefix);
     for (const parameter of parameters) {
-      console.log("Loaded parameter: " + Name);
       const { Name, Value } = parameter;
       const key = Name.replace(keyPrefix, "").toUpperCase();
+      console.log("Loaded parameter: " + key);
       process.env[key] = Value;
     }
   }
