@@ -1,16 +1,19 @@
-FROM public.ecr.aws/lambda/nodejs:18
+FROM public.ecr.aws/amazonlinux/amazonlinux:2022
 
-RUN yum -y update \
- && yum clean all
+RUN dnf -y update \
+ && dnf -y install \
+    nodejs \
+    npm \
+ && dnf clean all
 
-RUN mkdir -p ${LAMBDA_TASK_ROOT}
+RUN mkdir -p /app/database
 
-WORKDIR ${LAMBDA_TASK_ROOT}
+WORKDIR /app/database
 
-COPY database/package.json ${LAMBDA_TASK_ROOT}
+COPY database/package.json /app/database/
 
 RUN npm install
 
-COPY database ${LAMBDA_TASK_ROOT}
+COPY database /app/database/
 
-CMD ["app.handler"]
+CMD node startDatabaseImport.js
