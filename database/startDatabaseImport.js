@@ -34,7 +34,7 @@ if (isMainModule) {
 }
 
 export async function importData(env, schema, sources, sourceProvider, logger) {
-  const { EMAIL_SENDER } = env;
+  const { EMAIL_SENDER, TIER } = env;
   const connection = createConnection(env);
   const dataConnection = await createPostgresClient(env);
   const logConnection = await createPostgresClient(env);
@@ -68,7 +68,7 @@ export async function importData(env, schema, sources, sourceProvider, logger) {
       userManager,
       from: EMAIL_SENDER,
       roleName: "admin",
-      subject: "Methylscape Data Import Succeeded",
+      subject: `[${TIER.toUpperCase()}] Methylscape Data Import Succeeded`,
       templateName: "admin-import-success-email.html",
       params: {
         date: startDate,
@@ -83,7 +83,7 @@ export async function importData(env, schema, sources, sourceProvider, logger) {
       userManager,
       from: EMAIL_SENDER,
       roleName: "admin",
-      subject: "Methylscape Data Import Failed",
+      subject: `[${TIER.toUpperCase()}] Methylscape Data Import Failed`,
       templateName: "admin-import-failure-email.html",
       params: {
         date: startDate,
