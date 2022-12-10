@@ -12,10 +12,9 @@
     "start:debug": "node -r dotenv/config server.js"
   },
   "dependencies": {
-    "@aws-sdk/client-lambda": "^3.223.0",
-    "@aws-sdk/client-s3": "^3.223.0",
-    "@aws-sdk/client-sqs": "^3.223.0",
-    "axios": "^1.2.0",
+    "@aws-sdk/client-ecs": "^3.226.0",
+    "@aws-sdk/client-s3": "^3.226.0",
+    "axios": "^1.2.1",
     "connect-session-knex": "^3.0.0",
     "csv-parse": "^5.3.3",
     "dotenv": "^16.0.3",
