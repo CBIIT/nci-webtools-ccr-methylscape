@@ -1,6 +1,6 @@
 import { Suspense } from "react";
-import { RecoilRoot } from "recoil";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { RecoilRoot, useRecoilValue } from "recoil";
+import { BrowserRouter as Router, Routes, Route, NavLink } from "react-router-dom";
 import Alert from "react-bootstrap/Alert";
 import Loader from "./modules/components/loader";
 import Navbar from "./modules/components/navbar";
@@ -16,13 +16,14 @@ import Admin from "./modules/admin/admin";
 import DataImport from "./modules/admin/data-import/data-import";
 import AdminUserManagement from "./modules/admin/user-management/admin-user-management";
 import AdminOrganizationManagement from "./modules/admin/organization-management/admin-organization-management";
+import SessionRefreshModal from "./modules/session/session-refresh-modal";
+import SessionRoleWarning from "./modules/session/session-role-warning";
 import Session from "./modules/session/session";
 import ErrorBoundary from "./modules/components/error-boundary";
 import Header from "./header";
 import UserRegister from "./modules/user/user-registration";
 import RequirePolicy from "./modules/require-policy/require-policy";
 import { isAuthorized } from "./modules/require-policy/require-policy.utils";
-import SessionRefreshModal from "./modules/session/session-refresh-modal";
 
 export default function App() {
   const navbarLinks = [
@@ -74,8 +75,8 @@ export default function App() {
         <Session>
           <SessionRefreshModal />
           <Header />
-
           <Navbar linkGroups={navbarLinks} className="shadow-sm navbar-bottom-line" />
+
           <ErrorBoundary
             fallback={
               <Alert variant="danger" className="m-5">
