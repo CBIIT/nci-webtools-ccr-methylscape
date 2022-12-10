@@ -23,16 +23,15 @@
     "express-session": "^1.17.3",
     "knex": "^2.3.0",
     "lodash": "^4.17.21",
-    "memorystore": "^1.6.7",
     "nodemailer": "^6.8.0",
     "openid-client": "^5.3.1",
     "passport": "^0.6.0",
     "pg": "^8.8.0",
+    "pm2": "^5.2.2",
     "r-wrapper": "^1.1.2",
     "winston": "^3.8.2"
   },
   "devDependencies": {
-    "jest": "^29.3.1",
-    "pm2": "^5.2.2"
+    "jest": "^29.3.1"
   }
 }
