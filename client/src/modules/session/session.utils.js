@@ -1,12 +1,15 @@
 import axios from "axios";
 
-export function formatTime(seconds) {
-  const parts = [seconds / 60, seconds % 60];
+export function pluralize(count, singular, plural) {
+  return count === 1 ? singular : plural;
+}
 
-  return parts
-    .map((n) => Math.floor(n))
-    .map((e) => String(e).padStart(2, "0"))
-    .join(":");
+export function formatTime(seconds) {
+  const [mins, secs] = [seconds / 60, seconds % 60];
+  const minsRemaining = [Math.floor(mins), pluralize(Math.floor(mins), "min", "mins")];
+  const secsRemaining = [Math.floor(secs), pluralize(Math.floor(secs), "sec", "secs")];
+
+  return Math.floor(mins) > 0 ? [...minsRemaining, ...secsRemaining].join(" ") : secsRemaining.join(" ");
 }
 
 export async function getUserSession() {

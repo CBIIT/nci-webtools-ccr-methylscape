@@ -57,20 +57,29 @@ export default function SessionRefreshModal({ warningThresholds = [300, 180, 60]
     <>
       <Modal show={session.authenticated && showWarning} backdrop="static" keyboard={false}>
         <Modal.Header>
-          <Modal.Title>Warning: Session Timeout</Modal.Title>
+          <Modal.Title>Session timeout warning</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <div className="p-5">
-            Your session will expire in {formatTime(remainingTime)}. Please select an option below.
+          <div className="p-4 text-center">
+            Your session will expire in
+            <p className="display-4">{formatTime(remainingTime)}</p>
+            Select "Continue Session" to extend your session.
           </div>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={(_) => setShowWarning(false)}>
-            Close
-          </Button>
-          <Button variant="primary" onClick={refreshUserSession}>
-            Extend My Session
-          </Button>
+          <div className="w-100 d-flex justify-content-between">
+            <Button variant="secondary" onClick={(_) => setShowWarning(false)}>
+              Close
+            </Button>
+            <div>
+              <Button variant="primary" onClick={refreshUserSession} className="me-1">
+                Continue Session
+              </Button>
+              <Button variant="danger" href="/api/logout">
+                End Session Now
+              </Button>
+            </div>
+          </div>
         </Modal.Footer>
       </Modal>
     </>
