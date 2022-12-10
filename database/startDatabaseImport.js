@@ -34,7 +34,7 @@ if (isMainModule) {
 }
 
 export async function importData(env, schema, sources, sourceProvider, logger) {
-  const { EMAIL_SENDER, TIER } = env;
+  const { EMAIL_SENDER, TIER, BASE_URL } = env;
   const connection = createConnection(env);
   const dataConnection = await createPostgresClient(env);
   const logConnection = await createPostgresClient(env);
@@ -72,6 +72,7 @@ export async function importData(env, schema, sources, sourceProvider, logger) {
       templateName: "admin-import-success-email.html",
       params: {
         date: startDate,
+        baseUrl: BASE_URL,
       },
     });
   } catch (exception) {
@@ -87,6 +88,7 @@ export async function importData(env, schema, sources, sourceProvider, logger) {
       templateName: "admin-import-failure-email.html",
       params: {
         date: startDate,
+        baseUrl: BASE_URL,
         error,
       },
     });

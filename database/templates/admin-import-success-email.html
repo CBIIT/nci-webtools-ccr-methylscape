@@ -11,7 +11,10 @@
     Dear Administrator, <br />
     <p>The Methylscape data import initiated on <b><%- date %></b> succeeded.</p>
     <p>
-      For more information, please visit <a href="<%= dataImportLink %>">here</a> and go to Methylscape Data Import page
+      For more information, please visit the
+      <a href="<%- baseUrl %>/api/login?destination=%2Fadmin%2Fdata-import" target="_blank"
+        >Methylscape Data Import page</a
+      >
       under the admin dashboard.
     </p>
     <p>
