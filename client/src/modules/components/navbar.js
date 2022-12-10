@@ -49,17 +49,17 @@ export default function Navbar({ linkGroups = [[]], className, children }) {
         {children}
         {linkGroups.map((links, index) => (
           <Nav key={`navbar-nav-${index}`}>
-            {links?.filter(shouldShowLink).map((link, linkIndex) => (
-              <>
-                {link.childLinks && <NavbarDropdown key={`navbar-nav-dropdown-${index}-${linkIndex}`} {...link} />}
-                {!link.childLinks &&
-                  (link.native ? (
-                    <NavbarNativeLink key={`navbar-nav-native-link-${index}-${linkIndex}`} {...link} />
-                  ) : (
-                    <NavbarRouterLink key={`navbar-nav-link-${index}-${linkIndex}`} {...link} />
-                  ))}
-              </>
-            ))}
+            {links
+              ?.filter(shouldShowLink)
+              .map((link, linkIndex) =>
+                link.childLinks ? (
+                  <NavbarDropdown key={`navbar-nav-dropdown-${index}-${linkIndex}`} {...link} />
+                ) : link.native ? (
+                  <NavbarNativeLink key={`navbar-nav-native-link-${index}-${linkIndex}`} {...link} />
+                ) : (
+                  <NavbarRouterLink key={`navbar-nav-link-${index}-${linkIndex}`} {...link} />
+                )
+              )}
           </Nav>
         ))}
       </Container>
