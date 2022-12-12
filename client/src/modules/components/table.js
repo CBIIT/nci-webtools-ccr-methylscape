@@ -256,7 +256,7 @@ export default function Table({
               defaultPageSize={25}
               onChange={(e) => setPageSize(Number(e.target.value))}>
               {[10, 25, 50, 100].map((pageSize) => (
-                <option key={pageSize} value={pageSize}>
+                <option key={pageSize} value={pageSize} defaultValue={25}>
                   Show {pageSize}
                 </option>
               ))}
