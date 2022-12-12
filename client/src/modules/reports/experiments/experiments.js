@@ -43,7 +43,7 @@ export default function Experiments() {
         { id: "project", value: searchParams.get("project") || "" },
         { id: "experiment", value: searchParams.get("experiment") || "" },
       ],
-      pageSize: 100,
+      pageSize: 25,
     },
   };
 
