@@ -23,11 +23,11 @@ export default function GroupTables({ showTable = true }) {
                 <ReactTable
                   data={data}
                   columns={cols}
-                  defaultPageSize={100}
+                  defaultPageSize={25}
                   options={{
                     initialState: {
                       hiddenColumns: cols.filter((col) => col.show === false).map((col) => col.accessor),
-                      pageSize: 100,
+                      pageSize: 25,
                     },
                   }}
                   customOptions={{
