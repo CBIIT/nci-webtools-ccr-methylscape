@@ -89,7 +89,7 @@ export async function getExperiments(connection) {
 }
 
 export async function getSamples(connection, query) {
-  const { columns, conditions, offset, limit, orderBy } = query;
+  const { columns, conditions, offset, limit, orderBy, groupBy } = query;
 
   let sqlQuery = connection("sample")
     .select(columns || "*")
@@ -99,6 +99,10 @@ export async function getSamples(connection, query) {
 
   for (let condition of conditions || []) {
     sqlQuery = sqlQuery.where(...condition);
+  }
+
+  for (let group of groupBy || []) {
+    sqlQuery = sqlQuery.groupBy(group);
   }
 
   return await sqlQuery;
