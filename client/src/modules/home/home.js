@@ -29,7 +29,7 @@ export default function Home() {
             <h1 className="mb-4">Analysis</h1>
             <p className="mb-4 lead">
               Explore the clinically-reportable assay that uses genome-wide DNA methylation profiling as a diagnostic
-              tool for tumores of the central nervous system.
+              tool for tumors of the central nervous system.
             </p>
             {isAuthorized(session, "GetPage", "/analysis") && (
               <NavLink className="btn btn-lg btn-outline-light" to="analysis">
