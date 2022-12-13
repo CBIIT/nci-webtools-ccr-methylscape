@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { RecoilRoot, useRecoilValue } from "recoil";
+import { useRecoilValue } from "recoil";
 import { BrowserRouter as Router, Routes, Route, NavLink } from "react-router-dom";
 import Alert from "react-bootstrap/Alert";
 import Loader from "./modules/components/loader";
@@ -17,15 +17,18 @@ import DataImport from "./modules/admin/data-import/data-import";
 import AdminUserManagement from "./modules/admin/user-management/admin-user-management";
 import AdminOrganizationManagement from "./modules/admin/organization-management/admin-organization-management";
 import SessionRefreshModal from "./modules/session/session-refresh-modal";
-import SessionRoleWarning from "./modules/session/session-role-warning";
 import Session from "./modules/session/session";
 import ErrorBoundary from "./modules/components/error-boundary";
 import Header from "./header";
 import UserRegister from "./modules/user/user-registration";
 import RequirePolicy from "./modules/require-policy/require-policy";
+import RequireRole from "./modules/require-policy/require-role";
 import { isAuthorized } from "./modules/require-policy/require-policy.utils";
+import { sessionState } from "./modules/session/session.state";
+import UserProfile from "./modules/user/user-profile";
 
 export default function App() {
+  const session = useRecoilValue(sessionState);
   const navbarLinks = [
     [
       { path: "/", title: "Home", exact: true },
@@ -48,14 +51,8 @@ export default function App() {
         show: (session) => isAuthorized(session, "GetPage", "/admin"),
       },
       {
-        path: "/api/logout",
-        title: "Logout",
-        native: true,
-        show: (session) => session.authenticated,
-      },
-      {
         title: "Register",
-        show: (session) => !session.authenticated,
+        show: (session) => !session.authenticated || !session.user.id,
         align: "end",
         path: "register",
       },
@@ -66,114 +63,142 @@ export default function App() {
         path: "/api/login",
         native: true,
       },
+      {
+        title: "Logout",
+        show: (session) => session.authenticated && !session.user.id,
+        path: "/api/logout",
+        native: true,
+      },
+      {
+        title: session.user ? [session.user?.firstName, session.user?.lastName].join(" ") : "Profile",
+        show: (session) => session.authenticated && session.user.id,
+        align: "end",
+        childLinks: [
+          {
+            title: "User Profile",
+            path: "profile",
+          },
+          {
+            title: "Logout",
+            path: "/api/logout",
+            native: true,
+          },
+        ],
+      },
     ],
   ];
 
   return (
-    <RecoilRoot>
-      <Router>
-        <Session>
-          <SessionRefreshModal />
-          <Header />
-          <Navbar linkGroups={navbarLinks} className="shadow-sm navbar-bottom-line" />
+    <Router>
+      <Session>
+        <SessionRefreshModal />
+        <Header />
+        <Navbar linkGroups={navbarLinks} className="shadow-sm navbar-bottom-line" />
 
-          <ErrorBoundary
-            fallback={
-              <Alert variant="danger" className="m-5">
-                An internal error prevented this page from loading. Please contact the website administrator if this
-                problem persists.
-              </Alert>
-            }>
-            <Suspense fallback={<Loader message="Loading Page" />}>
-              <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="register" element={<UserRegister />} />
+        <ErrorBoundary
+          fallback={
+            <Alert variant="danger" className="m-5">
+              An internal error prevented this page from loading. Please contact the website administrator if this
+              problem persists.
+            </Alert>
+          }>
+          <Suspense fallback={<Loader message="Loading Page" />}>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="register" element={<UserRegister />} />
+              <Route
+                path="analysis"
+                element={
+                  <RequirePolicy action="GetPage">
+                    <Analysis />
+                  </RequirePolicy>
+                }
+              />
+              <Route
+                path="metadata"
+                element={
+                  <RequirePolicy action="GetPage">
+                    <MetadataSA />
+                  </RequirePolicy>
+                }
+              />
+              <Route
+                path="reports"
+                element={
+                  <RequirePolicy action="GetPage">
+                    <Reports />
+                  </RequirePolicy>
+                }>
                 <Route
-                  path="analysis"
+                  path="projects"
                   element={
                     <RequirePolicy action="GetPage">
-                      <Analysis />
+                      <Projects />
                     </RequirePolicy>
                   }
                 />
                 <Route
-                  path="metadata"
+                  path="experiments"
                   element={
                     <RequirePolicy action="GetPage">
-                      <MetadataSA />
+                      <Experiments />
                     </RequirePolicy>
                   }
                 />
                 <Route
-                  path="reports"
+                  path="samples"
                   element={
                     <RequirePolicy action="GetPage">
-                      <Reports />
-                    </RequirePolicy>
-                  }>
-                  <Route
-                    path="projects"
-                    element={
-                      <RequirePolicy action="GetPage">
-                        <Projects />
-                      </RequirePolicy>
-                    }
-                  />
-                  <Route
-                    path="experiments"
-                    element={
-                      <RequirePolicy action="GetPage">
-                        <Experiments />
-                      </RequirePolicy>
-                    }
-                  />
-                  <Route
-                    path="samples"
-                    element={
-                      <RequirePolicy action="GetPage">
-                        <Samples />
-                      </RequirePolicy>
-                    }
-                  />
-                </Route>
-                <Route path="about" element={<About />} />
-                <Route
-                  path="admin"
-                  element={
-                    <RequirePolicy action="GetPage">
-                      <Admin />
+                      <Samples />
                     </RequirePolicy>
                   }
                 />
-                <Route
-                  path="admin/users"
-                  element={
-                    <RequirePolicy action="GetPage">
-                      <AdminUserManagement />
-                    </RequirePolicy>
-                  }
-                />
-                <Route
-                  path="admin/organizations"
-                  element={
-                    <RequirePolicy action="GetPage">
-                      <AdminOrganizationManagement />
-                    </RequirePolicy>
-                  }
-                />
-                <Route
-                  path="admin/data-import"
-                  element={
-                    <RequirePolicy action="GetPage">
-                      <DataImport />
-                    </RequirePolicy>
-                  }
-                />
-              </Routes>
-            </Suspense>
-          </ErrorBoundary>
-        </Session>
-      </Router>
-    </RecoilRoot>
+              </Route>
+              <Route path="about" element={<About />} />
+              <Route
+                path="admin"
+                element={
+                  <RequirePolicy action="GetPage">
+                    <Admin />
+                  </RequirePolicy>
+                }
+              />
+              <Route
+                path="admin/users"
+                element={
+                  <RequirePolicy action="GetPage">
+                    <AdminUserManagement />
+                  </RequirePolicy>
+                }
+              />
+              <Route
+                path="admin/organizations"
+                element={
+                  <RequirePolicy action="GetPage">
+                    <AdminOrganizationManagement />
+                  </RequirePolicy>
+                }
+              />
+              <Route
+                path="admin/data-import"
+                element={
+                  <RequirePolicy action="GetPage">
+                    <DataImport />
+                  </RequirePolicy>
+                }
+              />
+              <Route
+                path="profile"
+                element={
+                  <RequireRole>
+                    <UserProfile />
+                  </RequireRole>
+                }
+              />
+            </Routes>
+          </Suspense>
+        </ErrorBoundary>
+      </Session>
+    </Router>
   );
 }
