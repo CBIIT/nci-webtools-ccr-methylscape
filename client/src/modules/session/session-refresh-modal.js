@@ -55,8 +55,12 @@ export default function SessionRefreshModal({ warningThresholds = [300, 180, 60]
 
   return (
     <>
-      <Modal show={session.authenticated && showWarning} backdrop="static" keyboard={false}>
-        <Modal.Header>
+      <Modal
+        show={session.authenticated && showWarning}
+        backdrop="static"
+        keyboard={false}
+        onHide={(_) => setShowWarning(false)}>
+        <Modal.Header closeButton>
           <Modal.Title>Session timeout warning</Modal.Title>
         </Modal.Header>
         <Modal.Body>
@@ -67,19 +71,12 @@ export default function SessionRefreshModal({ warningThresholds = [300, 180, 60]
           </div>
         </Modal.Body>
         <Modal.Footer>
-          <div className="w-100 d-flex justify-content-between">
-            <Button variant="secondary" onClick={(_) => setShowWarning(false)}>
-              Close
-            </Button>
-            <div>
-              <Button variant="primary" onClick={refreshUserSession} className="me-1">
-                Continue Session
-              </Button>
-              <Button variant="danger" href="/api/logout">
-                End Session Now
-              </Button>
-            </div>
-          </div>
+          <Button variant="primary" onClick={refreshUserSession} className="me-1">
+            Continue Session
+          </Button>
+          <Button variant="danger" href="/api/logout">
+            End Session Now
+          </Button>
         </Modal.Footer>
       </Modal>
     </>
