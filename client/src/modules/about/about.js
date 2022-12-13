@@ -7,7 +7,7 @@ import aboutImage from "../home/images/About.Background-image.png";
 export default function About() {
   return (
     <Card
-      className="py-4 bg-primary text-white border-0 vh-100 homepage-img-bg"
+      className="py-4 bg-primary text-white border-0 vh-100 cover-image"
       style={{ backgroundImage: `url(${aboutImage})` }}>
       <Card.Body>
         <Container>
