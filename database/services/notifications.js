@@ -81,9 +81,21 @@ async function renderTemplate(templateName, params, basePath = "templates") {
   return template(templateSource)(params);
 }
 
-async function sendMail(params, smtpConfig) {
-  const transport = createTransport(smtpConfig);
-  return await transport.sendMail(params);
+async function sendMail(params, smtpConfig, retry = 10) {
+  let success = false;
+  do {
+    try {
+      const transport = createTransport(smtpConfig);
+      const response = await transport.sendMail(params);
+      success = true;
+      return response;
+    } catch (error) {
+      retry--;
+      if (retry === 0) {
+        throw error;
+      }
+    }
+  } while (!success && retry > 0);
 }
 
 async function getValidNotificationEmails(emails, userManager) {
