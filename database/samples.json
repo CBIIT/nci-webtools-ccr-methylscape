@@ -62,7 +62,7 @@
       { "sourceName": "idat_filename", "name": "idatFilename" },
       { "sourceName": "Sample_Plate", "name": "samplePlate" },
       {
-        "sourceExpression": "upper(regexp_replace(\"Sample_Plate\", '[^a-z0-9]', ' ', 'ig'))",
+        "sourceExpression": "upper(regexp_replace(\"Sample_Plate\", '[^a-z0-9]+', ' ', 'ig'))",
         "name": "unifiedSamplePlate"
       },
       { "sourceName": "PI_Collaborator", "name": "piCollaborator" },
