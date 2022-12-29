@@ -67,7 +67,7 @@ export async function importData(env, schema, sources, sourceProvider, logger) {
     await sendNotification({
       userManager,
       from: EMAIL_SENDER,
-      roleName: "admin",
+      roleName: "Admin",
       subject: `[${TIER.toUpperCase()}] Methylscape Data Import Succeeded`,
       templateName: "admin-import-success-email.html",
       params: {
@@ -83,7 +83,7 @@ export async function importData(env, schema, sources, sourceProvider, logger) {
     await sendNotification({
       userManager,
       from: EMAIL_SENDER,
-      roleName: "admin",
+      roleName: "Admin",
       subject: `[${TIER.toUpperCase()}] Methylscape Data Import Failed`,
       templateName: "admin-import-failure-email.html",
       params: {
