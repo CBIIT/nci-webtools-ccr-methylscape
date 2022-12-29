@@ -64,6 +64,10 @@ export async function sendNotification({
     bcc = bcc.concat(users.map((user) => user.email));
   }
 
+  if (!to?.length && !cc?.length && !bcc?.length) {
+    return null;
+  }
+
   if (!force) {
     // force overrides notification preferences (eg: for inactive users)
     to = await getValidNotificationEmails(to, userManager);
