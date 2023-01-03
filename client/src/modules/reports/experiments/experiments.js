@@ -2,7 +2,7 @@ import { Container, Row, Col, Button } from "react-bootstrap";
 import { useRecoilValue } from "recoil";
 import axios from "axios";
 import { saveAs } from "file-saver";
-import { useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { experimentsTableData } from "./experiments.state";
 import Table from "../../components/table";
 
@@ -30,6 +30,7 @@ export default function Experiments() {
       id: "samplesCount",
       accessor: "samplecount",
       Header: "# of Samples",
+      Cell: (e) => <Link to={"../samples?experiment=" + e.data[e.row.index].experiment}>{e.value}</Link>,
     },
     {
       id: "date",
