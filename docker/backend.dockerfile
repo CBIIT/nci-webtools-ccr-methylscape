@@ -2,16 +2,17 @@ FROM public.ecr.aws/amazonlinux/amazonlinux:2022
 
 RUN dnf -y update \
  && dnf -y install \
-    make \
+    cmake \
     gcc-c++ \
+    libcurl-devel \
+    libjpeg-turbo-devel \
+    libxml2-devel \
+    make \
     nodejs \
     npm \
     python3-devel \
     R \
-    cmake \
-    libxml2-devel \
-    libjpeg-turbo-devel \
-    libcurl-devel \
+    tar \
  && dnf clean all
 
 RUN mkdir -p /app/server
