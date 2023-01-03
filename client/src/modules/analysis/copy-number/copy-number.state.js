@@ -99,7 +99,7 @@ export const defaultPlotState = {
 export const copyNumberPlotDataSelector = selector({
   key: "copyNumber.copyNumberPlotDataSelector",
   get: async ({ get }) => {
-    const { idatFilename } = get(selectSampleState);
+    const { idatFilename, sample } = get(selectSampleState);
 
     if (!idatFilename) return false;
     try {
@@ -122,6 +122,7 @@ export const copyNumberPlotDataSelector = selector({
       }
 
       return {
+        sample,
         idatFilename,
         segments: segmentsResponse.data,
         bins: binsResponse.data,
@@ -143,7 +144,7 @@ export const plotState = selector({
     if (error) return defaultPlotState.error;
 
     let { annotations, search } = get(formState);
-    let { idatFilename, segments, bins, binGeneMap } = cnData;
+    let { sample, idatFilename, segments, bins, binGeneMap } = cnData;
 
     bins = filterByStandardDeviation(bins, "medianValue", 4);
     segments = filterByStandardDeviation(segments, "medianValue", 4);
@@ -218,7 +219,7 @@ export const plotState = selector({
     const bufferMargin = 0.1;
     const layout = {
       uirevision: idatFilename + annotations + search,
-      title: `${idatFilename}`,
+      title: [sample, idatFilename].filter(Boolean).join(" - "),
       showlegend: false,
       dragmode: "pan",
       xaxis: {
