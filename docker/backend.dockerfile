@@ -4,6 +4,7 @@ RUN dnf -y update \
  && dnf -y install \
     cmake \
     gcc-c++ \
+    gzip \
     libcurl-devel \
     libjpeg-turbo-devel \
     libxml2-devel \
