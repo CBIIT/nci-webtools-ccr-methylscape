@@ -20,7 +20,7 @@ services:
       API_BASE_URL: http://backend:10000
       APP_PATH: /
     ports:
-      - "3000:80"
+      - "3000:443"
 
   # to test locally, run:
   # curl -XPOST "http://localhost:8080/2015-03-31/functions/function/invocations" -d '{}'
