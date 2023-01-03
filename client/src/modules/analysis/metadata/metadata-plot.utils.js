@@ -104,6 +104,7 @@ function getScatterTrace(data) {
   const hovertemplate =
     [
       "Sample: %{customdata.sample}",
+      "IDAT: %{customdata.idatFilename}",
       "Metric: %{customdata.nciMetric}",
       "Diagnosis: %{customdata.diagnosisProvided}",
       "Sex: %{customdata.sex}",
