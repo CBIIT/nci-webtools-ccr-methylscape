@@ -46,13 +46,10 @@ export default function CopyNumberPlot() {
           {state.ratio && (
             <div>
               <h4>Bin Info</h4>
+              <div>Chromosome: {state.data.chromosome}</div>
+              <div>Base Pair Position: {[state.data.start, state.data.end].join(" - ")}</div>
               <div>
-                Location: {state.data.chromosome} ({state.data.start}
-                {" - "}
-                {state.data.end})
-              </div>
-              <div>
-                log<sub>2</sub>ratio: {state.data.medianLogIntensity}
+                log<sub>2</sub>ratio: {state.data.medianValue}
               </div>
               <div>
                 Genes:{" "}
