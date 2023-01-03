@@ -9,7 +9,6 @@ import {
   getCnvSegments,
   getallproject,
   getExperiments,
-  getAllSamples,
   getUnifiedProject,
 } from "../query.js";
 
@@ -42,12 +41,6 @@ router.get("/unifiedproject", requiresRouteAccessPolicy("AccessApi"), async (req
 router.get("/experiment", async (request, response) => {
   const { connection } = request.app.locals;
   const results = await getExperiments(connection);
-  response.json(results);
-});
-
-router.get("/allsample", async (request, response) => {
-  const { connection } = request.app.locals;
-  const results = await getAllSamples(connection);
   response.json(results);
 });
 

@@ -42,31 +42,6 @@ export async function getUnifiedProject(connection) {
   return query;
 }
 
-export async function getAllSamples(connection) {
-  const sampleColumns = [
-    connection.raw(`"unifiedSamplePlate" as project`),
-    connection.raw(`"sample"`),
-    connection.raw(`"sentrixId" as experiment`),
-    connection.raw(`"sex" as gender`),
-    connection.raw(`"age" as age`),
-    connection.raw(`"notes"`),
-    connection.raw(`"diagnosisProvided" as diagnosis`),
-    connection.raw(`"CNSv12b6_family" as mf`),
-    connection.raw(`"CNSv12b6_family_score" as mf_calibrated_score`),
-    connection.raw(`"CNSv12b6_subclass1" as mc`),
-    connection.raw(`"CNSv12b6_subclass1_score" as mc_calibrated_score`),
-    connection.raw(`"mgmtStatus" as mgmt_status`),
-    connection.raw(`"mgmtEstimated" as tumore_sites`),
-    connection.raw(`"batchDate"as sampleDate`),
-    connection.raw(`"surgeryDate" as 	experimentDate`),
-    connection.raw(`"lpCpNumber"`),
-    connection.raw(`"unifiedSamplePlate"`),
-  ];
-  const query = await connection.select(sampleColumns).from("sample").whereNotNull("unifiedSamplePlate");
-
-  return query;
-}
-
 export async function getExperiments(connection) {
   const experimentColumns = [
     connection.raw(`string_agg(distinct "piCollaborator", ', ' ) as Investigator`),
