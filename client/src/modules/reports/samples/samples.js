@@ -31,40 +31,44 @@ export default function Samples() {
     },
     {
       id: "project",
-      accessor: "project",
+      accessor: "unifiedSamplePlate",
       Header: "Project",
       aria: "Project",
-      Cell: (e) => <Link to={"../projects?project=" + e.data[e.row.index].project}>{e.value}</Link>,
+      Cell: (e) => <Link to={"../projects?project=" + e.data[e.row.index].unifiedSamplePlate}>{e.value}</Link>,
     },
     {
       id: "experiment",
-      accessor: "experiment",
+      accessor: "sentrixId",
       Header: "Experiment",
       aria: "Experiment",
-      Cell: (e) => <Link to={"../experiments?experiment=" + e.data[e.row.index].experiment}>{e.value}</Link>,
+      Cell: (e) => <Link to={"../experiments?experiment=" + e.data[e.row.index].sentrixId}>{e.value}</Link>,
     },
     {
       id: "pool_id",
-      accessor: "sampledate",
+      accessor: "surgeryDate",
       Header: "Sample Date",
+      Cell: (e) => (e.value ? new Date(e.value).toLocaleDateString("en-US") : "N/A"),
       aria: "Sample Date",
     },
     {
       id: "gender",
-      accessor: "gender",
+      accessor: "sex",
       Header: "Gender",
+      Cell: (e) => (e.value ? e.value : "N/A"),
       aria: "Gender",
     },
     {
       id: "age",
       accessor: "age",
       Header: "Age",
+      Cell: (e) => (e.value ? e.value : "N/A"),
       aria: "Age",
     },
     {
       id: "diagnosis",
-      accessor: "diagnosis",
+      accessor: "diagnosisProvided",
       Header: "Diagnosis",
+      Cell: (e) => (e.value ? e.value : "N/A"),
       aria: "Diagnosis",
     },
   ];
@@ -89,46 +93,46 @@ export default function Samples() {
               <Col className="text-primary small">
                 <b>DIAGNOSIS:</b>
               </Col>
-              <Col>{original.diagnosis}</Col>
+              <Col>{original.diagnosisProvided ?? "N/A"}</Col>
             </Row>
             <Row>
               <Col className="text-primary small">
                 <b>METHYLATION FAMILY (MF):</b>
               </Col>
-              <Col>{original.mf}</Col>
+              <Col>{original.CNSv12b6_family ?? "N/A"}</Col>
             </Row>
             <Row>
               <Col className="text-primary small">
                 <b>MF CALIBRATED SCORES:</b>
               </Col>
-              <Col>{original.mf_calibrated_score}</Col>
+              <Col>{original.CNSv12b6_family_score ?? "N/A"}</Col>
             </Row>
             <Row>
               <Col className="text-primary small">
                 <b>METHYLATION CLASS (MC):</b>
               </Col>
-              <Col>{original.mc}</Col>
+              <Col>{original.CNSv12b6_subclass1 ?? "N/A"}</Col>
             </Row>
           </Col>
           <Col md className="table table-bordered detail-table detail-table-divider mx-1 my-1">
             <Row>
               <Col className="text-primary small">
-                <b>TUMORE SITES:</b>
+                <b>TUMOR SITES:</b>
               </Col>
-              <Col>{original.tumore_sites}</Col>
+              <Col>{[original.locationRegion, original.locationSite].filter(Boolean).join(", ") || "N/A"}</Col>
             </Row>
-            <Row className="text-primary small">
-              <Col>
+            <Row>
+              <Col className="text-primary small">
                 <b>MC CALIBRATED SCORES:</b>
               </Col>
-              <Col>{original.mc_calibrated_score}</Col>
+              <Col>{original.CNSv12b6_subclass1_score ?? "N/A"}</Col>
             </Row>
             <Row>
               <Col className="text-primary small">
                 <b>MGMT SCORES:</b>
               </Col>
-              <Col className="text-primary small">
-                <Col>{original.mgmt_status}</Col>
+              <Col>
+                {original.mgmtEstimated} ({original.mgmtStatus})
               </Col>
             </Row>
             <Row>

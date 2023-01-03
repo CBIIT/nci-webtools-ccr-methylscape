@@ -18,7 +18,9 @@ export const methylscapeData = selector({
     try {
       const newResponse = await axios.get("/api/analysis/allproject");
       const experimentRes = await axios.get("/api/analysis/experiment");
-      const sampleRes = await axios.get("/api/analysis/allsample");
+      const sampleRes = await axios.post("/api/analysis/samples", {
+        conditions: [["unifiedSamplePlate", "!=", "null"]],
+      });
       const unifiedproject = await axios.get("/api/analysis/unifiedproject");
       const data = newResponse.data;
       const experimentData = experimentRes.data;
@@ -30,44 +32,6 @@ export const methylscapeData = selector({
         if (!(item.unifiedSamplePlate in dict)) {
           dict[item.unifiedSamplePlate] = max(unifiedprojectData, item.unifiedSamplePlate);
         }
-      }
-      for (let i = 0; i < sampleData.length; i++) {
-        const obj = sampleData[i];
-        if (obj.mc == null) {
-          obj.mc = "N/A";
-        }
-        if (obj.mc_calibrated_score == null) {
-          obj.mc_calibrated_score = "N/A";
-        }
-        if (obj.mf == null) {
-          obj.mf = "N/A";
-        }
-        if (obj.mf_calibrated_score == null) {
-          obj.mf_calibrated_score = "N/A";
-        }
-        if (obj.mgmt_status == null) {
-          obj.mgmt_status = "N/A";
-        }
-        if (obj.tumore_sites == null) {
-          obj.tumore_sites = "N/A";
-        }
-        if (obj.lpCpNumber == null) {
-          obj.lpCpNumber = "N/A";
-        }
-        if (obj.sex == null) {
-          obj.sex = "N/A";
-        }
-
-        if (obj.age == null) {
-          obj.age = "N/A";
-        } else {
-          obj.age = round(obj.age);
-        }
-
-        if (obj.sampledate != null) {
-          obj.sampledate = obj.sampledate.split("T")[0];
-        }
-        sampleData[i] = obj;
       }
       for (let i = 0; i < data.length; i++) {
         const obj = data[i];
