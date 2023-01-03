@@ -12,7 +12,7 @@
       "script": "server.js",
       "node_args": "--require dotenv/config",
       "watch": ["."],
-      "ignore_watch": ["node_modules"]
+      "ignore_watch": ["node_modules", "renv"]
     }
   ]
 }
