@@ -176,15 +176,23 @@ export const plotState = selector({
       {
         x: xCoordinates,
         y: yCoordinates,
-        customdata: bins,
+        // customdata: bins,
         text: bins.map((bin) =>
           [
-            `Genes: ${bin.gene[0] || "N/A"} ${bin.gene.length > 1 ? ` + ${bin.gene.length - 1}` : ""}`,
             `Chromosome: ${bin.chromosome}`,
+            `BP: ${bin.start}-${bin.end}`,
             `Log<sub>2</sub>ratio: ${bin.medianValue.toFixed(2)}`,
-          ].join("<br>")
+            bin.gene?.length === 1
+              ? `Gene: ${bin.gene}`
+              : `Genes: ${bin.gene?.map((g) => `<br> - ${g}`).join("") || "N/A"}`,
+          ]
+            .filter(Boolean)
+            .join("<br>")
         ),
         hovertemplate: "%{text}<extra></extra>",
+        hoverlabel: {
+          align: "left",
+        },
         mode: "markers",
         type: "scattergl",
         marker: {
