@@ -21,7 +21,6 @@ export default function GroupTabs() {
       setUmapPoints({ ...umapPoints, points, selectedGroup: points.length - 1 });
     }
   }
-
   return (
     <div className="d-flex justify-content-between">
       <div>
