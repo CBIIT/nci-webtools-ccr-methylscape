@@ -12,6 +12,17 @@ export default function GroupTables({ showTable = true }) {
     setUmapPoints((state) => ({ ...state, selectedGroup: e }));
   }
 
+  function getTimestamp(date = new Date()) {
+    return [
+      date.getFullYear(),
+      date.getMonth() + 1,
+      date.getDate(),
+      date.getHours(),
+      date.getMinutes(),
+      date.getSeconds(),
+    ].join("");
+  }
+
   return (
     <Tabs id="controlled-tab-example" activeKey={umapPoints.selectedGroup} onSelect={handleSelect} className="mb-3">
       {umapPoints &&
@@ -32,7 +43,7 @@ export default function GroupTables({ showTable = true }) {
                   }}
                   customOptions={{
                     hideColumns: true,
-                    download: `Group_${i + 1}_data.csv`,
+                    download: `Methylscape_GP${i + 1}_${getTimestamp()}.csv`,
                   }}
                 />
               )}
