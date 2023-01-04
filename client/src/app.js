@@ -39,7 +39,7 @@ export default function App() {
       },
       {
         path: "reports",
-        title: "Samples",
+        title: "Projects",
         show: (session) => isAuthorized(session, "GetPage", "/reports"),
       },
       { path: "about", title: "About" },

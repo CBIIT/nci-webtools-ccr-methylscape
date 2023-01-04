@@ -1,4 +1,5 @@
 import { atom, selector } from "recoil";
+import groupBy from "lodash/groupBy.js";
 import { methylscapeData } from "../data.state";
 
 export const defaultProjectState = {
@@ -28,44 +29,16 @@ export const selectedRow = selector({
     if (!selectedProject) return false;
 
     let { sampleData } = get(methylscapeData);
-    let data = sampleData.filter(({ project }) => project == selectedProject);
+    let data = sampleData.filter(({ unifiedSamplePlate }) => unifiedSamplePlate == selectedProject);
 
-    const getMethylationClasses = () => {
-      let cur = {};
-      let pieData = [];
-      data.forEach((row) => {
-        if (row.classifier_prediction != null) {
-          if (Object.keys(row.classifier_prediction).length >= 2) {
-            Object.keys(row.classifier_prediction).forEach((key) => {
-              if (key != "0") {
-                Object.keys(row.classifier_prediction[key]).forEach((key1) => {
-                  cur[key1] = cur[key1] + 1 || 1;
-                });
-              }
-            });
-          } else {
-            Object.values(row.classifier_prediction).forEach((cp) => {
-              Object.keys(cp).forEach((key) => {
-                cur[key] = cur[key] + 1 || 1;
-              });
-            });
-          }
-        }
-      });
-      Object.keys(cur).forEach((k) => {
-        // pieData.push({label:k, value:cur[k]})
-        pieData.push([k.replace("methylation class ", ""), cur[k]]);
-        //pieData[0].push(k.replace('methylation class ', ''));
-        //pieData[1].push(cur[k]);
-      });
-      return pieData;
-    };
+    const getMethylationClasses = (key = "CNSv12b6_subclass1") =>
+      Object.entries(groupBy(data, key)).map((group) => [group[0], group[1].length]);
 
     const getGender = () => {
       let cur = {};
       let pieData = [];
       data.forEach((row) => {
-        cur[row.gender] = cur[row.gender] + 1 || 1;
+        cur[row.sex] = cur[row.sex] + 1 || 1;
       });
       Object.keys(cur).forEach((k) => {
         pieData.push([k, cur[k]]);
@@ -90,6 +63,8 @@ export const selectedRow = selector({
     const methylationClasses = getMethylationClasses();
     const gender = getGender();
     const ageDistribution = getAgeDistribution();
+
+    console.log({ methylationClasses, gender });
 
     return { selectedProject, methylationClasses, gender, ageDistribution };
   },

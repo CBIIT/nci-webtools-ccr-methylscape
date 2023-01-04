@@ -22,9 +22,9 @@ export default function Data() {
   const navClass = "text-decoration-none d-flex";
   const activeNavClass = " border-bottom border-5 border-warning";
 
-  // automatically redirect to one of the reports tabs, samples by default
+  // automatically redirect to one of the reports tabs, projects by default
   useEffect(() => {
-    if (location == "reports") navigate("samples");
+    if (location == "reports") navigate("projects");
   }, [location]);
 
   return (
