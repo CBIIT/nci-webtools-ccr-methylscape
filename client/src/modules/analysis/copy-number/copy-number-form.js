@@ -30,20 +30,9 @@ export default function CopyNumberForm() {
   }
 
   return (
-    <Row>
-      {/* <Col sm="auto" className="d-flex">
-        <Form.Group controlId="plotSignificant" className="my-auto">
-          <Form.Check
-            label="Significant"
-            type="switch"
-            name="plotSignificant"
-            checked={preForm.significant}
-            onChange={handleSignificant}
-          />
-        </Form.Group>
-      </Col> */}
-      <Col sm="auto" className="d-flex">
-        <Form.Group controlId="toggleAnnotations" className="my-auto">
+    <Row className="align-items-center">
+      <Col md="auto">
+        <Form.Group controlId="toggleAnnotations">
           <Form.Check
             label="Annotations"
             type="switch"
@@ -55,11 +44,11 @@ export default function CopyNumberForm() {
         </Form.Group>
       </Col>
       <Col md={6}>
-        <Form.Group id="copy-number-search" className="mb-3">
-          <Form.Label>Search</Form.Label>
+        <Form.Group id="copy-number-search">
+          <Form.Label className="visually-hidden">Search</Form.Label>
           <MultiSearch
             name="copy-number-search"
-            placeholder="Gene(s)"
+            placeholder="Search Gene(s)"
             value={form.search}
             defaultOptions={filterGenes()}
             loadOptions={handleSearchGene}
