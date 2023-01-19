@@ -1,14 +1,16 @@
 import { Container, Row, Col, Button } from "react-bootstrap";
-import { useRecoilValue } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import axios from "axios";
 import { saveAs } from "file-saver";
-import { Link, useSearchParams } from "react-router-dom";
-import { experimentsTableData } from "./experiments.state";
+import { Link } from "react-router-dom";
+import { experimentsTableData, experimentsTableFilters } from "./experiments.state";
+import { samplesTableFilters } from "../samples/samples.state";
 import Table from "../../components/table";
 
 export default function Experiments() {
-  const [searchParams] = useSearchParams();
   const tableData = useRecoilValue(experimentsTableData);
+  const tableFilters = useRecoilValue(experimentsTableFilters);
+  const setSamplesTableFilters = useSetRecoilState(samplesTableFilters);
 
   const columns = [
     {
@@ -30,7 +32,15 @@ export default function Experiments() {
       id: "samplesCount",
       accessor: "samplecount",
       Header: "# of Samples",
-      Cell: (e) => <Link to={"../samples?experiment=" + e.data[e.row.index].experiment}>{e.value}</Link>,
+      Cell: (e) => (
+        <Link
+          to="../samples?experiment"
+          onClick={() =>
+            setSamplesTableFilters({ project: e.data[e.row.index].project, experiment: e.data[e.row.index].experiment })
+          }>
+          {e.value}
+        </Link>
+      ),
     },
     {
       id: "date",
@@ -41,8 +51,8 @@ export default function Experiments() {
   const options = {
     initialState: {
       filters: [
-        { id: "project", value: searchParams.get("project") || "" },
-        { id: "experiment", value: searchParams.get("experiment") || "" },
+        { id: "project", value: tableFilters.project || "" },
+        { id: "experiment", value: tableFilters.experiment || "" },
       ],
       pageSize: 25,
     },

@@ -1,16 +1,20 @@
 import { useEffect } from "react";
 import { Container, Row, Col } from "react-bootstrap";
-import { Link, useSearchParams } from "react-router-dom";
-import { useRecoilState, useRecoilValue } from "recoil";
-import { projectsTableData, projectState } from "./projects.state";
+import { Link } from "react-router-dom";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { projectsTableData, projectState, projectsTableFilters } from "./projects.state";
+import { experimentsTableFilters } from "../experiments/experiments.state";
+import { samplesTableFilters } from "../samples/samples.state";
 import Table from "../../components/table";
 import Summary from "./summary";
 
 export default function Projects() {
-  const [searchParams, setSearchParams] = useSearchParams();
   const tableData = useRecoilValue(projectsTableData);
+  const tableFilters = useRecoilValue(projectsTableFilters);
   const [state, setState] = useRecoilState(projectState);
   const mergeState = (newState) => setState({ ...state, ...newState });
+  const setExperimentsTableFilters = useSetRecoilState(experimentsTableFilters);
+  const setSamplesTableFilters = useSetRecoilState(samplesTableFilters);
   const { selectedProject } = state;
 
   const columns = [
@@ -42,19 +46,27 @@ export default function Projects() {
       id: "experimentsCount",
       accessor: "experimentcount",
       Header: "# of Experiments",
-      Cell: (e) => <Link to={"../experiments?project=" + e.data[e.row.index].project}>{e.value}</Link>,
+      Cell: (e) => (
+        <Link to="../experiments" onClick={() => setExperimentsTableFilters({ project: e.data[e.row.index].project })}>
+          {e.value}
+        </Link>
+      ),
     },
     {
       id: "samplesCount",
       accessor: "samplecount",
       Header: "# of Samples",
-      Cell: (e) => <Link to={"../samples?project=" + e.data[e.row.index].project}>{e.value}</Link>,
+      Cell: (e) => (
+        <Link to="../samples" onClick={() => setSamplesTableFilters({ project: e.data[e.row.index].project })}>
+          {e.value}
+        </Link>
+      ),
     },
   ];
   const options = {
     initialState: {
       selectedRowIds: { 0: true },
-      filters: [{ id: "project", value: searchParams.get("project") || "" }],
+      filters: [{ id: "project", value: tableFilters?.project || "" }],
     },
     stateReducer: (newState, action) => {
       // Allow only one row to be selected at a time

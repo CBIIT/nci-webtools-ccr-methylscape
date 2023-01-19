@@ -1,15 +1,19 @@
 import { useCallback } from "react";
 import { Container, Row, Col, Button } from "react-bootstrap";
-import { Link, useSearchParams } from "react-router-dom";
-import { useRecoilValue } from "recoil";
+import { Link } from "react-router-dom";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import axios from "axios";
 import { saveAs } from "file-saver";
-import { samplesTableData } from "./samples.state";
+import { samplesTableData, samplesTableFilters } from "./samples.state";
+import { projectsTableFilters } from "../projects/projects.state";
+import { experimentsTableFilters } from "../experiments/experiments.state";
 import Table from "../../components/table";
 
 export default function Samples() {
-  const [searchParams, setSearchParams] = useSearchParams();
   const tableData = useRecoilValue(samplesTableData);
+  const tableFilters = useRecoilValue(samplesTableFilters);
+  const setProjectsTableFilters = useSetRecoilState(projectsTableFilters);
+  const setExperimentsTableFilters = useSetRecoilState(experimentsTableFilters);
 
   const columns = [
     {
@@ -34,14 +38,26 @@ export default function Samples() {
       accessor: "unifiedSamplePlate",
       Header: "Project",
       aria: "Project",
-      Cell: (e) => <Link to={"../projects?project=" + e.data[e.row.index].unifiedSamplePlate}>{e.value}</Link>,
+      Cell: (e) => (
+        <Link
+          to="../projects"
+          onClick={() => setProjectsTableFilters({ project: e.data[e.row.index].unifiedSamplePlate })}>
+          {e.value}
+        </Link>
+      ),
     },
     {
       id: "experiment",
       accessor: "sentrixId",
       Header: "Experiment",
       aria: "Experiment",
-      Cell: (e) => <Link to={"../experiments?experiment=" + e.data[e.row.index].sentrixId}>{e.value}</Link>,
+      Cell: (e) => (
+        <Link
+          to="../experiments"
+          onClick={() => setExperimentsTableFilters({ experiment: e.data[e.row.index].sentrixId })}>
+          {e.value}
+        </Link>
+      ),
     },
     {
       id: "pool_id",
@@ -76,8 +92,8 @@ export default function Samples() {
   const options = {
     initialState: {
       filters: [
-        { id: "project", value: searchParams.get("project") || "" },
-        { id: "experiment", value: searchParams.get("experiment") || "" },
+        { id: "project", value: tableFilters?.project || "" },
+        { id: "experiment", value: tableFilters?.experiment || "" },
       ],
       pageSize: 25,
     },

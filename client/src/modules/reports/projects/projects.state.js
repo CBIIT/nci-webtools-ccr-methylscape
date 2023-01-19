@@ -22,6 +22,11 @@ export const projectsTableData = selector({
   },
 });
 
+export const projectsTableFilters = atom({
+  key: "projectsTableFilters",
+  default: {},
+});
+
 export const selectedRow = selector({
   key: "selectedProject",
   get: ({ get }) => {
@@ -31,8 +36,7 @@ export const selectedRow = selector({
     let { sampleData } = get(methylscapeData);
     let data = sampleData.filter(({ unifiedSamplePlate }) => unifiedSamplePlate == selectedProject);
 
-    const getMethylationClasses = (key = "CNSv12b6_subclass1") =>
-      Object.entries(groupBy(data, key)).map((group) => [group[0], group[1].length]);
+    const getGroups = (key) => Object.entries(groupBy(data, key)).map((group) => [group[0], group[1].length]);
 
     const getGender = () => {
       let cur = {};
@@ -60,11 +64,11 @@ export const selectedRow = selector({
       return pieData;
     };
 
-    const methylationClasses = getMethylationClasses();
+    const methylationClasses = getGroups("CNSv12b6_subclass1");
     const gender = getGender();
     const ageDistribution = getAgeDistribution();
 
-    console.log({ methylationClasses, gender });
+    // console.log({ methylationClasses, gender });
 
     return { selectedProject, methylationClasses, gender, ageDistribution };
   },
