@@ -39,7 +39,7 @@ export default function Analysis() {
   }
 
   return (
-    <Container fluid className="ps-4">
+    <Container fluid>
       <Row className="my-4">
         <Col>
           <h1 className="text-white">Analysis</h1>
