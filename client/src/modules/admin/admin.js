@@ -21,13 +21,13 @@ export default function Admin() {
   ];
 
   return (
-    <Container fluid="xxl" className="my-4 p-3 rounded bg-white">
-      <h1 className="h3 mb-4 px-3 text-primary">Administrative Tasks</h1>
-      <hr className="mb-4 mb-4 border-info" />
-
-      <Row className="px-3">
+    <Container>
+      <Row className="my-4">
+        <h1 className="text-white">Administrative Tasks</h1>
+      </Row>
+      <Row className="mb-4">
         {actions.map((action, index) => (
-          <Col md="3" key={`admin-action-${index}`}>
+          <Col md={4} key={`admin-action-${index}`}>
             <Link to={action.link} className="text-decoration-none">
               <Card className="card-link card-accent-primary">
                 <Card.Body className="shadow">

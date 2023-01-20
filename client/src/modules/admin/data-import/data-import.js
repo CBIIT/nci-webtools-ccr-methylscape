@@ -85,31 +85,50 @@ export default function DataImport() {
 
   return (
     <>
-      <Container className="my-4 p-3 rounded bg-white">
-        <h1 className="h4 mb-3 text-primary d-flex justify-content-between">
-          Data Import
-          <Button onClick={() => runImport()}>Run Import</Button>
-        </h1>
-        <Row className="row row-cols-lg-auto">
+      <Container>
+        <Row className="my-4">
           <Col>
-            <InputGroup className="mb-2">
-              <InputGroup.Text className="bg-transparent border-0">Status</InputGroup.Text>
-              <Form.Select onChange={(ev) => setStatusFilter(ev.target.value)} value={statusFilter}>
-                <option value="">ALL</option>
-                <option value="COMPLETED">COMPLETED</option>
-                <option value="FAILED">FAILED</option>
-              </Form.Select>
-              <Button
-                variant="outline-primary"
-                className="bg-transparent border-0 text-primary"
-                onClick={(ev) => setStatusFilter("")}>
-                &#10005; Clear
-              </Button>
-            </InputGroup>
+            <h1 className="text-white">Data Import</h1>
+          </Col>
+          <Col className="d-flex justify-content-end">
+            <Button variant="light" onClick={() => runImport(true)}>
+              Recreate Import
+            </Button>
           </Col>
         </Row>
 
-        <Table data={filteredData} columns={columns} options={{ disableFilters: true }} />
+        <Row className="mb-4">
+          <Col>
+            <div className="bg-light py-4 px-2 rounded">
+              <Row className="row row-cols-lg-auto">
+                <Col>
+                  <InputGroup className="mb-2">
+                    <InputGroup.Text className="bg-transparent border-0">Status</InputGroup.Text>
+                    <Form.Select onChange={(ev) => setStatusFilter(ev.target.value)} value={statusFilter}>
+                      <option value="">ALL</option>
+                      <option value="COMPLETED">COMPLETED</option>
+                      <option value="FAILED">FAILED</option>
+                    </Form.Select>
+                    <Button
+                      variant="outline-primary"
+                      className="bg-transparent border-0 text-primary"
+                      onClick={(ev) => setStatusFilter("")}>
+                      &#10005; Clear
+                    </Button>
+                  </InputGroup>
+                </Col>
+              </Row>
+
+              <Row>
+                <Col>
+                  <div className="bg-light">
+                    <Table data={filteredData} columns={columns} options={{ disableFilters: true }} />
+                  </div>
+                </Col>
+              </Row>
+            </div>
+          </Col>
+        </Row>
       </Container>
 
       <Modal show={modal.show} onHide={closeModal} size="lg">

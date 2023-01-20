@@ -10,9 +10,11 @@ export default function UserProfile() {
   const session = useRecoilValue(sessionState);
 
   return (
-    <Container className="py-3">
-      <Row className="mb-3">
-        <h1 className="text-white">User Profile</h1>
+    <Container>
+      <Row className="my-4">
+        <Col>
+          <h1 className="text-white">User Profile</h1>
+        </Col>
       </Row>
       <Row>
         <Col>

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Container, Button, Row, Modal, Form, FormControl } from "react-bootstrap";
+import { Container, Button, Row, Col, Modal, Form, FormControl } from "react-bootstrap";
 import { useRecoilValue, useRecoilRefresher_UNSTABLE } from "recoil";
 import Table from "../../components/table";
 import { organizationsSelector } from "./organization-management.state";
@@ -135,20 +135,25 @@ export default function AdminOrganizationManagement() {
   ];
   return (
     <>
-      <Container fluid="xxl" className="my-3 text-white rounded">
-        <Row>
-          <div className="col-sm-10 col-xs-12 col-12">
-            <h1 className="h2">Manage Organizations/ Institutions</h1>
-          </div>
-          <div className="col-sm-2 col-xs-12 col-12 mb-2">
-            <Button className="btn btn-success pull-right" onClick={(e) => openAddOrgModal()}>
+      <Container>
+        <Row className="my-4">
+          <Col>
+            <h1 className="text-white">Manage Organizations/Institutions</h1>
+          </Col>
+          <Col className="d-flex justify-content-end">
+            <Button variant="light" onClick={() => openAddOrgModal()}>
               Add Organization
             </Button>
-          </div>
+          </Col>
         </Row>
-        <div className="bg-white text-primary px-3">
-          <Table responsive data={organizations} columns={cols} options={{ disableFilters: true }} />
-        </div>
+
+        <Row className="mb-4">
+          <Col>
+            <div className="bg-light py-4 px-2 rounded">
+              <Table responsive data={organizations} columns={cols} options={{ disableFilters: true }} />
+            </div>
+          </Col>
+        </Row>
 
         <Modal show={showAddOrgModal} onHide={() => setShowAddOrgModal(false)}>
           <Form className="bg-light p-3" onSubmit={handleAddOrgSubmit}>

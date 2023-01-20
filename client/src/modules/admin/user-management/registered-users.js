@@ -172,7 +172,7 @@ export default function RegisterUsers() {
     },
   ].filter(Boolean);
   return (
-    <Container>
+    <>
       {/* <h1 className="h4 mb-3 text-primary">Registered Users</h1> */}
       {alerts.map(({ type, message }, i) => (
         <Alert key={i} variant={type} onClose={() => setAlerts([])} dismissible>
@@ -256,6 +256,6 @@ export default function RegisterUsers() {
           </Modal.Footer>
         </Form>
       </Modal>
-    </Container>
+    </>
   );
 }

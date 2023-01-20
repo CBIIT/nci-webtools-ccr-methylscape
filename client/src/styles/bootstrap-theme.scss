@@ -50,6 +50,16 @@ a,
   @include nav-link;
 }
 
+.legend {
+  font-size: 1rem;
+  white-space: nowrap;
+}
+
+legend {
+  float: none;
+  width: inherit;
+}
+
 .table {
   font-variant-numeric: tabular-nums;
 }
@@ -103,7 +113,7 @@ input::-webkit-calendar-picker-indicator,
   transition: all 0.1s;
 
   &.card-accent-primary {
-    border-top: 6px $primary solid;
+    border-top: 6px $blue-300 solid;
     .bi {
       color: $blue-400;
       transition: all 0.1s;
@@ -111,11 +121,10 @@ input::-webkit-calendar-picker-indicator,
 
     &:hover {
       color: $blue-600;
-      border-top-color: $blue-400;
       box-shadow: 0 0.75rem 1.5rem rgba($black, 0.15);
 
       .bi {
-        color: $orange;
+        color: $green;
       }
     }
   }

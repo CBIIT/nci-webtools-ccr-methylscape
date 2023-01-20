@@ -1,31 +1,10 @@
-// .stat-icon {
-//   color: black;
-//   font-size: 24px; //rem;
-//   align-self: center;
-// }
-
-.stat-icon {
-  height: 120px;
-  align-self: left;
+.data-background-image {
+  background-repeat: no-repeat;
+  background-position: left center;
 }
 
-.data-text-project {
-  position: absolute;
-  //left: 140px;
-  //top: 25px;
-  padding-top: 35px;
-  padding-left: 125px;
-}
-
-.data-text-experiment {
-  position: absolute;
-  padding-top: 35px;
-  padding-left: 110px;
-}
-.data-text-sample {
-  position: absolute;
-  padding-top: 35px;
-  padding-left: 110px;
+.data-text {
+  margin-left: 150px;
 }
 
 .header-img {
@@ -36,4 +15,12 @@
 }
 .detail-table-divider {
   border-left: 3px solid #6ba5b4;
+}
+
+.border-inactive {
+  border-bottom: 4px solid transparent;
+}
+
+.border-active {
+  border-bottom: 4px solid orange;
 }

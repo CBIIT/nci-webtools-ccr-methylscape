@@ -39,12 +39,14 @@ export default function Analysis() {
   }
 
   return (
-    <Container fluid>
-      <Row className="mt-3">
-        <h1 className="text-white">Analysis</h1>
+    <Container fluid className="ps-4">
+      <Row className="my-4">
+        <Col>
+          <h1 className="text-white">Analysis</h1>
+        </Col>
       </Row>
       <Row>
-        <Col xl={expand[0] ? 12 : 6} className={classNames("my-4", expand[1] ? "d-xl-none" : "d-block")}>
+        <Col xl={expand[0] ? 12 : 6} className={classNames("mb-4", expand[1] ? "d-xl-none" : "d-block")}>
           <Card className="h-100">
             <Card.Body>
               <OverlayTrigger
@@ -75,7 +77,7 @@ export default function Analysis() {
             </Card.Body>
           </Card>
         </Col>
-        <Col xl={expand[1] ? 12 : 6} className={classNames("my-4", expand[0] ? "d-xl-none" : "d-block")}>
+        <Col xl={expand[1] ? 12 : 6} className={classNames("mb-4", expand[0] ? "d-xl-none" : "d-block")}>
           <Card className="h-100">
             <OverlayTrigger
               overlay={<Tooltip id="expand-tooltip-1">{expand[1] ? "Collapse Panel" : "Expand Panel"}</Tooltip>}>
