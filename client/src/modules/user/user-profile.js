@@ -16,7 +16,7 @@ export default function UserProfile() {
           <h1 className="text-white">User Profile</h1>
         </Col>
       </Row>
-      <Row>
+      <Row className="mb-4">
         <Col>
           <Card className="h-100">
             <Card.Body>
