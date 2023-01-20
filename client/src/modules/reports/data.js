@@ -1,7 +1,6 @@
 import { Suspense, useEffect } from "react";
 import Container from "react-bootstrap/Container";
 import { useRecoilValue } from "recoil";
-import CountUp from "react-countup";
 import { methylscapeData } from "./data.state";
 import { NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
 
@@ -50,12 +49,8 @@ export default function Data() {
                   className={({ isActive }) => (isActive ? navClass + activeNavClass : navClass)}>
                   {/* <PieChartFill className="stat-icon" /> */}
                   <img src={ProjectImg} className="stat-icon" alt="Project" />
-                  <div className="data-text-project">
-                    {data.length ? (
-                      <CountUp className="countup" start={projectsCount / 2} end={projectsCount} duration={1} />
-                    ) : (
-                      <span className="countup">0</span>
-                    )}
+                  <div className="data-text-project text-black">
+                    {projectsCount}
                     <h5 className="fw-light text-black">Projects</h5>
                   </div>
                 </NavLink>
@@ -66,13 +61,9 @@ export default function Data() {
                   className={({ isActive }) => (isActive ? navClass + activeNavClass : navClass)}>
                   {/* <ClipboardData className="stat-icon" /> */}
                   <img src={ExperimentImg} className="stat-icon" alt="Experiment" />
-                  <div className="data-text-experiment">
-                    {data.length ? (
-                      <CountUp className="countup" start={experimentsCount / 2} end={experimentsCount} duration={1} />
-                    ) : (
-                      <span className="countup">0</span>
-                    )}
-                    <h5 className="fw-light text-black">Experiments</h5>
+                  <div className="data-text-experiment text-black">
+                    {experimentsCount}
+                    <h5 className="fw-light">Experiments</h5>
                   </div>
                 </NavLink>
               </Col>
@@ -80,13 +71,9 @@ export default function Data() {
                 <NavLink to={"samples"} className={({ isActive }) => (isActive ? navClass + activeNavClass : navClass)}>
                   {/* <PeopleFill className="stat-icon" /> */}
                   <img src={SampleImg} className="stat-icon" alt="Samples" />
-                  <div className="data-text-sample">
-                    {data.length ? (
-                      <CountUp className="countup" start={samplesCount / 2} end={samplesCount} duration={1} />
-                    ) : (
-                      <span className="countup">0</span>
-                    )}
-                    <h5 className="fw-light text-black">Samples</h5>
+                  <div className="data-text-sample text-black">
+                    {samplesCount}
+                    <h5 className="fw-light">Samples</h5>
                   </div>
                 </NavLink>
               </Col>
