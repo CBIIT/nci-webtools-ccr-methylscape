@@ -3,43 +3,37 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "axios": "^0.27.2",
-    "bootstrap": "^5.2.1",
-    "bootstrap-icons": "^1.9.1",
+    "axios": "^1.2.3",
+    "bootstrap": "^5.2.3",
+    "bootstrap-icons": "^1.10.3",
     "classnames": "^2.3.2",
     "file-saver": "^2.0.5",
     "lodash": "^4.17.21",
-    "plotly.js": "^2.14.0",
+    "plotly.js": "^2.18.0",
     "react": "^18.2.0",
-    "react-bootstrap": "^2.5.0",
-    "react-chartkick": "^0.5.2",
-    "react-countup": "^6.2.0",
+    "react-bootstrap": "^2.7.0",
     "react-dom": "^18.2.0",
     "react-plotly.js": "^2.6.0",
-    "react-router-dom": "^6.4.1",
-    "react-select": "^5.4.0",
+    "react-router-dom": "^6.7.0",
+    "react-select": "^5.7.0",
     "react-table": "^7.8.0",
-    "recoil": "^0.7.5",
+    "recoil": "^0.7.6",
     "web-vitals": "^2.1.4"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.3.0",
     "@testing-library/user-event": "^13.5.0",
-    "assert": "^2.0.0",
-    "buffer": "^6.0.3",
     "http-proxy-middleware": "^2.0.6",
-    "react-app-rewired": "^2.2.1",
     "react-scripts": "^5.0.1",
-    "sass": "^1.55.0",
-    "stream-browserify": "^3.0.0"
+    "sass": "^1.57.1"
   },
   "scripts": {
-    "start": "react-app-rewired --max_old_space_size=4096 start",
-    "start:sudo": "sudo react-app-rewired --max_old_space_size=4096 start",
-    "build": "react-app-rewired --max_old_space_size=4096 build",
-    "test": "react-app-rewired test",
-    "eject": "react-app-rewired eject"
+    "start": "react-scripts --max_old_space_size=4096 start",
+    "start:sudo": "sudo react-scripts --max_old_space_size=4096 start",
+    "build": "react-scripts --max_old_space_size=4096 build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
   },
   "eslintConfig": {
     "extends": [
