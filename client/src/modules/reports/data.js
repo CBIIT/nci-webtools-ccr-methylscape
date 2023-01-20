@@ -44,7 +44,7 @@ export default function Data() {
           }>
           <Col>
             <Suspense fallback={<Loader message="Loading Samples" />}>
-              <div className="bg-light mb-4">
+              <div className="bg-light mb-4 rounded">
                 <Row className="justify-content-center">
                   {links.map((link, index) => (
                     <Col xl={3} className={index < links.length - 1 ? "border-end" : ""} key={index}>
@@ -74,7 +74,7 @@ export default function Data() {
       </Row>
       <Row>
         <Col>
-          <div className="bg-white mb-4">
+          <div className="bg-white mb-4 rounded">
             <Outlet />
           </div>
         </Col>
