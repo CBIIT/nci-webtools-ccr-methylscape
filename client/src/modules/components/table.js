@@ -125,7 +125,7 @@ export default function Table({
             id: "selection",
             disableSortBy: true,
             Cell: ({ row }) => (
-              <div className="d-flex justify-content-center">
+              <div className="text-center">
                 <IndeterminateRadio {...row.getToggleRowSelectedProps()} title={Object.values(row.values)[0]} />
               </div>
             ),
