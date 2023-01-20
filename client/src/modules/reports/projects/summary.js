@@ -1,11 +1,18 @@
 import { Row, Col } from "react-bootstrap";
-import { ColumnChart, PieChart } from "react-chartkick";
+import Plot from "react-plotly.js";
 import { useRecoilValue } from "recoil";
 import { selectedRow } from "./projects.state";
-import "chartkick/chart.js";
+import { getGroupedCounts, getPiePlot, getHistogramPlot } from "./projects.utils";
 
 export default function Summary() {
-  const { selectedProject, methylationClasses, gender, ageDistribution } = useRecoilValue(selectedRow);
+  const { selectedProject, data } = useRecoilValue(selectedRow);
+  const methylationClassCounts = getGroupedCounts(data, (g) => g.CNSv12b6_subclass1?.split(":")[0] || "N/A");
+  const genderCounts = getGroupedCounts(data, (g) => g.sex || "N/A");
+  const ageData = data.map((d) => d.age);
+
+  const methylationClassesPlot = getPiePlot(methylationClassCounts);
+  const genderPlot = getPiePlot(genderCounts);
+  const agePlot = getHistogramPlot(ageData, { layout: { xaxis: { title: "Age" }, yaxis: { title: "Count" } } });
 
   return (
     <div>
@@ -17,25 +24,17 @@ export default function Summary() {
             </Col>
           </Row>
           <Row className="text-center">
-            <Col md="4" sm="12">
+            <Col lg="6" xxl="4" sm="12">
               <h5 className="mb-3">Methylation Classes</h5>
-              <PieChart
-                height="300px"
-                data={[...methylationClasses]}
-                // legend={false}
-              />
+              <Plot className="w-100 mb-4" style={{ height: "400px" }} {...methylationClassesPlot} />
             </Col>
-            <Col md="4" sm="12">
+            <Col lg="6" xxl="4" sm="12">
               <h5 className="mb-3">Gender</h5>
-              <PieChart
-                height="300px"
-                data={[...gender]}
-                //   legend={false}
-              />
+              <Plot className="w-100 mb-4" style={{ height: "400px" }} {...genderPlot} />
             </Col>
-            <Col md="4" sm="12">
+            <Col lg="12" xxl="4" sm="12">
               <h5 className="mb-3">Age Distribution</h5>
-              <ColumnChart height="300px" data={[...ageDistribution]} />
+              <Plot className="w-100 mb-4" style={{ height: "400px" }} {...agePlot} />
             </Col>
           </Row>
         </>
