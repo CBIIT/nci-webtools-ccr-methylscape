@@ -27,9 +27,9 @@ export default function Admin() {
       </Row>
       <Row className="mb-4">
         {actions.map((action, index) => (
-          <Col md={4} key={`admin-action-${index}`}>
+          <Col lg={4} md={6} key={`admin-action-${index}`}>
             <Link to={action.link} className="text-decoration-none">
-              <Card className="card-link card-accent-primary">
+              <Card className="card-link card-accent-primary mb-3">
                 <Card.Body className="shadow">
                   <div className="text-center py-4 admin-manage-icons">
                     <i className={`display-3 bi ${action.icon}`} role="img" aria-label={action.title} />
