@@ -71,7 +71,7 @@ export default function MetadataForm({ className, onSelect }) {
         <Col md="auto">
           <Form.Group controlId="showAnnotations" className="mb-3">
             <Form.Check
-              label="Show Weekly Updates"
+              label="Show most recent clinical samples"
               type="switch"
               name="showAnnotations"
               checked={form.showAnnotations}
