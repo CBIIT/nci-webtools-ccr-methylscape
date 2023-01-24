@@ -90,11 +90,11 @@ export default function DataImport() {
           <Col>
             <h1 className="text-white">Data Import</h1>
           </Col>
-          <Col className="d-flex justify-content-end">
+          {/* <Col className="d-flex justify-content-end">
             <Button variant="light" onClick={() => runImport(true)}>
               Recreate Import
             </Button>
-          </Col>
+          </Col> */}
         </Row>
 
         <Row className="mb-4">
