@@ -60,7 +60,7 @@ export default function Samples() {
       ),
     },
     {
-      id: "pool_id",
+      id: "surgeryDate",
       accessor: "surgeryDate",
       Header: "Sample Date",
       Cell: (e) => (e.value ? new Date(e.value).toLocaleDateString("en-US") : "N/A"),
@@ -95,6 +95,7 @@ export default function Samples() {
         { id: "project", value: tableFilters?.project || "" },
         { id: "experiment", value: tableFilters?.experiment || "" },
       ],
+      sortBy: [{ id: "surgeryDate", desc: true }],
       pageSize: 25,
     },
   };
