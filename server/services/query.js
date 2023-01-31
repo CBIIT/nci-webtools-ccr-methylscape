@@ -45,7 +45,7 @@ export async function getUnifiedProject(connection) {
 export async function getExperiments(connection) {
   const experimentColumns = [
     connection.raw(`string_agg(distinct "piCollaborator", ', ' ) as Investigator`),
-    connection.raw(`string_agg(distinct to_char("surgeryDate", 'yyyy-mm-dd'), ', ' ) as experimentDate`),
+    connection.raw(`max("surgeryDate") as experimentDate`),
     connection.raw(`count(distinct "idatFilename") as sampleCount`),
     connection.raw(`"sentrixId" as experiment`),
     connection.raw(`"unifiedSamplePlate"`),
