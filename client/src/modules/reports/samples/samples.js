@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import axios from "axios";
 import { saveAs } from "file-saver";
-import { samplesTableData, samplesTableFilters } from "./samples.state";
+import { additionalColumns, samplesTableData, samplesTableFilters } from "./samples.state";
 import { projectsTableFilters } from "../projects/projects.state";
 import { experimentsTableFilters } from "../experiments/experiments.state";
 import Table from "../../components/table";
@@ -19,7 +19,7 @@ export default function Samples() {
     {
       Header: () => null,
       id: "expander",
-      aria: "",
+      aria: "Show/Hide Details",
       disableSortBy: true,
       Cell: ({ row }) => (
         <span {...row.getToggleRowExpandedProps()}>
@@ -86,11 +86,14 @@ export default function Samples() {
       Header: "Diagnosis",
       Cell: (e) => (e.value ? e.value : "N/A"),
       aria: "Diagnosis",
+      show: false,
     },
+    ...additionalColumns,
   ];
 
   const options = {
     initialState: {
+      hiddenColumns: columns.filter((col) => col.show === false).map((col) => col.accessor),
       filters: [
         { id: "project", value: tableFilters?.project || "" },
         { id: "experiment", value: tableFilters?.experiment || "" },
@@ -160,137 +163,9 @@ export default function Samples() {
             </Row>
           </Col>
         </Row>
-
-        {/* <Row>
-          <Col sm="3">
-            <b>Diagnosis:</b>
-          </Col>
-          <Col sm="3">{original.diagnosis}</Col>
-          <Col sm="3">
-            <b>Tumor Site:</b>
-          </Col>
-          <Col sm="3">{original.tumor_data}</Col>
-        </Row>
-        <Row>
-          <Col sm="3">
-            <b>Methylation Family (MF):</b>
-          </Col>
-          <Col sm="3">{original.family}</Col>
-          <Col sm="3">
-            <b>t-SNE Plot:</b>
-          </Col>
-          <Col sm="3">
-            <Button
-              variant="link"
-              className="p-0"
-              onClick={() =>
-                download(original.id, original.sample_name + '.html')
-              }
-            >
-              View Plot
-            </Button>
-          </Col>
-        </Row>
-        <Row>
-          <Col sm="3">
-            <b>MF Calibrated Scores:</b>
-          </Col>
-          <Col sm="3">{original.family_score}</Col>
-          <Col sm="3">
-            <b>Methylation Report:</b>
-          </Col>
-          <Col sm="3">
-            <Button
-              variant="link"
-              className="p-0"
-              onClick={() => download(original.id, original.report_file_name)}
-            >
-              Download Report
-            </Button>
-          </Col>
-        </Row>
-        <Row>
-          <Col sm="3">
-            <b>Methylation Class (MC):</b>
-          </Col>
-          <Col sm="3">{original.class}</Col>
-          <Col sm="3">
-            <b>QCI Report:</b>
-          </Col>
-          <Col sm="3">
-            {original.xml_report ? (
-              <Link
-                className="btn btn-link p-0"
-                target="_blank"
-                to={`/qci?id=${original.id}&file=${original.xml_report}`}
-              >
-                View Report
-              </Link>
-            ) : (
-              <Button variant="link" className="p-0" disabled={true}>
-                View Report
-              </Button>
-            )}
-          </Col>
-        </Row>
-        <Row>
-          <Col sm="3">
-            <b>MC Calibrated Scores:</b>
-          </Col>
-          <Col sm="3">{original.class_score}</Col>
-          <Col sm="3">
-            <b>NGS Report (legacy)</b>
-          </Col>
-          <Col sm="3">
-            <Button
-              variant="link"
-              className="p-0"
-              onClick={() =>
-                download(original.id, original.sample_name + '_NGS.pdf')
-              }
-            >
-              Download Report
-            </Button>
-          </Col>
-        </Row>
-        <Row>
-          <Col sm="3">
-            <b>MGMT Score:</b>
-          </Col>
-          <Col sm="3">
-            {original.mgmt_prediction == null
-              ? ''
-              : parseFloat(original.mgmt_prediction.Estimated).toFixed(3)}
-          </Col>
-          <Col sm="3">
-            <b>Slide Image:</b>
-          </Col>
-          <Col sm="3">
-            <Button
-              variant="link"
-              className="p-0"
-              onClick={() =>
-                download(original.id, original.sample_name + '.jpg')
-              }
-            >
-              Download Image
-            </Button>
-          </Col>
-        </Row>
-        <Row>
-          <Col sm="3">
-            <b>Notes:</b>
-          </Col>
-          <Col sm="3">{original.notes}</Col>
-          <Col></Col>
-        </Row> */}
       </Container>
     );
   }, []);
-
-  function convertDate(data) {
-    return data;
-  }
 
   async function download(id, file) {
     try {
@@ -309,7 +184,7 @@ export default function Samples() {
   }
 
   return (
-    <Container fluid>
+    <Container fluid className="py-1">
       <Row>
         <Col>
           {tableData && tableData.length > 0 && (
