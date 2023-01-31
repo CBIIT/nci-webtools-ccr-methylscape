@@ -4,7 +4,7 @@ import pick from "lodash/pick";
 import { selector } from "recoil";
 import { selectedPoints, formState } from "../metadata/metadata-plot.state";
 
-function toFixed(num, maxDigits = 2) {
+export function toFixed(num, maxDigits = 2) {
   return isNumber(num) && !isNaN(num) ? +num.toFixed(maxDigits) : num;
 }
 
