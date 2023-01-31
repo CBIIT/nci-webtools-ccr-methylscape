@@ -65,6 +65,7 @@ export default function Projects() {
   ];
   const options = {
     initialState: {
+      sortBy: [{ id: "project" }],
       selectedRowIds: { 0: true },
       filters: [{ id: "project", value: tableFilters?.project || "" }],
     },

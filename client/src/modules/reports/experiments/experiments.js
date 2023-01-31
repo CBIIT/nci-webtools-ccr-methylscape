@@ -45,11 +45,13 @@ export default function Experiments() {
     {
       id: "date",
       accessor: "experimentdate",
-      Header: "Experiment Date",
+      Header: "Most Recent Experiment Date",
+      Cell: (e) => (e?.value ? new Date(e.value).toLocaleDateString() : null),
     },
   ];
   const options = {
     initialState: {
+      sortBy: [{ id: "date", desc: true }],
       filters: [
         { id: "project", value: tableFilters.project || "" },
         { id: "experiment", value: tableFilters.experiment || "" },
