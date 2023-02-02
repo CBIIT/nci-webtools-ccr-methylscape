@@ -69,6 +69,10 @@ export async function sendNotification({
     bcc = await getValidNotificationEmails(bcc, userManager);
   }
 
+  if (!to?.length && !cc?.length && !bcc?.length) {
+    return null;
+  }
+
   const html = await renderTemplate(templateName, params);
   return await sendMail({ from, to, cc, bcc, subject, html });
 }
