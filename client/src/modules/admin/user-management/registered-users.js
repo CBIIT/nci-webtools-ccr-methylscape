@@ -200,62 +200,70 @@ export default function RegisterUsers() {
         </>
       )}
 
-      <Modal show={showApprovalModal} onHide={() => setShowApprovalModal(false)}>
-        <Form onSubmit={handleApprovalFormSubmit}>
-          <Modal.Header closeButton>
-            <Modal.Title>
-              Set User Role: {approvalForm.firstName}, {approvalForm.lastName}
-            </Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <Form.Group className="mb-3" controlId="approveModalId">
-              <Form.Label>User Role</Form.Label>
-              <Form.Select name="roleId" value={approvalForm.roleId || ""} onChange={handleApprovalFormChange} required>
-                <option value="" hidden>
-                  Select Role
-                </option>
-                {roles.map((r) => (
-                  <option key={r.id} value={r.id}>
-                    {r.description} ({r.name})
+      {showApprovalModal && (
+        <Modal show={showApprovalModal} onHide={() => setShowApprovalModal(false)}>
+          <Form onSubmit={handleApprovalFormSubmit}>
+            <Modal.Header closeButton>
+              <Modal.Title>
+                Set User Role: {approvalForm.firstName}, {approvalForm.lastName}
+              </Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <Form.Group className="mb-3" controlId="approveModalId">
+                <Form.Label>User Role</Form.Label>
+                <Form.Select
+                  name="roleId"
+                  value={approvalForm.roleId || ""}
+                  onChange={handleApprovalFormChange}
+                  required>
+                  <option value="" hidden>
+                    Select Role
                   </option>
-                ))}
-              </Form.Select>
-            </Form.Group>
-          </Modal.Body>
-          <Modal.Footer>
-            <Button variant="primary" type="submit" className="btn-lg">
-              Approve
-            </Button>
-          </Modal.Footer>
-        </Form>
-      </Modal>
+                  {roles.map((r) => (
+                    <option key={r.id} value={r.id}>
+                      {r.description} ({r.name})
+                    </option>
+                  ))}
+                </Form.Select>
+              </Form.Group>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant="primary" type="submit" className="btn-lg">
+                Approve
+              </Button>
+            </Modal.Footer>
+          </Form>
+        </Modal>
+      )}
 
-      <Modal show={showRejectionModal} onHide={() => setShowRejectionModal(false)}>
-        <Form onSubmit={handleRejectionFormSubmit}>
-          <Modal.Header closeButton>
-            <Modal.Title>
-              Reject User: {rejectionForm.firstName}, {rejectionForm.lastName}
-            </Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <Form.Group className="mb-3">
-              <Form.Label>Comments</Form.Label>
-              <Form.Control
-                as="textarea"
-                name="notes"
-                value={rejectionForm.notes || ""}
-                onChange={handleRejectionFormChange}
-                required
-              />
-            </Form.Group>
-          </Modal.Body>
-          <Modal.Footer>
-            <Button variant="primary" type="submit" className="btn-lg">
-              Reject
-            </Button>
-          </Modal.Footer>
-        </Form>
-      </Modal>
+      {showRejectionModal && (
+        <Modal show={showRejectionModal} onHide={() => setShowRejectionModal(false)}>
+          <Form onSubmit={handleRejectionFormSubmit}>
+            <Modal.Header closeButton>
+              <Modal.Title>
+                Reject User: {rejectionForm.firstName}, {rejectionForm.lastName}
+              </Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <Form.Group className="mb-3">
+                <Form.Label>Comments</Form.Label>
+                <Form.Control
+                  as="textarea"
+                  name="notes"
+                  value={rejectionForm.notes || ""}
+                  onChange={handleRejectionFormChange}
+                  required
+                />
+              </Form.Group>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant="primary" type="submit" className="btn-lg">
+                Reject
+              </Button>
+            </Modal.Footer>
+          </Form>
+        </Modal>
+      )}
     </>
   );
 }

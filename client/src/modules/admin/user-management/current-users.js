@@ -196,77 +196,78 @@ export default function CurrentUsers() {
         </>
       )}
 
-      <Modal show={showEditModal} onHide={() => setShowEditModal(false)}>
-        <Form onSubmit={handleFormSubmit}>
-          <Modal.Header closeButton>
-            <Modal.Title>
-              Edit User: {form.firstName}, {form.lastName}
-            </Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <Form.Group className="mb-3" controlId="approveModalId">
-              <Form.Label>Update User Role</Form.Label>
-              <Form.Select name="roleId" value={form.roleId} onChange={handleFormChange} required>
-                <option value="" hidden>
-                  Select Role
-                </option>
-                {roles.map((r) => (
-                  <option key={r.id} value={r.id}>
-                    {r.description} ({r.name})
+      {showEditModal && (
+        <Modal show={showEditModal} onHide={() => setShowEditModal(false)}>
+          <Form onSubmit={handleFormSubmit}>
+            <Modal.Header closeButton>
+              <Modal.Title>
+                Edit User: {form.firstName}, {form.lastName}
+              </Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <Form.Group className="mb-3" controlId="approveModalId">
+                <Form.Label>Update User Role</Form.Label>
+                <Form.Select name="roleId" value={form.roleId} onChange={handleFormChange} required>
+                  <option value="" hidden>
+                    Select Role
                   </option>
-                ))}
-              </Form.Select>
-            </Form.Group>
+                  {roles.map((r) => (
+                    <option key={r.id} value={r.id}>
+                      {r.description} ({r.name})
+                    </option>
+                  ))}
+                </Form.Select>
+              </Form.Group>
 
-            <Form.Group className="mb-3" controlId="organization">
-              <Form.Label>Update Organization/Institution</Form.Label>
-              <Form.Select name="organizationId" value={form.organizationId} onChange={handleFormChange} required>
-                <option value="" hidden>
-                  Select Organization/Instituiton
-                </option>
-                {organizations.map((o) => (
-                  <option key={`organization-${o.name}`} value={o.id}>
-                    {o.name}
+              <Form.Group className="mb-3" controlId="organization">
+                <Form.Label>Update Organization/Institution</Form.Label>
+                <Form.Select name="organizationId" value={form.organizationId} onChange={handleFormChange} required>
+                  <option value="" hidden>
+                    Select Organization/Instituiton
                   </option>
-                ))}
-              </Form.Select>
-              {+form.organizationId === 1 && (
-                <Form.Control
-                  type="text"
-                  name="organizationOther"
-                  placeholder="Enter Organization/Instituiton"
-                  value={form.organizationOther}
+                  {organizations.map((o) => (
+                    <option key={`organization-${o.name}`} value={o.id}>
+                      {o.name}
+                    </option>
+                  ))}
+                </Form.Select>
+                {+form.organizationId === 1 && (
+                  <Form.Control
+                    type="text"
+                    name="organizationOther"
+                    placeholder="Enter Organization/Instituiton"
+                    value={form.organizationOther}
+                    onChange={handleFormChange}
+                    required
+                    className="mt-2"
+                  />
+                )}
+              </Form.Group>
+              <Form.Group>
+                <Form.Check
+                  inline
+                  id="status"
+                  type="switch"
+                  label="Active"
+                  name="status"
+                  data-checkedvalue="active"
+                  data-uncheckedvalue="inactive"
+                  checked={form.status === "active"}
                   onChange={handleFormChange}
-                  required
-                  className="mt-2"
                 />
-              )}
-            </Form.Group>
-            <Form.Group>
-              <Form.Check
-                inline
-                id="status"
-                type="switch"
-                label="Active"
-                name="status"
-                data-checkedvalue="active"
-                data-uncheckedvalue="inactive"
-                checked={form.status === "active"}
-                onChange={handleFormChange}
-              />
-            </Form.Group>
-            <Form.Group>
-              <Form.Check
-                inline
-                type="switch"
-                id="receiveNotification"
-                label="Receive Notifications"
-                name="receiveNotification"
-                checked={form.receiveNotification}
-                onChange={handleFormChange}
-              />
-            </Form.Group>
-            {/* <Form.Group className="mb-3" controlId="editUserStatus">
+              </Form.Group>
+              <Form.Group>
+                <Form.Check
+                  inline
+                  type="switch"
+                  id="receiveNotification"
+                  label="Receive Notifications"
+                  name="receiveNotification"
+                  checked={form.receiveNotification}
+                  onChange={handleFormChange}
+                />
+              </Form.Group>
+              {/* <Form.Group className="mb-3" controlId="editUserStatus">
               <Form.Label>Enable/ Disable Account</Form.Label>
               <Form.Select
                 name="status"
@@ -280,14 +281,15 @@ export default function CurrentUsers() {
                 <option value="inactive">Disable account</option>
               </Form.Select>
             </Form.Group> */}
-          </Modal.Body>
-          <Modal.Footer>
-            <Button variant="primary" type="submit" className="btn-lg">
-              Save
-            </Button>
-          </Modal.Footer>
-        </Form>
-      </Modal>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant="primary" type="submit" className="btn-lg">
+                Save
+              </Button>
+            </Modal.Footer>
+          </Form>
+        </Modal>
+      )}
     </>
   );
 }
