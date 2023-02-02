@@ -2,14 +2,15 @@ import { useMemo, forwardRef, useRef, useEffect, Fragment } from "react";
 import BootstrapTable from "react-bootstrap/Table";
 import { Form, InputGroup, Pagination, Row, Col, Dropdown, Button } from "react-bootstrap";
 import { useTable, useFilters, usePagination, useSortBy, useRowSelect, useExpanded } from "react-table";
+import debounce from "lodash/debounce";
 import "./table.scss";
 
 export function TextFilter({ column: { filterValue, setFilter, placeholder, aria } }) {
   return (
     <Form.Control
       size="sm"
-      value={filterValue || ""}
-      onChange={(e) => setFilter(e.target.value || undefined)}
+      defaultValue={filterValue || ""}
+      onChange={debounce((e) => setFilter(e.target.value || undefined), 200)}
       placeholder={placeholder || `Search`}
       aria-label={aria}
       className="border-0 rounded-pill"></Form.Control>
@@ -24,15 +25,15 @@ export function RangeFilter({ column: { filterValue = [], setFilter, minPlacehol
       <Form.Control
         placeholder={minPlaceholder || "Min value"}
         type="number"
-        value={filterValue[0] || ""}
-        onChange={(e) => setFilter((old = []) => [getInputValue(e), old[1]])}
+        defaultValue={filterValue[0] || ""}
+        onChange={debounce((e) => setFilter((old = []) => [getInputValue(e), old[1]], 200))}
         aria-label={aria + " Min"}
       />
       <Form.Control
         placeholder={maxPlaceholder || "Max value"}
         type="number"
-        value={filterValue[1] || ""}
-        onChange={(e) => setFilter((old = []) => [old[0], getInputValue(e)])}
+        defaultValue={filterValue[1] || ""}
+        onChange={debounce((e) => setFilter((old = []) => [old[0], getInputValue(e)], 200))}
         aria-label={aria + " Max"}
       />
     </InputGroup>
@@ -157,14 +158,16 @@ export default function Table({
               </Dropdown.Toggle>
               <Dropdown.Menu>
                 <Form>
-                  {allColumns.map((column) => (
-                    <Form.Group
-                      key={`${column.Header}-visible`}
-                      controlId={`${column.Header}-visible`}
-                      className="my-1 px-2">
-                      <Form.Check type="checkbox" label={column.Header} {...column.getToggleHiddenProps()} />
-                    </Form.Group>
-                  ))}
+                  {allColumns
+                    .filter((c) => !c.disableToggle)
+                    .map((column) => (
+                      <Form.Group
+                        key={`${column.Header}-visible`}
+                        controlId={`${column.Header}-visible`}
+                        className="my-1 px-2">
+                        <Form.Check type="checkbox" label={column.Header} {...column.getToggleHiddenProps()} />
+                      </Form.Group>
+                    ))}
                 </Form>
               </Dropdown.Menu>
             </Dropdown>
