@@ -1,9 +1,16 @@
 import { atom, selector } from "recoil";
 import { methylscapeData } from "../data.state";
 
-export const experimentsTableFilters = atom({
-  key: "experimentsTableFilters",
-  default: {},
+export const defaultexperimentsTableState = {
+  filters: [],
+  sortBy: [{ id: "experimentdate", desc: true }],
+  pageSize: 25,
+  pageIndex: 0,
+};
+
+export const experimentsTableState = atom({
+  key: "experimentsTableState",
+  default: defaultexperimentsTableState,
 });
 
 export const experimentsTableData = selector({

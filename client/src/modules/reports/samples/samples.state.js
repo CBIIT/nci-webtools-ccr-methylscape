@@ -2,83 +2,7 @@ import { atom, selector } from "recoil";
 import { methylscapeData } from "../data.state";
 import { toFixed } from "../../analysis/table/table.state";
 
-export const samplesTableFilters = atom({
-  key: "samplesTableFilters",
-  default: {},
-});
-
-export const samplesTableData = selector({
-  key: "samplesTableData",
-  get: ({ get }) => {
-    const { sampleData } = get(methylscapeData);
-    if (!sampleData.length) return [];
-    return sampleData;
-  },
-});
-
-/*
-{
-  id: "sample_name",
-  accessor: "sample",
-  Header: "Sample Name",
-  aria: "Sample Name",
-},
-{
-  id: "project",
-  accessor: "unifiedSamplePlate",
-  Header: "Project",
-  aria: "Project",
-  Cell: (e) => (
-    <Link
-      to="../projects"
-      onClick={() => setProjectsTableFilters({ project: e.data[e.row.index].unifiedSamplePlate })}>
-      {e.value}
-    </Link>
-  ),
-},
-{
-  id: "experiment",
-  accessor: "sentrixId",
-  Header: "Experiment",
-  aria: "Experiment",
-  Cell: (e) => (
-    <Link
-      to="../experiments"
-      onClick={() => setExperimentsTableFilters({ experiment: e.data[e.row.index].sentrixId })}>
-      {e.value}
-    </Link>
-  ),
-},
-{
-  id: "surgeryDate",
-  accessor: "surgeryDate",
-  Header: "Sample Date",
-  Cell: (e) => (e.value ? new Date(e.value).toLocaleDateString("en-US") : "N/A"),
-  aria: "Sample Date",
-},
-{
-  id: "sex",
-  accessor: "sex",
-  Header: "Gender",
-  Cell: (e) => (e.value ? e.value : "N/A"),
-  aria: "Gender",
-},
-{
-  id: "age",
-  accessor: "age",
-  Header: "Age",
-  Cell: (e) => (e.value ? e.value : "N/A"),
-  aria: "Age",
-},
-{
-  id: "diagnosisProvided",
-  accessor: "diagnosisProvided",
-  Header: "Diagnosis",
-  Cell: (e) => (e.value ? e.value : "N/A"),
-  aria: "Diagnosis",
-},*/
-
-export const additionalColumns = [
+export const columns = [
   {
     accessor: "idatFilename",
     Header: ".IDAT Filename",
@@ -418,3 +342,25 @@ export const additionalColumns = [
     show: false,
   },
 ];
+
+export const defaultSamplesTableState = {
+  hiddenColumns: columns.filter((c) => c.show === false).map((c) => c.accessor),
+  filters: [],
+  sortBy: [{ id: "surgeryDate", desc: true }],
+  pageSize: 25,
+  pageIndex: 0,
+};
+
+export const samplesTableState = atom({
+  key: "samplesTableState",
+  default: defaultSamplesTableState,
+});
+
+export const samplesTableData = selector({
+  key: "samplesTableData",
+  get: ({ get }) => {
+    const { sampleData } = get(methylscapeData);
+    if (!sampleData.length) return [];
+    return sampleData;
+  },
+});

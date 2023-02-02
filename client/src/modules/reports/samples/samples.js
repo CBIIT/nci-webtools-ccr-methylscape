@@ -1,26 +1,35 @@
 import { useCallback } from "react";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import { useRecoilValue, useSetRecoilState } from "recoil";
-import axios from "axios";
-import { saveAs } from "file-saver";
-import { additionalColumns, samplesTableData, samplesTableFilters } from "./samples.state";
-import { projectsTableFilters } from "../projects/projects.state";
-import { experimentsTableFilters } from "../experiments/experiments.state";
+import { useRecoilValue, useSetRecoilState, useRecoilState } from "recoil";
+import {
+  columns,
+  samplesTableData,
+  samplesTableState,
+  samplesTableFilters,
+  defaultSamplesTableState,
+} from "./samples.state";
+import { projectsTableState } from "../projects/projects.state";
+import { experimentsTableState } from "../experiments/experiments.state";
 import Table from "../../components/table";
 
 export default function Samples() {
   const tableData = useRecoilValue(samplesTableData);
-  const tableFilters = useRecoilValue(samplesTableFilters);
-  const setProjectsTableFilters = useSetRecoilState(projectsTableFilters);
-  const setExperimentsTableFilters = useSetRecoilState(experimentsTableFilters);
-
-  const columns = [
+  const [initialState, setInitialState] = useRecoilState(samplesTableState);
+  const setProjectsTableState = useSetRecoilState(projectsTableState);
+  const setExperimentsTableState = useSetRecoilState(experimentsTableState);
+  const stateReducer = (newState, action) => {
+    const actions = ["toggleHideColumn", "toggleSortBy", "setFilter", "gotoPage", "setPageSize"];
+    if (actions.includes(action.type)) setInitialState(newState);
+    return newState;
+  };
+  const tableColumns = [
     {
       Header: () => null,
       id: "expander",
       aria: "Show/Hide Details",
       disableSortBy: true,
+      disableToggle: true,
       Cell: ({ row }) => (
         <span {...row.getToggleRowExpandedProps()}>
           {row.isExpanded ? <i className="bi bi-plus-square-dotted" /> : <i className="bi bi-plus-square" />}
@@ -41,7 +50,12 @@ export default function Samples() {
       Cell: (e) => (
         <Link
           to="../projects"
-          onClick={() => setProjectsTableFilters({ project: e.data[e.row.index].unifiedSamplePlate })}>
+          onClick={() =>
+            setProjectsTableState((state) => ({
+              ...state,
+              filters: [{ id: "project", value: e.data[e.row.index].unifiedSamplePlate }],
+            }))
+          }>
           {e.value}
         </Link>
       ),
@@ -54,7 +68,12 @@ export default function Samples() {
       Cell: (e) => (
         <Link
           to="../experiments"
-          onClick={() => setExperimentsTableFilters({ experiment: e.data[e.row.index].sentrixId })}>
+          onClick={() =>
+            setExperimentsTableState((state) => ({
+              ...state,
+              filters: [{ id: "experiment", value: e.data[e.row.index].sentrixId }],
+            }))
+          }>
           {e.value}
         </Link>
       ),
@@ -88,20 +107,8 @@ export default function Samples() {
       aria: "Diagnosis",
       show: false,
     },
-    ...additionalColumns,
+    ...columns,
   ];
-
-  const options = {
-    initialState: {
-      hiddenColumns: columns.filter((col) => col.show === false).map((col) => col.accessor),
-      filters: [
-        { id: "project", value: tableFilters?.project || "" },
-        { id: "experiment", value: tableFilters?.experiment || "" },
-      ],
-      sortBy: [{ id: "surgeryDate", desc: true }],
-      pageSize: 25,
-    },
-  };
 
   const renderRowSubComponent = useCallback(({ row }) => {
     const { original } = row;
@@ -167,22 +174,6 @@ export default function Samples() {
     );
   }, []);
 
-  async function download(id, file) {
-    try {
-      const response = await axios.post(
-        `/api/reports/getReportsFile`,
-        {
-          sample: id + "/" + file,
-        },
-        { responseType: "blob" }
-      );
-      saveAs(response.data, file);
-    } catch (err) {
-      window.alert("File is unavailable");
-      console.log(err);
-    }
-  }
-
   return (
     <Container fluid className="py-1">
       <Row>
@@ -191,9 +182,8 @@ export default function Samples() {
             <Table
               name="Samples"
               data={tableData}
-              columns={columns}
-              options={options}
-              defaultPageSize={25}
+              columns={tableColumns}
+              options={{ initialState, stateReducer }}
               customOptions={{ expanded: true, hideColumns: true }}
               renderRowSubComponent={renderRowSubComponent}
             />

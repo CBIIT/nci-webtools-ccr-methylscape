@@ -19,6 +19,18 @@ export const projectsTableData = selector({
   },
 });
 
+export const defaultProjectsTableState = {
+  filters: [],
+  sortBy: [{ id: "project" }],
+  pageSize: 25,
+  pageIndex: 0,
+};
+
+export const projectsTableState = atom({
+  key: "projectsTableState",
+  default: defaultProjectsTableState,
+});
+
 export const projectsTableFilters = atom({
   key: "projectsTableFilters",
   default: {},
