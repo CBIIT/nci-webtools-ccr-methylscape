@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import cloneDeep from "lodash/cloneDeep";
-import { plotState, selectedPoints } from "./metadata-plot.state";
+import { formState, plotState, selectedPoints } from "./metadata-plot.state";
 import { analysisState } from "../analysis.state";
 import { selectSampleState } from "../copy-number/copy-number.state";
+import { tableColumnsMap, tableColumns } from "../table/table.state";
 import Plot from "react-plotly.js";
 
 export default function MetdataPlot() {
@@ -12,13 +13,24 @@ export default function MetdataPlot() {
   const setSelectedPoints = useSetRecoilState(selectedPoints);
   const setTabs = useSetRecoilState(analysisState);
   const setSample = useSetRecoilState(selectSampleState);
+  const { organSystem } = useRecoilValue(formState);
 
   function handleSelect(e) {
     if (e?.points.length) {
       setSelectedPoints((state) => {
-        const points = state.points.slice();
-        points[state.selectedGroup] = e.points;
-        return { ...state, points };
+        const groups = state.groups.slice();
+        const visibleColumns = tableColumnsMap[organSystem] || tableColumnsMap.default;
+        const columns = tableColumns.map((c) => ({ ...c, show: visibleColumns.includes(c.accessor) }));
+        const table = {
+          data: e.points.map((p) => p.customdata),
+          columns,
+          initialState: {
+            hiddenColumns: columns.filter((c) => !c.show).map((c) => c.accessor),
+            pageSize: 25,
+          },
+        };
+        groups[state.selectedGroup] = table;
+        return { ...state, groups };
       });
       setTabs((state) => {
         const { currentTab } = state;

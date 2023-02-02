@@ -15,7 +15,9 @@ export const formState = atom({
 });
 
 export const defaultSelectedPoints = {
-  points: [[]],
+  groups: [],
+  // points: [[]],
+  // tableConfig: [{}],
   selectedGroup: 0,
 };
 
