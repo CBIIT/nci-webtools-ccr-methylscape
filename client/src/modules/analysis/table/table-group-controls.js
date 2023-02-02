@@ -9,7 +9,7 @@ export default function GroupTabs() {
   function addTab() {
     let points = [...(umapPoints?.points || [])];
     if (points.length < 3) {
-      points.push([]);
+      points.push({});
       setUmapPoints({ ...umapPoints, points, selectedGroup: points.length - 1 });
     }
   }
