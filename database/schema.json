@@ -17,6 +17,7 @@
       { "name": "age", "type": "double precision" },
       { "name": "sex", "type": "text" },
       { "name": "diagnosisProvided", "type": "text" },
+      { "name": "diagnosisIntegrated", "type": "text" },
       { "name": "locationRegion", "type": "text" },
       { "name": "locationSite", "type": "text" },
       { "name": "additionalInfo", "type": "text" },

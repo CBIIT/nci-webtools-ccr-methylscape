@@ -75,6 +75,7 @@
       { "sourceName": "Age", "name": "age" },
       { "sourceName": "Sex", "name": "sex" },
       { "sourceName": "Diagnosis.provided", "name": "diagnosisProvided" },
+      { "sourceName": "integrated_diagnosis", "name": "diagnosisIntegrated" },
       { "sourceName": "Location_region", "name": "locationRegion" },
       { "sourceName": "Location_site", "name": "locationSite" },
       { "sourceName": "Additional.info", "name": "additionalInfo" },
