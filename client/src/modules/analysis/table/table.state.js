@@ -13,6 +13,7 @@ export const tableColumnsMap = {
     "nciMetric",
     "age",
     "diagnosisProvided",
+    "diagnosisIntegrated",
     "locationSite",
     "MCF1_v11b6",
     "MCF1_v11b6_score",
@@ -76,7 +77,11 @@ export const tableColumns = [
   },
   {
     accessor: "diagnosisProvided",
-    Header: "Diagnosis Provided",
+    Header: "Provided Diagnosis",
+  },
+  {
+    accessor: "diagnosisIntegrated",
+    Header: "Integrated Diagnosis",
   },
   {
     accessor: "locationRegion",

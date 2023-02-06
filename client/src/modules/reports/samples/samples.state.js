@@ -24,6 +24,11 @@ export const columns = [
     show: false,
   },
   {
+    accessor: "diagnosisIntegrated",
+    Header: "Integrated Diagnosis",
+    show: false,
+  },
+  {
     accessor: "locationRegion",
     Header: "Location (Region)",
     show: false,

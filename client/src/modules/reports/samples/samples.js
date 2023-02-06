@@ -97,7 +97,7 @@ export default function Samples() {
     },
     {
       accessor: "diagnosisProvided",
-      Header: "Diagnosis",
+      Header: "Provided Diagnosis",
       Cell: (e) => (e.value ? e.value : "N/A"),
       aria: "Diagnosis",
       show: false,
