@@ -62,6 +62,11 @@ legend {
 
 .table {
   font-variant-numeric: tabular-nums;
+
+  th {
+    font-weight: normal;
+    white-space: nowrap;
+  }
 }
 
 .pagination {
