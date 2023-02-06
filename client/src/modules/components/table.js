@@ -160,6 +160,7 @@ export default function Table({
                 <Form>
                   {allColumns
                     .filter((c) => !c.disableToggle)
+                    .sort((a, b) => String(a.Header).localeCompare(String(b.Header)))
                     .map((column) => (
                       <Form.Group
                         key={`${column.Header}-visible`}
@@ -180,7 +181,7 @@ export default function Table({
             {headerGroups.map((headerGroup) => (
               <tr {...headerGroup.getHeaderGroupProps()} className="h5 sample-title">
                 {headerGroup.headers.map((column) => (
-                  <td {...column.getHeaderProps(column.getSortByToggleProps())} aria-label={column.Header + "-sort"}>
+                  <th {...column.getHeaderProps(column.getSortByToggleProps())} aria-label={column.Header + "-sort"}>
                     {column.render("Header")}
                     {column.isSorted ? (
                       column.isSortedDesc ? (
@@ -191,7 +192,7 @@ export default function Table({
                     ) : (
                       !column.disableSortBy && <i className="bi bi-chevron-expand ms-1" />
                     )}
-                  </td>
+                  </th>
                 ))}
               </tr>
             ))}
@@ -200,9 +201,9 @@ export default function Table({
               headerGroups.map((headerGroup) => (
                 <tr {...headerGroup.getHeaderGroupProps()} className="search-bg">
                   {headerGroup.headers.map((column) => (
-                    <td {...column.getHeaderProps()}>
+                    <th {...column.getHeaderProps()}>
                       <div className="py-2">{column.canFilter ? column.render("Filter") : null}</div>
-                    </td>
+                    </th>
                   ))}
                 </tr>
               ))}
