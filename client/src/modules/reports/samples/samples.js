@@ -37,7 +37,6 @@ export default function Samples() {
       ),
     },
     {
-      id: "sample_name",
       accessor: "sample",
       Header: "Sample Name",
       aria: "Sample Name",
@@ -79,28 +78,24 @@ export default function Samples() {
       ),
     },
     {
-      id: "surgeryDate",
       accessor: "surgeryDate",
       Header: "Sample Date",
       Cell: (e) => (e.value ? new Date(e.value).toLocaleDateString("en-US") : "N/A"),
       aria: "Sample Date",
     },
     {
-      id: "gender",
       accessor: "sex",
-      Header: "Gender",
+      Header: "Sex",
       Cell: (e) => (e.value ? e.value : "N/A"),
       aria: "Gender",
     },
     {
-      id: "age",
       accessor: "age",
       Header: "Age",
       Cell: (e) => (e.value ? e.value : "N/A"),
       aria: "Age",
     },
     {
-      id: "diagnosis",
       accessor: "diagnosisProvided",
       Header: "Diagnosis",
       Cell: (e) => (e.value ? e.value : "N/A"),
