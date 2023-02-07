@@ -25,12 +25,22 @@ export function NavbarRouterLink({ path, title, exact }) {
 
 export function NavbarDropdown({ title, childLinks, align = "start" }) {
   return (
-    <NavDropdown title={title} id={title} align={align}>
+    <NavDropdown title={title} id={`navdropdown-${title}`} align={align}>
       {childLinks.map((link, index) =>
         link.path ? (
-          <NavDropdown.Item key={`navbar-dropdown-${index}`} href={link.path}>
-            {link.title}
-          </NavDropdown.Item>
+          link.native ? (
+            <NavDropdown.Item key={`navbar-dropdown-${index}`} href={link.path}>
+              {link.title}
+            </NavDropdown.Item>
+          ) : (
+            <NavLink
+              className="dropdown-item"
+              to={link.path}
+              key={`navbar-dropdown-${index}`}
+              onClick={() => window[`navdropdown-${title}`]?.click()}>
+              {link.title}
+            </NavLink>
+          )
         ) : (
           <div className="dropdown-item" key={`navbar-dropdown-item-${index}`}>
             {link.title}
