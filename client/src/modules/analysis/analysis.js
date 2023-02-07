@@ -62,7 +62,7 @@ export default function Analysis() {
                 </Button>
               </OverlayTrigger>
               <MemoizedMetadata />
-              <div className="d-flex justify-content-between p-1">
+              {/* <div className="d-flex justify-content-between p-1">
                 <Button
                   size="sm"
                   variant="link"
@@ -73,7 +73,7 @@ export default function Analysis() {
                   <i className="bi bi-box-arrow-in-up-right" />
                   View Metadata
                 </Button>
-              </div>
+              </div> */}
             </Card.Body>
           </Card>
         </Col>
