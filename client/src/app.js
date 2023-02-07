@@ -76,7 +76,7 @@ export default function App() {
         childLinks: [
           {
             title: "User Profile",
-            path: "profile",
+            path: "/profile",
           },
           {
             title: "Logout",
