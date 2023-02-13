@@ -10,9 +10,9 @@ export default function Survival() {
     <Container fluid>
       <ErrorBoundary
         fallback={
-          <Alert variant="danger">
-            An internal error prevented plots from loading. Please contact the website administrator if this problem
-            persists.
+          <Alert variant="info">
+            No survival data could be found for the selected samples. Please contact the website administrator if this
+            problem persists.
           </Alert>
         }>
         <Suspense
