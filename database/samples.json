@@ -1,0 +1,274 @@
+[
+  {
+    "command": "recreateTables",
+    "description": "Recreate tables",
+    "tables": ["sample", "sampleCoordinate", "gene"]
+  },
+  {
+    "command": "importTable",
+    "description": "Import Sample_sheet_master.csv to staging table",
+    "source": "Sample_sheet_master.csv",
+    "target": "stage.sample"
+  },
+  {
+    "command": "importTable",
+    "description": "Import anno_heme.txt to staging table",
+    "source": "anno_heme.txt",
+    "target": "stage.sampleCoordinateHematopoietic",
+    "options": { "delimiter": "\t" }
+  },
+  {
+    "command": "importTable",
+    "description": "Import anno_kidney.txt to staging table",
+    "source": "anno_kidney.txt",
+    "target": "stage.sampleCoordinateRenal",
+    "options": { "delimiter": "\t" }
+  },
+  {
+    "command": "importTable",
+    "description": "Import anno_neuro.txt to staging table",
+    "source": "anno_neuro.txt",
+    "target": "stage.sampleCoordinateCentralNervousSystem",
+    "options": { "delimiter": "\t" }
+  },
+  {
+    "command": "importTable",
+    "description": "Import anno_pan.txt to staging table",
+    "source": "anno_pan.txt",
+    "target": "stage.sampleCoordinatePanCancer",
+    "options": { "delimiter": "\t" }
+  },
+  {
+    "command": "importTable",
+    "description": "Import anno_sarcoma.txt to staging table",
+    "source": "anno_sarcoma.txt",
+    "target": "stage.sampleCoordinateBoneAndSoftTissue",
+    "options": { "delimiter": "\t" }
+  },
+  {
+    "command": "importTable",
+    "description": "Import genes.csv to gene table",
+    "source": "genes.csv",
+    "target": "gene",
+    "options": { "delimiter": "," }
+  },
+  {
+    "command": "copyTable",
+    "description": "Import samples from staging table",
+    "source": "stage.sample",
+    "target": "sample",
+    "columns": [
+      { "sourceName": "Sample", "name": "sample" },
+      { "sourceName": "idat_filename", "name": "idatFilename" },
+      { "sourceName": "Sample_Plate", "name": "samplePlate" },
+      {
+        "sourceExpression": "lower(regexp_replace(\"Sample_Plate\", '[^a-z0-9]+', ' ', 'ig'))",
+        "name": "unifiedSamplePlate"
+      },
+      { "sourceName": "PI_Collaborator", "name": "piCollaborator" },
+      { "sourceName": "Surgery_date", "name": "surgeryDate" },
+      { "sourceName": "Notes", "name": "notes" },
+      { "sourceName": "Sentrix_ID", "name": "sentrixId" },
+      { "sourceName": "NIH_labels", "name": "nihLabels" },
+      { "sourceName": "NCI_METRIC", "name": "nciMetric" },
+      { "sourceName": "v11b6", "name": "v11b6" },
+      { "sourceName": "Age", "name": "age" },
+      { "sourceName": "Sex", "name": "sex" },
+      { "sourceName": "Diagnosis.provided", "name": "diagnosisProvided" },
+      { "sourceName": "integrated_diagnosis", "name": "diagnosisIntegrated" },
+      { "sourceName": "Location_region", "name": "locationRegion" },
+      { "sourceName": "Location_site", "name": "locationSite" },
+      { "sourceName": "Additional.info", "name": "additionalInfo" },
+      { "sourceName": "Variants", "name": "variants" },
+      { "sourceName": "Fusions/translocations", "name": "fusionsOrTranslocations" },
+      { "sourceName": "Assay", "name": "assay" },
+      { "sourceName": "Variants_report", "name": "variantsReport" },
+      { "sourceName": "Fusions/translocations_report", "name": "fusionsOrTranslocationsReport" },
+      { "sourceName": "Outside.assay", "name": "outsideAssay" },
+      { "sourceName": "Variants_format", "name": "variantsFormat" },
+      { "sourceName": "Fuions/tranlocations_format", "name": "fusionsOrTranslocationsFormat" },
+      { "sourceName": "LP.CP.Number", "name": "lpCpNumber" },
+      { "sourceName": "Subtype/pattern", "name": "subtypeOrPattern" },
+      { "sourceName": "WHO_2007_grade", "name": "who2007Grade" },
+      { "sourceName": "MCF1_v11b6", "name": "MCF1_v11b6" },
+      { "sourceName": "MCF1_v11b6_score", "name": "MCF1_v11b6_score" },
+      { "sourceName": "SC1_v11b6", "name": "SC1_v11b6" },
+      { "sourceName": "SC1_v11b6_score", "name": "SC1_v11b6_score" },
+      { "sourceName": "GSM_accession", "name": "gsmAccession" },
+      { "sourceName": "Primary_study", "name": "primaryStudy" },
+      { "sourceName": "Center_methy", "name": "centerMethylation" },
+      { "sourceName": "Accession_methy", "name": "accessionMethylation" },
+      { "sourceName": "Sampling_treatment", "name": "samplingTreatment" },
+      { "sourceName": "Location_metastasis", "name": "locationMetastasis" },
+      { "sourceName": "Type", "name": "type" },
+      { "sourceName": "Category", "name": "category" },
+      { "sourceName": "Diagnosis.(tier.1)", "name": "diagnosisTier1" },
+      { "sourceName": "Diagnosis.(tier.2)", "name": "diagnosisTier2" },
+      { "sourceName": "Diagnosis.(tier.3)", "name": "diagnosisTier3" },
+      { "sourceName": "WHO.diagnosis.(tier.4)", "name": "whoDiagnosisTier4" },
+      { "sourceName": "RFpurity.ABSOLUTE", "name": "rfPurityAbsolute" },
+      { "sourceName": "RFpurity.ESTIMATE", "name": "rfPurityEstimate" },
+      { "sourceName": "LUMP", "name": "lump" },
+      { "sourceName": "MCF", "name": "mcf" },
+      { "sourceName": "MCF.score", "name": "mcfScore" },
+      { "sourceName": "Subclass", "name": "subclass" },
+      { "sourceName": "Subclass.score", "name": "subclassScore" },
+      { "sourceName": "CNSv12b6", "name": "CNSv12b6" },
+      { "sourceName": "CNSv12b6.score", "name": "CNSv12b6_score" },
+      { "sourceName": "CNSv12b6.superfamily", "name": "CNSv12b6_superfamily" },
+      { "sourceName": "CNSv12b6.superfamily.score", "name": "CNSv12b6_superfamily_score" },
+      { "sourceName": "CNSv12b6.family", "name": "CNSv12b6_family" },
+      { "sourceName": "CNSv12b6.family.score", "name": "CNSv12b6_family_score" },
+      { "sourceName": "CNSv12b6.class", "name": "CNSv12b6_class" },
+      { "sourceName": "CNSv12b6.class.score", "name": "CNSv12b6_class_score" },
+      { "sourceName": "CNSv12b6.subclass1", "name": "CNSv12b6_subclass1" },
+      { "sourceName": "CNSv12b6.subclass1.score", "name": "CNSv12b6_subclass1_score" },
+      { "sourceName": "CNSv12b6.subclass2", "name": "CNSv12b6_subclass2" },
+      { "sourceName": "CNSv12b6.subclass2.score", "name": "CNSv12b6_subclass2_score" },
+      { "sourceName": "MGMT.Status", "name": "mgmtStatus" },
+      { "sourceName": "MGMT.Estimated", "name": "mgmtEstimated" },
+      { "sourceName": "SARv12b6", "name": "SARv12b6" },
+      { "sourceName": "SARv12b6.desc", "name": "SARv12b6_desc" },
+      { "sourceName": "SARv12b6.score", "name": "SARv12b6_score" },
+      { "sourceName": "SARv12b6.second", "name": "SARv12b6_second" },
+      { "sourceName": "SARv12b6.second.desc", "name": "SARv12b6_second_desc" },
+      { "sourceName": "SARv12b6.second.score", "name": "SARv12b6_second_score" },
+      { "sourceName": "SARv12b6.third", "name": "SARv12b6_third" },
+      { "sourceName": "SARv12b6.third.desc", "name": "SARv12b6_third_desc" },
+      { "sourceName": "SARv12b6.third.score", "name": "SARv12b6_third_score" },
+      { "sourceName": "OS_months", "name": "overallSurvivalMonths" },
+      { "sourceName": "OS_status", "name": "overallSurvivalStatus" },
+      { "sourceName": "Batch_date", "name": "batchDate" }
+    ]
+  },
+  {
+    "command": "copyTable",
+    "description": "Import sample coordinates (hematopoietic, densmap) from staging table",
+    "source": "stage.sampleCoordinateHematopoietic",
+    "target": "sampleCoordinate",
+    "columns": [
+      { "sourceName": "idat_filename", "name": "sampleIdatFilename" },
+      { "sourceValue": "hematopoietic", "name": "organSystem" },
+      { "sourceValue": "densmap", "name": "embedding" },
+      { "sourceName": "densmap_x", "name": "x" },
+      { "sourceName": "densmap_y", "name": "y" }
+    ]
+  },
+  {
+    "command": "copyTable",
+    "description": "Import sample coordinates (hematopoietic, umap) from staging table",
+    "source": "stage.sampleCoordinateHematopoietic",
+    "target": "sampleCoordinate",
+    "columns": [
+      { "sourceName": "idat_filename", "name": "sampleIdatFilename" },
+      { "sourceValue": "hematopoietic", "name": "organSystem" },
+      { "sourceValue": "umap", "name": "embedding" },
+      { "sourceName": "umap_x", "name": "x" },
+      { "sourceName": "umap_y", "name": "y" }
+    ]
+  },
+  {
+    "command": "copyTable",
+    "description": "Import sample coordinates (renal, densmap) from staging table",
+    "source": "stage.sampleCoordinateRenal",
+    "target": "sampleCoordinate",
+    "columns": [
+      { "sourceName": "idat_filename", "name": "sampleIdatFilename" },
+      { "sourceValue": "renal", "name": "organSystem" },
+      { "sourceValue": "densmap", "name": "embedding" },
+      { "sourceName": "densmap_x", "name": "x" },
+      { "sourceName": "densmap_y", "name": "y" }
+    ]
+  },
+  {
+    "command": "copyTable",
+    "description": "Import sample coordinates (renal, umap) from staging table",
+    "source": "stage.sampleCoordinateRenal",
+    "target": "sampleCoordinate",
+    "columns": [
+      { "sourceName": "idat_filename", "name": "sampleIdatFilename" },
+      { "sourceValue": "renal", "name": "organSystem" },
+      { "sourceValue": "umap", "name": "embedding" },
+      { "sourceName": "umap_x", "name": "x" },
+      { "sourceName": "umap_y", "name": "y" }
+    ]
+  },
+  {
+    "command": "copyTable",
+    "description": "Import sample coordinates (centralNervousSystem, densmap) from staging table",
+    "source": "stage.sampleCoordinateCentralNervousSystem",
+    "target": "sampleCoordinate",
+    "columns": [
+      { "sourceName": "idat_filename", "name": "sampleIdatFilename" },
+      { "sourceValue": "centralNervousSystem", "name": "organSystem" },
+      { "sourceValue": "densmap", "name": "embedding" },
+      { "sourceName": "densmap_x", "name": "x" },
+      { "sourceName": "densmap_y", "name": "y" }
+    ]
+  },
+  {
+    "command": "copyTable",
+    "description": "Import sample coordinates (centralNervousSystem, umap) from staging table",
+    "source": "stage.sampleCoordinateCentralNervousSystem",
+    "target": "sampleCoordinate",
+    "columns": [
+      { "sourceName": "idat_filename", "name": "sampleIdatFilename" },
+      { "sourceValue": "centralNervousSystem", "name": "organSystem" },
+      { "sourceValue": "umap", "name": "embedding" },
+      { "sourceName": "umap_x", "name": "x" },
+      { "sourceName": "umap_y", "name": "y" }
+    ]
+  },
+  {
+    "command": "copyTable",
+    "description": "Import sample coordinates (panCancer, densmap) from staging table",
+    "source": "stage.sampleCoordinatePanCancer",
+    "target": "sampleCoordinate",
+    "columns": [
+      { "sourceName": "idat_filename", "name": "sampleIdatFilename" },
+      { "sourceValue": "panCancer", "name": "organSystem" },
+      { "sourceValue": "densmap", "name": "embedding" },
+      { "sourceName": "densmap_x", "name": "x" },
+      { "sourceName": "densmap_y", "name": "y" }
+    ]
+  },
+  {
+    "command": "copyTable",
+    "description": "Import sample coordinates (panCancer, umap) from staging table",
+    "source": "stage.sampleCoordinatePanCancer",
+    "target": "sampleCoordinate",
+    "columns": [
+      { "sourceName": "idat_filename", "name": "sampleIdatFilename" },
+      { "sourceValue": "panCancer", "name": "organSystem" },
+      { "sourceValue": "umap", "name": "embedding" },
+      { "sourceName": "umap_x", "name": "x" },
+      { "sourceName": "umap_y", "name": "y" }
+    ]
+  },
+  {
+    "command": "copyTable",
+    "description": "Import sample coordinates (boneAndSoftTissue, densmap) from staging table",
+    "source": "stage.sampleCoordinateBoneAndSoftTissue",
+    "target": "sampleCoordinate",
+    "columns": [
+      { "sourceName": "idat_filename", "name": "sampleIdatFilename" },
+      { "sourceValue": "boneAndSoftTissue", "name": "organSystem" },
+      { "sourceValue": "densmap", "name": "embedding" },
+      { "sourceName": "densmap_x", "name": "x" },
+      { "sourceName": "densmap_y", "name": "y" }
+    ]
+  },
+  {
+    "command": "copyTable",
+    "description": "Import sample coordinates (boneAndSoftTissue, umap) from staging table",
+    "source": "stage.sampleCoordinateBoneAndSoftTissue",
+    "target": "sampleCoordinate",
+    "columns": [
+      { "sourceName": "idat_filename", "name": "sampleIdatFilename" },
+      { "sourceValue": "boneAndSoftTissue", "name": "organSystem" },
+      { "sourceValue": "umap", "name": "embedding" },
+      { "sourceName": "umap_x", "name": "x" },
+      { "sourceName": "umap_y", "name": "y" }
+    ]
+  }
+]

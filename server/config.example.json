@@ -1,7 +1,0 @@
-{
-    "port": 8290,
-    "dynamoDBTableName":"MethylScapeSamplesTable-dev",
-    "S3BucketName": "nci-cbiit-analysistools",
-    "S3SamplesKey": "dev/ClassifierReports",
-    "S3QCReportsKey": "dev/QCreports"
-}

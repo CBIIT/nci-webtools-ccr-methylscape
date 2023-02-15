@@ -1,31 +1,26 @@
 {
-  "name": "nci-webtools-ccr-methylscape",
+  "name": "methylscape-analysis",
   "version": "1.0.0",
-  "description": "Sample and Summery view for MethylScape",
+  "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node server/server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "cd client && yarn build"
+    "format": "prettier --write --ignore-unknown .",
+    "postinstall": "husky install"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/CBIIT/nci-webtools-ccr-methylscape.git"
-  },
-  "author": "Zaki Abdullah",
+  "author": "",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/CBIIT/nci-webtools-ccr-methylscape/issues"
-  },
-  "homepage": "https://github.com/CBIIT/nci-webtools-ccr-methylscape#readme",
-  "dependencies": {
-    "aws-sdk": "2.503.0",
-    "body-parser": "1.19.0",
-    "express": "4.17.1",
-    "path": "0.12.7",
-    "winston": "3.2.1"
-  },
   "devDependencies": {
-    "nodemon": "1.19.1"
+    "husky": "^8.0.1",
+    "lint-staged": "^13.0.2",
+    "prettier": "^2.7.1"
+  },
+  "prettier": {
+    "printWidth": 120,
+    "quoteProps": "consistent",
+    "bracketSameLine": true
+  },
+  "lint-staged": {
+    "**/*": "prettier --write --ignore-unknown"
   }
 }

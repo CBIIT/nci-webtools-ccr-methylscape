@@ -1,0 +1,32 @@
+.navbar-bottom-line {
+  border-bottom: 1px solid $yellow;
+}
+
+.navbar-dark .navbar-nav .nav-link.active {
+  background-color: $yellow;
+  color: black;
+}
+
+.navbar {
+  z-index: 100;
+}
+
+.sample-blue {
+  color: $sample-blue;
+}
+
+.footer-background-color {
+  background-color: #0c95a1;
+}
+
+.text-align-center {
+  text-align: center;
+}
+
+.text-align-left {
+  text-align: left;
+}
+
+.admin-manage-icons:hover {
+  color: $green;
+}

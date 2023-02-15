@@ -1,0 +1,93 @@
+/** Colors */
+$blue: #48569e;
+$dark: rgb(42, 73, 111);
+$green: rgb(111, 208, 178);
+$blue-200: #e4e9f7;
+
+$secondary: $green;
+$sample-blue: #b0cfea;
+
+/** Headings */
+$headings-font-weight: 700;
+$headings-margin-bottom: 0;
+
+/** Buttons */
+$btn-font-weight: 500;
+
+/** Links */
+$link-decoration: none;
+$link-hover-decoration: underline;
+
+/** Navbar */
+$navbar-padding-y: 0;
+
+/** Tables */
+$table-th-font-weight: 500;
+$table-group-separator-color: #ddd;
+$table-cell-padding-x: 1rem;
+$table-cell-padding-y: 0.75rem;
+
+/** Forms */
+$form-label-font-weight: 500;
+$form-label-color: $blue;
+$form-text-color: #595959;
+
+/** Responsive Breakpoints */
+$grid-breakpoints: (
+  xs: 0,
+  sm: 576px,
+  md: 768px,
+  lg: 992px,
+  xl: 1200px,
+  xxl: 1400px,
+  xxxl: 1600px,
+  xxxxl: 1920px,
+);
+
+$container-max-widths: (
+  sm: 540px,
+  md: 720px,
+  lg: 960px,
+  xl: 1140px,
+  xxl: 1320px,
+  xxxl: 1500px,
+  xxxxl: 1800px,
+);
+
+/** Spacers */
+$spacer: 1rem;
+$spacers: (
+  0: 0,
+  1: $spacer * 0.25,
+  2: $spacer * 0.5,
+  3: $spacer,
+  4: $spacer * 1.5,
+  5: $spacer * 3,
+  6: $spacer * 4.5,
+  7: $spacer * 6,
+  8: $spacer * 7.5,
+  9: $spacer * 9,
+);
+
+// Borders
+$btn-border-radius: 2rem;
+$btn-border-radius-sm: 2rem;
+$input-border-radius: 2rem;
+$input-border-radius-sm: 2rem;
+$input-border-color: $secondary;
+$component-active-bg: $secondary;
+
+//form
+$form-select-color: $blue !default;
+$form-select-border-color: $secondary !default;
+$form-select-focus-border-color: $blue !default;
+
+//dropdown
+$dropdown-link-color: $blue !default;
+$dropdown-link-hover-bg: $blue-200 !default;
+
+//tabs
+$nav-tabs-link-active-color: $secondary !default;
+
+$pagination-border-color: none;
+$pagination-hover-bg: $blue-200 !default;

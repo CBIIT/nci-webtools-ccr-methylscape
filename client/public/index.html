@@ -1,43 +1,163 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Methylscape Analysis</title>
 
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="theme-color" content="#000000">
-  <link rel="stylesheet" href="index.css">
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
-  <title>NCI MethylScape</title>
-</head>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-SKN74LB5CM"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
 
-<body style="display:flex; flex-direction:column; min-height: 100vh;">
-  <noscript>
-    You need to enable JavaScript to run this app.
-  </noscript>
-  
-  <div id="root" style="flex: 1"></div>
+      gtag("config", "G-SKN74LB5CM");
+    </script>
+  </head>
+  <body class="d-flex vh-100 flex-column" react-cloak style="overflow-x: hidden">
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <main id="root" class="d-flex flex-column flex-grow-0 align-items-stretch bg-primary"></main>
+    <footer class="flex-grow-0" style="border-top: 1px solid white">
+      <div class="bg-dark text-white py-4">
+        <!-- <div class="container">
+          <div class="d-flex">
+            <div class="p-2 mb-4">
+              <a href="https://ccr.cancer.gov/" class="text-white h4 mb-1">
+                Center for Cancer Research
+              </a>
+              <div class="h6">
+                at the
+                <a class="text-white" href="https://www.cancer.gov/">
+                  National Cancer Institute
+                </a>
+              </div>
+            </div>
+            <div class="ms-auto text-end">
+              <ul class="list-inline">
+                <li class="list-inline-item mx-3"><a class="text-white" href="#"><small>Documentation</small></a></li>
+                <li class="list-inline-item mx-3"><a class="text-white" href="#"><small>Features</small></a></li>
+                <li class="list-inline-item mx-3"><a class="text-white" href="#"><small>Getting Started</small></a></li>
+                <li class="list-inline-item mx-3"><a class="text-white" href="https://methylscape-dev.ccr.cancer.gov/#/about"><small>About</small></a></li>
+                <li class="list-inline-item"><a class="text-white" href="https://www.cancer.gov/policies"><small>Privacy Policy</small></a></li>
+                <li class="list-inline-item"><a class="text-white" href="https://www.hhs.gov/vulnerability-disclosure-policy/index.html"><small>HHS Vulnerability Disclosure</small></a></li>
 
-  <footer class="ant-layout-footer" style="text-align: center; color:white; padding-bottom:50px">
-    <a class="white" href="mailto:MethylScapeWebAdimin.mail.nih.gov">Support</a>
-    <span> | </span>
-    <a class="white" href="http://www.cancer.gov/global/web/policies" target="_blank">Policies</a>
-    <span> | </span>
-    <a class="white" href="http://www.cancer.gov/global/web/policies/accessibility" target="_blank">
-      Accessibility
-    </a>
-    <span> | </span>
-    <a class="white" href="http://www.cancer.gov/global/web/policies/foia" target="_blank">FOIA</a>
-    <span> | </span>
-    <a class="white" href="http://get.adobe.com/reader/" target="_blank">Get Adobe Reader</a>
-    <br />
-    <a class="white" href="http://www.nih.gov" target="_blank">National Institutes of Health</a>
-    <span> | </span>
-    <a class="white" href="http://www.cancer.gov" target="_blank">National Cancer Institute</a>
-    <span> | </span>
-    <a class="white" href="http://www.usa.gov" target="_blank">USA.gov</a>
-    <br />
-    <p>NIH....Turning Discovery into Health®</p>
-  </footer>
-</body>
+            </ul>
+              <div class="container p-3 pb-0 text-end">
+                <section class="mb-4">
+                  <a class="btn btn-light btn-floating" href="https://www.facebook.com/cancer.gov" role="button" aria-label="Facebook">
+                    <i class="bi bi-facebook" aria-label="Facebook"></i></a>      
+                  <a class="btn btn-light btn-floating" href="https://twitter.com/NCIResearchCtr" role="button" aria-label="Twitter"> 
+                    <i class="bi bi-twitter"  aria-label="Twitter"></i></a>    
+                  <a class="btn btn-light btn-floating" href="https://www.youtube.com/user/NCIgov" role="button" aria-label="Youtube">
+                    <i class="bi bi-youtube"  aria-label="Youtube"></i></a>    
+                  <a class="btn btn-light btn-floating" href="https://www.instagram.com/nationalcancerinstitute" role="button" aria-label="Instagram">
+                    <i class="bi bi-instagram"  aria-label="Instagram"></i></a>    
+                </section>
 
+
+            </div>
+          </div>
+        </div> -->
+
+        <div class="container">
+          <div class="row">
+            <div class="p-2 mb-4">
+              <a href="https://ccr.cancer.gov/" class="text-white h4 mb-1"> National Cancer Institude </a>
+              <div class="h6">
+                at the
+                <a class="text-white" href="https://www.cancer.gov/"> National Institutes of Health </a>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-lg-3 mb-4">
+              <div class="h5 mb-1 font-weight-light">FOLLOW US</div>
+
+              <a
+                class="btn btn-light btn-floating"
+                href="https://twitter.com/NCIResearchCtr"
+                role="button"
+                aria-label="Twitter">
+                <i class="bi bi-twitter" aria-label="Twitter"></i
+              ></a>
+              <a
+                class="btn btn-light btn-floating"
+                href="https://public.govdelivery.com/accounts/USNIHNCI/subscriber/new"
+                role="button"
+                aria-label="News">
+                <i class="bi bi-envelope-fill" aria-label="News"></i
+              ></a>
+            </div>
+            <div class="col-lg-3 mb-4">
+              <div class="h5 mb-1 font-weight-light">CONTACT INFORMATION</div>
+              <ul class="list-unstyled mb-0">
+                <li>
+                  <a class="text-white" href="mailto:MethylscapeWebAdmin@mail.nih.gov"> Contact Us </a>
+                </li>
+              </ul>
+            </div>
+            <div class="col-lg-3 mb-4">
+              <div class="h5 mb-1 font-weight-light">MORE INFORMATION</div>
+              <ul class="list-unstyled mb-0">
+                <li>
+                  <a class="text-white" href="http://www.hhs.gov/"> DOC Home </a>
+                </li>
+                <li>
+                  <a class="text-white" href="http://www.nih.gov/"> Site Map </a>
+                </li>
+              </ul>
+            </div>
+            <div class="col-lg-3 mb-4">
+              <div class="h5 mb-1 font-weight-light">POLICIES</div>
+              <ul class="list-unstyled mb-0">
+                <li>
+                  <a class="text-white" href="https://www.cancer.gov/policies/accessibility"> Accessibility </a>
+                </li>
+                <li>
+                  <a class="text-white" href="https://www.cancer.gov/policies/disclaimer"> Disclaimer </a>
+                </li>
+                <li>
+                  <a class="text-white" href="https://www.cancer.gov/policies/foia"> FOIA </a>
+                </li>
+                <li>
+                  <a class="text-white" href="https://www.hhs.gov/vulnerability-disclosure-policy/index.html">
+                    HHS Vulnerability Disclosure
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <hr style="color: black" />
+        <div class="row">
+          <ul class="list-inline text-center small">
+            <li class="list-inline-item">
+              <a class="text-white" href="http://www.hhs.gov/"
+                ><small>U.S Department of Health and Humans Services</small></a
+              >
+            </li>
+            |
+            <li class="list-inline-item">
+              <a class="text-white" href="http://www.nih.gov/"><small>National Institutes of Health</small></a>
+            </li>
+            |
+            <li class="list-inline-item">
+              <a class="text-white" href="https://www.cancer.gov/"><small>National Cancer Institute</small></a>
+            </li>
+            |
+            <li class="list-inline-item">
+              <a class="text-white" href="http://usa.gov/"><small>USA.gov</small></a>
+            </li>
+          </ul>
+          <div class="text-center">NIH ... Turning Discovery Into Health ®</div>
+        </div>
+      </div>
+    </footer>
+  </body>
 </html>

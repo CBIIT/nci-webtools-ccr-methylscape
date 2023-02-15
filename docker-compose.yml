@@ -1,0 +1,46 @@
+version: "3"
+services:
+  backend:
+    build:
+      context: "."
+      dockerfile: "./docker/backend.dockerfile"
+    env_file: server/.env
+    environment:
+      - DATABASE_HOST=database
+    ports:
+      - "10000:10000"
+
+  frontend:
+    build:
+      context: "."
+      dockerfile: "./docker/frontend.dockerfile"
+      args:
+        APP_PATH: /
+    environment:
+      API_BASE_URL: http://backend:10000
+      APP_PATH: /
+    ports:
+      - "3000:443"
+
+  # to test locally, run:
+  # curl -XPOST "http://localhost:8080/2015-03-31/functions/function/invocations" -d '{}'
+  data-import:
+    build:
+      context: "."
+      dockerfile: "./docker/data-import.dockerfile"
+    env_file: database/.env
+    environment:
+      - DATABASE_HOST=database
+    ports:
+      - "8080:8080"
+
+  # to start only the database container, run:
+  # docker compose up database
+  database:
+    image: postgres
+    environment:
+      POSTGRES_USER: methylscape
+      POSTGRES_PASSWORD: methylscape
+      POSTGRES_DB: methylscape
+    ports:
+      - "5432:5432"

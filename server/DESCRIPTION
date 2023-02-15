@@ -1,0 +1,8 @@
+Type: project
+Description: Methylscape server
+Depends:
+  jsonlite,
+  survival,
+  survminer,
+  tibble,
+  tidyr

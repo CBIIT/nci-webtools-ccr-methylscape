@@ -1,0 +1,180 @@
+[
+  {
+    "table": "sample",
+    "columns": [
+      { "name": "id", "type": "serial", "constraints": ["primary key"] },
+      { "name": "sample", "type": "text" },
+      { "name": "idatFilename", "type": "text", "constraints": ["unique"] },
+      { "name": "samplePlate", "type": "text" },
+      { "name": "unifiedSamplePlate", "type": "text" },
+      { "name": "piCollaborator", "type": "text" },
+      { "name": "surgeryDate", "type": "date" },
+      { "name": "notes", "type": "text" },
+      { "name": "sentrixId", "type": "text" },
+      { "name": "nihLabels", "type": "text" },
+      { "name": "nciMetric", "type": "text" },
+      { "name": "v11b6", "type": "text" },
+      { "name": "age", "type": "double precision" },
+      { "name": "sex", "type": "text" },
+      { "name": "diagnosisProvided", "type": "text" },
+      { "name": "diagnosisIntegrated", "type": "text" },
+      { "name": "locationRegion", "type": "text" },
+      { "name": "locationSite", "type": "text" },
+      { "name": "additionalInfo", "type": "text" },
+      { "name": "variants", "type": "text" },
+      { "name": "fusionsOrTranslocations", "type": "text" },
+      { "name": "assay", "type": "text" },
+      { "name": "variantsReport", "type": "text" },
+      { "name": "fusionsOrTranslocationsReport", "type": "text" },
+      { "name": "outsideAssay", "type": "text" },
+      { "name": "variantsFormat", "type": "text" },
+      { "name": "fusionsOrTranslocationsFormat", "type": "text" },
+      { "name": "lpCpNumber", "type": "text" },
+      { "name": "subtypeOrPattern", "type": "text" },
+      { "name": "who2007Grade", "type": "text" },
+      { "name": "MCF1_v11b6", "type": "text" },
+      { "name": "MCF1_v11b6_score", "type": "double precision" },
+      { "name": "SC1_v11b6", "type": "text" },
+      { "name": "SC1_v11b6_score", "type": "double precision" },
+      { "name": "CNSv12b6", "type": "text" },
+      { "name": "CNSv12b6_score", "type": "double precision" },
+      { "name": "CNSv12b6_superfamily", "type": "text" },
+      { "name": "CNSv12b6_superfamily_score", "type": "double precision" },
+      { "name": "CNSv12b6_family", "type": "text" },
+      { "name": "CNSv12b6_family_score", "type": "double precision" },
+      { "name": "CNSv12b6_class", "type": "text" },
+      { "name": "CNSv12b6_class_score", "type": "double precision" },
+      { "name": "CNSv12b6_subclass1", "type": "text" },
+      { "name": "CNSv12b6_subclass1_score", "type": "double precision" },
+      { "name": "CNSv12b6_subclass2", "type": "text" },
+      { "name": "CNSv12b6_subclass2_score", "type": "double precision" },
+      { "name": "mgmtStatus", "type": "text" },
+      { "name": "mgmtEstimated", "type": "double precision" },
+      { "name": "SARv12b6", "type": "text" },
+      { "name": "SARv12b6_desc", "type": "text" },
+      { "name": "SARv12b6_score", "type": "double precision" },
+      { "name": "SARv12b6_second", "type": "text" },
+      { "name": "SARv12b6_second_desc", "type": "text" },
+      { "name": "SARv12b6_second_score", "type": "double precision" },
+      { "name": "SARv12b6_third", "type": "text" },
+      { "name": "SARv12b6_third_desc", "type": "text" },
+      { "name": "SARv12b6_third_score", "type": "double precision" },
+      { "name": "gsmAccession", "type": "text" },
+      { "name": "primaryStudy", "type": "text" },
+      { "name": "centerMethylation", "type": "text" },
+      { "name": "accessionMethylation", "type": "text" },
+      { "name": "samplingTreatment", "type": "text" },
+      { "name": "locationMetastasis", "type": "text" },
+      { "name": "type", "type": "text" },
+      { "name": "category", "type": "text" },
+      { "name": "diagnosisTier1", "type": "text" },
+      { "name": "diagnosisTier2", "type": "text" },
+      { "name": "diagnosisTier3", "type": "text" },
+      { "name": "whoDiagnosisTier4", "type": "text" },
+      { "name": "rfPurityAbsolute", "type": "double precision" },
+      { "name": "rfPurityEstimate", "type": "double precision" },
+      { "name": "lump", "type": "double precision" },
+      { "name": "mcf", "type": "text" },
+      { "name": "mcfScore", "type": "double precision" },
+      { "name": "subclass", "type": "text" },
+      { "name": "subclassScore", "type": "double precision" },
+      { "name": "overallSurvivalMonths", "type": "double precision" },
+      { "name": "overallSurvivalStatus", "type": "integer" },
+      { "name": "batchDate", "type": "date" }
+    ]
+  },
+  {
+    "table": "sampleCoordinate",
+    "columns": [
+      { "name": "id", "type": "serial", "constraints": ["primary key"] },
+      { "name": "sampleIdatFilename", "type": "text" },
+      { "name": "organSystem", "type": "text" },
+      { "name": "embedding", "type": "text" },
+      { "name": "x", "type": "double precision" },
+      { "name": "y", "type": "double precision" }
+    ]
+  },
+  {
+    "table": "gene",
+    "columns": [
+      { "name": "id", "type": "serial", "constraints": ["primary key"] },
+      { "name": "chromosome", "type": "text" },
+      { "name": "start", "type": "integer" },
+      { "name": "end", "type": "integer" },
+      { "name": "gene", "type": "text" }
+    ]
+  },
+  {
+    "table": "importLog",
+    "columns": [
+      { "name": "id", "type": "serial", "constraints": ["primary key"] },
+      { "name": "status", "type": "text" },
+      { "name": "type", "type": "text" },
+      { "name": "log", "type": "text" },
+      { "name": "warnings", "type": "integer", "options": ["default 0"] },
+      { "name": "createdAt", "type": "timestamp", "options": ["default CURRENT_TIMESTAMP"] },
+      { "name": "updatedAt", "type": "timestamp", "options": ["default CURRENT_TIMESTAMP"] },
+      { "name": "createdBy", "type": "text", "options": ["default 'system'"] },
+      { "name": "updatedBy", "type": "text", "options": ["default 'system'"] }
+    ]
+  },
+  {
+    "table": "role",
+    "columns": [
+      { "name": "id", "type": "serial", "constraints": ["primary key"] },
+      { "name": "name", "type": "text", "constraints": ["not null", "unique"] },
+      { "name": "description", "type": "text" },
+      { "name": "createdAt", "type": "timestamp", "options": ["default CURRENT_TIMESTAMP"] },
+      { "name": "updatedAt", "type": "timestamp", "options": ["default CURRENT_TIMESTAMP"] },
+      { "name": "createdBy", "type": "text", "options": ["default 'system'"] },
+      { "name": "updatedBy", "type": "text", "options": ["default 'system'"] }
+    ]
+  },
+  {
+    "table": "rolePolicy",
+    "columns": [
+      { "name": "id", "type": "serial", "constraints": ["primary key"] },
+      { "name": "roleId", "type": "integer", "constraints": ["not null", "references role"] },
+      { "name": "action", "type": "text", "constraints": ["not null"] },
+      { "name": "resource", "type": "text" },
+      { "name": "createdAt", "type": "timestamp", "options": ["default CURRENT_TIMESTAMP"] },
+      { "name": "updatedAt", "type": "timestamp", "options": ["default CURRENT_TIMESTAMP"] },
+      { "name": "createdBy", "type": "text", "options": ["default 'system'"] },
+      { "name": "updatedBy", "type": "text", "options": ["default 'system'"] }
+    ]
+  },
+  {
+    "table": "organization",
+    "columns": [
+      { "name": "id", "type": "serial", "constraints": ["primary key"] },
+      { "name": "order", "type": "integer" },
+      { "name": "name", "type": "text", "constraints": ["not null", "unique"] },
+      { "name": "status", "type": "text", "options": ["default 'active'"] },
+      { "name": "createdAt", "type": "timestamp", "options": ["default CURRENT_TIMESTAMP"] },
+      { "name": "updatedAt", "type": "timestamp", "options": ["default CURRENT_TIMESTAMP"] },
+      { "name": "createdBy", "type": "text", "options": ["default 'system'"] },
+      { "name": "updatedBy", "type": "text", "options": ["default 'system'"] }
+    ]
+  },
+  {
+    "table": "user",
+    "columns": [
+      { "name": "id", "type": "serial", "constraints": ["primary key"] },
+      { "name": "roleId", "type": "integer", "constraints": ["references role"] },
+      { "name": "organizationId", "type": "integer", "constraints": ["references organization"] },
+      { "name": "organizationOther", "type": "text" },
+      { "name": "accountType", "type": "text" },
+      { "name": "name", "type": "text", "constraints": ["not null", "unique"] },
+      { "name": "firstName", "type": "text" },
+      { "name": "lastName", "type": "text" },
+      { "name": "email", "type": "text", "constraints": ["unique"] },
+      { "name": "status", "type": "text", "options": ["default 'pending'"] },
+      { "name": "receiveNotification", "type": "boolean", "options": ["default true"] },
+      { "name": "notes", "type": "text" },
+      { "name": "createdAt", "type": "timestamp", "options": ["default CURRENT_TIMESTAMP"] },
+      { "name": "updatedAt", "type": "timestamp", "options": ["default CURRENT_TIMESTAMP"] },
+      { "name": "createdBy", "type": "text", "options": ["default 'system'"] },
+      { "name": "updatedBy", "type": "text", "options": ["default 'system'"] }
+    ]
+  }
+]
