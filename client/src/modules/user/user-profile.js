@@ -22,8 +22,8 @@ export default function UserProfile() {
             <Card.Body>
               {/* <h1 class="h4 mb-3 text-primary">Summary</h1> */}
               <p>
-                Please contact the <a href="mailto:MethylscapeWebAdmin@mail.nih.gov">site administrator</a> if your user
-                profile is inaccurate or needs to be updated.
+                Please contact the <a href="mailto:NCIMethylscapeWebAdmin@mail.nih.gov">site administrator</a> if your
+                user profile is inaccurate or needs to be updated.
               </p>
 
               {session.user && (
