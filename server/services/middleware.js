@@ -1,3 +1,5 @@
+import { formatObject } from "./logger.js";
+
 const isProduction = process.env.NODE_ENV === "production";
 
 export function publicCacheControl(maxAge) {
@@ -16,13 +18,12 @@ export function logRequests(formatter = (request) => [request.path, { ...request
   };
 }
 
-export function logErrors(error, request, response, next) {
-  const { name, message } = error;
-  request.app.locals.logger.error(error.stack ? error.stack : error);
-
-  // return less descriptive errors in production
-  // response.status(500).json(isProduction ? name : `${name}: ${message}`);
-  response.status(500).json(`${name}: ${message}`);
+export function logErrors(formatter = (e) => ({ error: e.message })) {
+  return (error, request, response, next) => {
+    const { logger } = request.app.locals;
+    logger.error(formatObject(error));
+    response.status(400).json(formatter(error));
+  };
 }
 
 export function withAsync(fn) {
