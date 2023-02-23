@@ -1,4 +1,4 @@
-import { createOAuthStrategy } from "./passportStrategies.js";
+import { createOAuthStrategy, createPkceStrategy } from "./passportStrategies.js";
 
 export function getAccountType({ preferred_username }) {
   const loginDomain = (preferred_username || "").split("@").pop();
@@ -18,15 +18,29 @@ export function createUserDeserializer(userManager) {
 }
 
 export async function createDefaultAuthStrategy(env = process.env) {
-  return await createOAuthStrategy({
-    name: "default",
-    clientId: env.OAUTH2_CLIENT_ID,
-    clientSecret: env.OAUTH2_CLIENT_SECRET,
-    baseUrl: env.OAUTH2_BASE_URL,
-    redirectUris: [env.OAUTH2_REDIRECT_URI],
-    params: {
-      scope: "openid profile email",
-      prompt: "login",
-    },
-  });
+  if (env.OAUTH2_CLIENT_SECRET) {
+    return await createOAuthStrategy({
+      name: "default",
+      clientId: env.OAUTH2_CLIENT_ID,
+      clientSecret: env.OAUTH2_CLIENT_SECRET,
+      baseUrl: env.OAUTH2_BASE_URL,
+      redirectUris: [env.OAUTH2_REDIRECT_URI],
+      params: {
+        scope: "openid profile email",
+        prompt: "login",
+      },
+    });
+  } else {
+    return await createPkceStrategy({
+      name: "default",
+      clientId: env.OAUTH2_CLIENT_ID,
+      baseUrl: env.OAUTH2_BASE_URL,
+      redirectUris: [env.OAUTH2_REDIRECT_URI],
+      params: {
+        scope: "openid profile email",
+        acr_values: env.OAUTH2_ACR_VALUES,
+        // prompt: "login",
+      },
+    });
+  }
 }
