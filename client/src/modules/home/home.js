@@ -15,11 +15,11 @@ export default function Home() {
       <SessionRoleWarning>
         <div className="fw-bold text-center bg-danger text-light p-2">
           <i className="bi bi-exclamation-triangle-fill text-warning me-1" />
-          You are not registered to access this website. Please submit a registration request{" "}
+          You are not authorized to access this website. Please submit a registration request{" "}
           <NavLink to="register" className="text-light text-decoration-underline fw-bold">
             here
-          </NavLink>
-          .
+          </NavLink>{" "}
+          if you do not have an account.
         </div>
       </SessionRoleWarning>
       <Container fluid className="cover-image" style={{ backgroundImage: `url(${backgroundImage})` }}>

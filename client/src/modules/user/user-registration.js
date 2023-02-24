@@ -34,9 +34,9 @@ export default function UserRegister() {
       resetForm();
     } catch (error) {
       console.error(error);
-      const message = error.response.data;
-      const message2 = "Cannot register this user! - ";
-      setAlerts([{ type: "danger", message2, message }]);
+      const data = error.response.data;
+      const message = data.error || String(error);
+      setAlerts([{ type: "danger", message }]);
     }
   }
 

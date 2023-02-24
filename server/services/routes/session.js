@@ -9,12 +9,12 @@ router.get(
     const destination = request.query.destination || "/";
     passport.authenticate("default", {
       failureRedirect: "/api/login",
-      state: destination,
+      state: "0".repeat(22) + destination,
     })(request, response, next);
   },
   (request, response) => {
     request.session.expires = request.session.cookie.expires;
-    const destination = request.query.state || "/";
+    const destination = request.query.state?.slice(22) || "/";
     response.redirect(destination);
   }
 );

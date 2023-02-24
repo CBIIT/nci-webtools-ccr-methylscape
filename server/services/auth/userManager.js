@@ -63,6 +63,7 @@ export default class UserManager {
       .leftJoin("organization", "user.organizationId", "organization.id")
       .where({ "user.email": email })
       .where({ "user.accountType": accountType })
+      .where({ "user.status": "active" })
       .select("user.*", "role.name as roleName", "organization.name as organizationName")
       .first();
 
@@ -74,7 +75,7 @@ export default class UserManager {
   async addUser(user) {
     const userExists = await this.database("user").where({ name: user.name });
     if (userExists && userExists.length > 0) {
-      throw new Error("User already exists");
+      throw new Error("This email address is already in use. Please choose a different email address.");
     } else {
       const columnInfo = await this.database("user").columnInfo();
       for (let key in user) {

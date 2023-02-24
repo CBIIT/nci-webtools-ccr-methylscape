@@ -1,6 +1,6 @@
 import express from "express";
 import Router from "express-promise-router";
-import { logRequests } from "./middleware.js";
+import { logErrors, logRequests } from "./middleware.js";
 import adminRouter from "./routes/admin.js";
 import analysisRouter from "./routes/analysis.js";
 import healthcheckRouter from "./routes/healthcheck.js";
@@ -25,3 +25,6 @@ apiRouter.use(organizationsRouter);
 apiRouter.use(usersRouter);
 apiRouter.use(rolesRouter);
 apiRouter.use(sessionRouter);
+
+// log errors
+apiRouter.use(logErrors());
