@@ -146,8 +146,8 @@ export const plotState = selector({
     let { annotations, search } = get(formState);
     let { sample, idatFilename, segments, bins, binGeneMap } = cnData;
 
-    bins = filterByStandardDeviation(bins, "medianValue", 4);
-    segments = filterByStandardDeviation(segments, "medianValue", 4);
+    // bins = filterByStandardDeviation(bins, "medianValue", 4);
+    // segments = filterByStandardDeviation(segments, "medianValue", 4);
 
     // determine x coordinates for each bin
     const xOffsets = [0, ...chrLines.map((c) => c["pos.start"])];
