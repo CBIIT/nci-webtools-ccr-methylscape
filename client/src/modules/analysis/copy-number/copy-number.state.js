@@ -196,10 +196,10 @@ export const plotState = selector({
         mode: "markers",
         type: "scattergl",
         marker: {
-          color: yCoordinates.map(colorScale),
+          color: yCoordinates,
           colorscale: [
-            [0, "rgb(255, 0, 0)"],
-            [0.5, "rgb(180, 180, 180)"],
+            [-1, "rgb(255, 0, 0)"],
+            [0, "rgb(180, 180, 180)"],
             [1, "rgb(0, 255, 0)"],
           ],
         },
