@@ -10,6 +10,7 @@ router.get(
     passport.authenticate("default", {
       failureRedirect: "/api/login",
       state: "0".repeat(22) + destination,
+      nonce: "0".repeat(22),
     })(request, response, next);
   },
   (request, response) => {
