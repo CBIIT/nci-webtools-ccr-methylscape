@@ -146,9 +146,6 @@ export const plotState = selector({
     let { annotations, search } = get(formState);
     let { sample, idatFilename, segments, bins, binGeneMap } = cnData;
 
-    // bins = filterByStandardDeviation(bins, "medianValue", 4);
-    // segments = filterByStandardDeviation(segments, "medianValue", 4);
-
     // determine x coordinates for each bin
     const xOffsets = [0, ...chrLines.map((c) => c["pos.start"])];
     const xCoordinates = bins.map((bin) => {
@@ -162,8 +159,9 @@ export const plotState = selector({
     let [yMin, yMax] = getRange(yCoordinates);
     const yAbsMax = Math.max(Math.abs(yMin), Math.abs(yMax));
     const yClamped = yAbsMax * 0.2; // approximates the majority of points
-    const colorScale = createScale([yMin, yMax], [0, 1], true);
-    const yRange = Math.max(1.2, yClamped);
+    const colorScale = createScale([-yClamped, yClamped], [0, 1], true);
+    const yThreshold = 1.2;
+    const yRange = Math.max(yThreshold, yClamped);
     const yRangeValues = [-yRange, yRange];
     [yMin, yMax] = yRangeValues;
 
@@ -196,10 +194,13 @@ export const plotState = selector({
         mode: "markers",
         type: "scattergl",
         marker: {
-          color: yCoordinates,
+          color: yCoordinates.map(colorScale),
+          cmin: 0,
+          cmid: 0.5,
+          cmax: 1,
           colorscale: [
-            [-1, "rgb(255, 0, 0)"],
-            [0, "rgb(180, 180, 180)"],
+            [0, "rgb(255, 0, 0)"],
+            [0.5, "rgb(200, 200, 200)"],
             [1, "rgb(0, 255, 0)"],
           ],
         },
