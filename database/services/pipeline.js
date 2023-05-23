@@ -1,9 +1,6 @@
-import { createReadStream } from "fs";
-import { Readable } from "stream";
 import { parse } from "csv-parse";
 import copyStreams from "pg-copy-streams";
 import format from "pg-format";
-import XLSX from "xlsx";
 
 export const COMMANDS = {
   createSchema,
@@ -96,26 +93,9 @@ export async function getColumns(inputStream, options) {
 export async function convertStream(inputStream, sourceFormat, targetFormat) {
   if (sourceFormat === targetFormat) {
     return inputStream;
-  } else if (sourceFormat === "xlsx" && targetFormat === "csv") {
-    return await convertXlsxToCsvStream(inputStream);
   } else {
     throw new Error(`Unsupported conversion: ${sourceFormat} -> ${targetFormat}`);
   }
-}
-
-export async function convertXlsxToCsvStream(inputStream, options = {}) {
-  let buffers = [];
-  for await (const chunk of inputStream) {
-    buffers.push(chunk);
-  }
-  const workbook = XLSX.read(Buffer.concat(buffers));
-  const sheet = workbook.Sheets[workbook.SheetNames[0]];
-  const csv = XLSX.utils.sheet_to_csv(sheet, options);
-
-  const readable = new Readable();
-  readable.push(csv);
-  readable.push(null);
-  return readable;
 }
 
 export async function getConvertedStream(source, sourceProvider, convert) {

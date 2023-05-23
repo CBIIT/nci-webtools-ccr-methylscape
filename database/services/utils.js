@@ -1,7 +1,5 @@
 import { basename } from "path";
-import mapValues from "lodash/mapValues.js";
 import { parse } from "csv-parse";
-import * as XLSX from "xlsx";
 import knex from "knex";
 import postgres from "pg";
 
@@ -99,41 +97,9 @@ export async function createRecordIterator(sourcePath, sourceProvider, { columns
     case "txt":
     case "tsv":
       return createCsvRecordIterator(inputStream, columns, { delimiter: "\t", ...parseConfig }, metadata, logger);
-    case "xlsx":
-      return await createExcelRecordIterator(inputStream, columns, metadata, logger);
     default:
       throw new Error(`Unsupported file extension: ${fileExtension}`);
   }
-}
-
-export async function createExcelRecordIterator(stream, columns, metadata = {}, logger) {
-  let buffers = [];
-  for await (const chunk of stream) {
-    buffers.push(chunk);
-  }
-  const workbook = XLSX.read(Buffer.concat(buffers));
-  const sheet = workbook.Sheets[workbook.SheetNames[0]];
-
-  const [headers] = XLSX.utils.sheet_to_json(sheet, {
-    header: 1,
-    range: "A1:ZZZ1", // max column is XFD (2^14)
-  });
-  const errors = [];
-
-  for (const { sourceName } of columns) {
-    if (sourceName && !headers.includes(sourceName)) {
-      errors.push(`Missing column: ${sourceName}`);
-    }
-  }
-
-  if (errors.length > 0) {
-    throw new Error(errors.join("\n"));
-  }
-
-  const records = XLSX.utils.sheet_to_json(sheet);
-  const recordParser = createRecordParser(columns, metadata, logger);
-
-  return records.map((record) => recordParser(mapValues(record, castValue)));
 }
 
 export function createCsvRecordIterator(stream, columns, options = {}, metadata = {}, logger) {
