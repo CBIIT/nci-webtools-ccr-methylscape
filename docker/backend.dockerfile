@@ -1,4 +1,4 @@
-FROM public.ecr.aws/amazonlinux/amazonlinux:2022
+FROM public.ecr.aws/amazonlinux/amazonlinux:2023
 
 RUN dnf -y update \
  && dnf -y install \
@@ -23,8 +23,9 @@ WORKDIR /app/server
 COPY server/renv.lock ./
 
 RUN R -e "\
-    options(Ncpus=parallel::detectCores()); \
-    install.packages('renv', repos = 'https://cloud.r-project.org/'); \
+    options(Ncpus=parallel::detectCores());\
+    install.packages('renv', repos = 'https://cloud.r-project.org/');\
+    renv::init(bare = T);\
     renv::restore();"
 
 COPY server/package.json server/package-lock.json ./
