@@ -3,3 +3,4 @@
 **/config.json
 **/logs
 database/data
+server/renv
