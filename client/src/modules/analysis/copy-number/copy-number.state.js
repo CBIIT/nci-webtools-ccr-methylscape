@@ -166,7 +166,7 @@ export const plotState = selector({
     [yMin, yMax] = yRangeValues;
 
     // determine top points
-    const sortedBins = [...bins].sort((a, b) => a.medianValue - b.medianValue);
+    const sortedBins = [...bins].sort((a, b) => a.medianValue - b.medianValue).filter((bin) => bin.gene?.length > 0);
     const topCount = Math.ceil(bins.length / 500); // top 0.5%
     const topBins = [...sortedBins.slice(0, topCount), ...sortedBins.slice(-topCount)];
 
