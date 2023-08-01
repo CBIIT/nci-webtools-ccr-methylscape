@@ -2,7 +2,7 @@ import { createOAuthStrategy, createPkceStrategy } from "./passportStrategies.js
 
 export function getAccountType({ preferred_username }) {
   const loginDomain = (preferred_username || "").split("@").pop();
-  return loginDomain.endsWith("login.gov") ? "Login.gov" : "NIH";
+  return !preferred_username || loginDomain.endsWith("login.gov") ? "Login.gov" : "NIH";
 }
 
 export function createUserSerializer() {
