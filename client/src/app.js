@@ -26,6 +26,7 @@ import RequireRole from "./modules/require-policy/require-role";
 import { isAuthorized } from "./modules/require-policy/require-policy.utils";
 import { sessionState } from "./modules/session/session.state";
 import UserProfile from "./modules/user/user-profile";
+import Submissions from "./modules/submissions/submissions";
 
 export default function App() {
   const session = useRecoilValue(sessionState);
@@ -41,6 +42,11 @@ export default function App() {
         path: "reports",
         title: "Samples",
         show: (session) => isAuthorized(session, "GetPage", "/reports"),
+      },
+      {
+        path: "submissions",
+        title: "Submissions",
+        show: (session) => isAuthorized(session, "GetPage", "/submissions"),
       },
       { path: "about", title: "About" },
     ],
@@ -154,6 +160,14 @@ export default function App() {
                   }
                 />
               </Route>
+              <Route
+                path="submissions"
+                element={
+                  <RequirePolicy action="GetPage">
+                    <Submissions />
+                  </RequirePolicy>
+                }
+              />
               <Route path="about" element={<About />} />
               <Route
                 path="admin"
