@@ -2,6 +2,7 @@ import { Container, Row, Col, Button, Modal } from "react-bootstrap";
 import { useRecoilValue } from "recoil";
 import SubmissionsForm from "./submissions-form";
 import SubmissionsList from "./submissions-list";
+import SubmissionsDetails from "./submissions-details";
 import { submissionsState } from "./submissions.state";
 import { useState } from "react";
 
@@ -22,6 +23,11 @@ export default function Submissions() {
         <Row className="mb-3">
           <Col>
             <SubmissionsList submissions={submissions} />
+          </Col>
+        </Row>
+        <Row className="mb-3">
+          <Col>
+            <SubmissionsDetails />
           </Col>
         </Row>
       </Container>
