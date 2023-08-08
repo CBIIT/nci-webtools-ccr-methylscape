@@ -1,25 +1,55 @@
 import { Form, Row, Col, Button } from "react-bootstrap";
-import { useRecoilValue } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import { sessionState } from "../session/session.state";
+import { formState } from "./submissions.state";
 import { useForm } from "react-hook-form";
+import { useState } from "react";
+import { parseMetadata } from "./submissions.utils";
 
 export default function SubmissionsForm() {
   const session = useRecoilValue(sessionState);
-
+  const setForm = useSetRecoilState(formState);
+  const [invalidMetadata, setInvalidMetadata] = useState([]);
+  const [metadataFileError, setMetadataFileError] = useState("");
+  const [sampleFilesError, setSampleFilesError] = useState("");
   const {
     register,
     handleSubmit,
-    reset,
-    setValue,
     watch,
     formState: { errors },
-  } = useForm({ defaultValues: {} });
+  } = useForm();
 
   const { manualMetadata } = watch();
 
-  if (errors) console.log("errors", errors);
+  if (Object.keys(errors).length) console.log("errors", errors);
   async function onSubmit(data) {
     console.log(data);
+    // check sample files
+    const sampleFiles = Array.from(data?.sampleFiles).map((e) => {
+      const [id, position] = e.name.slice(0, -5).split("_");
+      return { id, position };
+    });
+    if (sampleFiles.length % 2 > 0) setSampleFilesError("Each sample requires two pairs of IDAT files.");
+
+    console.log(sampleFiles);
+    try {
+      const { ownerInfo, metadata } = await parseMetadata(data.metadataFile[0]);
+
+      const checkInvalid = metadata.map((e) => {
+        const valid = sampleFiles.filter((s) => s.id == e.Sentrix_ID && s.position == e.Sentrix_Position).length == 2;
+        if (!valid) {
+          return e.Sample_Name;
+        }
+      });
+      if (checkInvalid.length) {
+        setInvalidMetadata(checkInvalid);
+      } else {
+        setInvalidMetadata([]);
+      }
+    } catch (error) {
+      console.log(error);
+      setMetadataFileError(error);
+    }
   }
 
   return (
@@ -53,7 +83,7 @@ export default function SubmissionsForm() {
           </Col>
         </Row>
       </Form.Group>
-      <Form.Group controlId="sampleFile" className="my-2">
+      <Form.Group controlId="sampleFiles" className="my-2">
         <Row>
           <Col sm="3">
             <Form.Label className="me-3">
@@ -61,12 +91,21 @@ export default function SubmissionsForm() {
             </Form.Label>
           </Col>
           <Col sm="auto">
-            <Form.Control {...register("sampleFile", { required: true })} size="sm" type="file" multiple />
+            <Form.Control
+              {...register("sampleFiles", { required: true })}
+              size="sm"
+              type="file"
+              multiple
+              accept=".idat"
+              isInvalid={sampleFilesError.length || errors.sampleFiles}
+            />
+            <Form.Control.Feedback type="invalid">{sampleFilesError}</Form.Control.Feedback>
           </Col>
         </Row>
       </Form.Group>
-      <Form.Group>
-        <Form.Check {...register("manualMetadata")} type="checkbox" label={"Manual Metadata"} />
+      <Form.Group controlId="manualMetadata">
+        <Form.Check {...register("manualMetadata")} type="checkbox" label={"Single Sample Metadata"} />
+        <p className="text-muted">Use this option if you are uploading a single sample without a metadata file.</p>
       </Form.Group>
 
       {/* metadata */}
@@ -190,7 +229,11 @@ export default function SubmissionsForm() {
                 <Form.Label>Experiment Name</Form.Label>
               </Col>
               <Col sm="9">
-                <Form.Control {...register("experimentName")} size="sm" placeholder="sentrix id here" />
+                <Form.Control
+                  {...register("experimentName")}
+                  size="sm"
+                  placeholder="Enter Experiment Name (Will use Sentrix ID if left blank)"
+                />
               </Col>
             </Row>
           </Form.Group>
@@ -234,10 +277,36 @@ export default function SubmissionsForm() {
               </Form.Label>
             </Col>
             <Col sm="auto">
-              <Form.Control {...register("metadataFile", { required: true })} size="sm" type="file" />
+              <Form.Control
+                {...register("metadataFile", { required: true })}
+                size="sm"
+                type="file"
+                accept=".csv"
+                isInvalid={metadataFileError.length || errors.metadataFile}
+              />
+              <Form.Control.Feedback type="invalid">{metadataFileError}</Form.Control.Feedback>
             </Col>
           </Row>
         </Form.Group>
+      )}
+
+      {invalidMetadata.length > 0 && (
+        <div>
+          <p>
+            <b>Metadata validation failed</b>
+            <div>Unable to find matching IDAT files for the samples in the metadata file.</div>
+            <div>Please check the format of your metadata file.</div>
+            <div>
+              Ensure all included samples are uploaded with a pair of IDAT files with standardized file names in the
+              following format: <i>[sentrix_id]_[sentrix_position]_[color].idat</i>
+            </div>
+          </p>
+          <ul>
+            {invalidMetadata.map((e) => (
+              <li>{e}</li>
+            ))}
+          </ul>
+        </div>
       )}
 
       <Row className="justify-content-center mt-3">

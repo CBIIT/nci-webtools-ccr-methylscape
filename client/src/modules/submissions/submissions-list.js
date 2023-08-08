@@ -26,8 +26,7 @@ export default function SubmissionsList({ submissions }) {
     //   submitDate: "123",
     // },
   ];
-  console.log(columns);
-  console.log(data);
+
   return (
     <Card className="bg-white p-3">
       {submissions.length == 0 ? (
