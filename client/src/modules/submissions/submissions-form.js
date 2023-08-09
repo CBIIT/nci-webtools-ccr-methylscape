@@ -25,11 +25,15 @@ export default function SubmissionsForm() {
   async function onSubmit(data) {
     console.log(data);
     // check sample files
-    const sampleFiles = Array.from(data?.sampleFiles).map((e) => {
-      const [id, position] = e.name.slice(0, -5).split("_");
-      return { id, position };
-    });
-    if (sampleFiles.length % 2 > 0) setSampleFilesError("Each sample requires two pairs of IDAT files.");
+    const sampleFiles = Array.from(data.sampleFiles)
+      .map((e) => {
+        const [id, position] = e.name.slice(0, -5).split("_");
+        if (id && position) return { id, position };
+      })
+      .filter((e) => e);
+    if (sampleFiles.length == 0)
+      setSampleFilesError("Improperly named files. Unable to identify Sentrix ID and position.");
+    else if (sampleFiles.length % 2 > 0) setSampleFilesError("Each sample requires two pairs of IDAT files.");
 
     console.log(sampleFiles);
     try {
@@ -178,7 +182,7 @@ export default function SubmissionsForm() {
                   <option>Select</option>
                   <option value="male">Male</option>
                   <option value="female">Female</option>
-                  <option value="unknown">Unknown</option>
+                  <option value="NA">NA</option>
                 </Form.Select>
               </Col>
             </Row>
