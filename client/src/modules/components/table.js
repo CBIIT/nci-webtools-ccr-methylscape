@@ -153,7 +153,7 @@ export default function Table({
         <Col sm="auto">
           {customOptions.hideColumns && (
             <Dropdown>
-              <Dropdown.Toggle variant="secondary" size="sm" id={`toggle-umap-columns`}>
+              <Dropdown.Toggle variant="success" size="sm" id={`toggle-umap-columns`}>
                 Columns
               </Dropdown.Toggle>
               <Dropdown.Menu>

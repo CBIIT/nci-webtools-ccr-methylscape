@@ -4,7 +4,6 @@ $dark: rgb(42, 73, 111);
 $green: rgb(111, 208, 178);
 $blue-200: #e4e9f7;
 
-$secondary: $green;
 $sample-blue: #b0cfea;
 
 /** Headings */
@@ -74,12 +73,12 @@ $btn-border-radius: 2rem;
 $btn-border-radius-sm: 2rem;
 $input-border-radius: 2rem;
 $input-border-radius-sm: 2rem;
-$input-border-color: $secondary;
-$component-active-bg: $secondary;
+$input-border-color: $green;
+$component-active-bg: $green;
 
 //form
 $form-select-color: $blue !default;
-$form-select-border-color: $secondary !default;
+$form-select-border-color: $green !default;
 $form-select-focus-border-color: $blue !default;
 
 //dropdown
@@ -87,7 +86,7 @@ $dropdown-link-color: $blue !default;
 $dropdown-link-hover-bg: $blue-200 !default;
 
 //tabs
-$nav-tabs-link-active-color: $secondary !default;
+$nav-tabs-link-active-color: $green !default;
 
 $pagination-border-color: none;
 $pagination-hover-bg: $blue-200 !default;
