@@ -27,6 +27,9 @@ import { isAuthorized } from "./modules/require-policy/require-policy.utils";
 import { sessionState } from "./modules/session/session.state";
 import UserProfile from "./modules/user/user-profile";
 import Submissions from "./modules/submissions/submissions";
+import SubmissionsForm from "./modules/submissions/submissions-form";
+import SubmissionsList from "./modules/submissions/submissions-list";
+import SubmissionsDetails from "./modules/submissions/submissions-details";
 
 export default function App() {
   const session = useRecoilValue(sessionState);
@@ -166,8 +169,32 @@ export default function App() {
                   <RequirePolicy action="GetPage">
                     <Submissions />
                   </RequirePolicy>
-                }
-              />
+                }>
+                <Route
+                  path="create"
+                  element={
+                    <RequirePolicy action="GetPage">
+                      <SubmissionsForm />
+                    </RequirePolicy>
+                  }
+                />
+                <Route
+                  path="list"
+                  element={
+                    <RequirePolicy action="GetPage">
+                      <SubmissionsList />
+                    </RequirePolicy>
+                  }
+                />
+                <Route
+                  path="details"
+                  element={
+                    <RequirePolicy action="GetPage">
+                      <SubmissionsDetails />
+                    </RequirePolicy>
+                  }
+                />
+              </Route>
               <Route path="about" element={<About />} />
               <Route
                 path="admin"

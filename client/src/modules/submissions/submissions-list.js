@@ -1,7 +1,9 @@
-import { Card, Button } from "react-bootstrap";
+import { Card, Row, Col, Button, Container } from "react-bootstrap";
 import Table from "../components/table";
+import { useNavigate } from "react-router-dom";
 
-export default function SubmissionsList({ submissions }) {
+export default function SubmissionsList({ submissions = [] }) {
+  const navigate = useNavigate();
   const columns = [
     { accessor: "submissionName", Header: "Submission Name" },
     { accessor: "submitter", Header: "Submitter" },
@@ -28,12 +30,24 @@ export default function SubmissionsList({ submissions }) {
   ];
 
   return (
-    <Card className="bg-white p-3">
-      {submissions.length == 0 ? (
-        <p>You have no submissions. Click on Create Submission to start a data submission.</p>
-      ) : (
-        <Table key="submissions-table" name="Submissions" data={data} columns={columns} />
-      )}
-    </Card>
+    <Container fluid="xxl">
+      <Row className="justify-content-between mb-3">
+        <Col sm="auto">
+          <h3 className="text-white">Submissions</h3>
+        </Col>
+        <Col sm="auto">
+          <Button size="sm" variant="success" onClick={() => navigate("/submissions/create")}>
+            Create Submission
+          </Button>
+        </Col>
+      </Row>
+      <Card className="bg-white p-3">
+        {submissions.length == 0 ? (
+          <p>You have no submissions. Click on Create Submission to start a data submission.</p>
+        ) : (
+          <Table key="submissions-table" name="Submissions" data={data} columns={columns} />
+        )}
+      </Card>
+    </Container>
   );
 }

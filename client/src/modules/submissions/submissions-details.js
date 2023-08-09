@@ -1,7 +1,9 @@
-import { Row, Col, Card, Form, Button } from "react-bootstrap";
+import { Container, Row, Col, Card, Form, Button } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 import Table from "../components/table";
 
 export default function SubmissionsDetails({}) {
+  const navigate = useNavigate();
   const columns = [
     { accessor: "1", Header: "Sample Name" },
     { accessor: "2", Header: "Project" },
@@ -13,7 +15,7 @@ export default function SubmissionsDetails({}) {
   ];
 
   return (
-    <div>
+    <Container fluid="xxl">
       <Card className="bg-white">
         <Card.Body>
           <Row>
@@ -51,9 +53,11 @@ export default function SubmissionsDetails({}) {
         <Card.Body>
           <div>placeholder</div>
           {/* <Table name="" data={[{ 1: "test" }]} columns={columns} options={{}} /> */}
-          <Button variant="link">Back to Submissions List</Button>
+          <Button variant="link" onClick={() => navigate("/submissions")}>
+            Back to Submissions List
+          </Button>
         </Card.Body>
       </Card>
-    </div>
+    </Container>
   );
 }

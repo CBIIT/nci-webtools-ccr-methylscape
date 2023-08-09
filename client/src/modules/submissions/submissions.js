@@ -1,45 +1,18 @@
-import { Container, Row, Col, Button, Modal } from "react-bootstrap";
-import { useRecoilValue } from "recoil";
-import SubmissionsForm from "./submissions-form";
-import SubmissionsList from "./submissions-list";
-import SubmissionsDetails from "./submissions-details";
-import { submissionsState } from "./submissions.state";
-import { useState } from "react";
+import { useEffect } from "react";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 
 export default function Submissions() {
-  const [modalVis, setModalVis] = useState(false);
-  const { submissions } = useRecoilValue(submissionsState);
+  const location = useLocation().pathname.split("/").slice(-1);
+  const navigate = useNavigate();
+
+  // automatically redirect to one of the reports tabs, projects by default
+  useEffect(() => {
+    if (location == "submissions") navigate("list");
+  }, [location]);
 
   return (
-    <>
-      <Container fluid="xxl" className="">
-        <Row className="justify-content-end my-3">
-          <Col sm="auto">
-            <Button size="sm" variant="success" onClick={() => setModalVis(true)}>
-              Create Submission
-            </Button>
-          </Col>
-        </Row>
-        <Row className="mb-3">
-          <Col>
-            <SubmissionsList submissions={submissions} />
-          </Col>
-        </Row>
-        <Row className="mb-3">
-          <Col>
-            <SubmissionsDetails />
-          </Col>
-        </Row>
-      </Container>
-
-      <Modal size="lg" show={modalVis} onHide={() => setModalVis(false)}>
-        <Modal.Header closeButton>
-          <Modal.Title>Create Submission</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <SubmissionsForm />
-        </Modal.Body>
-      </Modal>
-    </>
+    <div className="d-flex justify-content-center my-3">
+      <Outlet />
+    </div>
   );
 }
