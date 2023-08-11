@@ -11,6 +11,7 @@ export default function SubmissionsForm() {
   const navigate = useNavigate();
   const session = useRecoilValue(sessionState);
   const setForm = useSetRecoilState(formState);
+  const [success, setSuccess] = useState(false);
   const [invalidMetadata, setInvalidMetadata] = useState([]);
   const [metadataFileError, setMetadataFileError] = useState("");
   const [sampleFilesError, setSampleFilesError] = useState("");
@@ -30,28 +31,44 @@ export default function SubmissionsForm() {
     // check sample files
     const sampleFiles = Array.from(data.sampleFiles)
       .map((e) => {
-        const [id, position] = e.name.slice(0, -5).split("_");
-        if (id && position) return { id, position };
+        const [id, position, channel] = e.name.slice(0, -5).split("_");
+        if (id && position && channel) return { id, position, channel };
       })
-      .filter((e) => e);
-    if (sampleFiles.length == 0)
+      .filter(Boolean);
+    if (sampleFiles.length == 0) {
       setSampleFilesError("Improperly named files. Unable to identify Sentrix ID and position.");
-    else if (sampleFiles.length % 2 > 0) setSampleFilesError("Each sample requires two pairs of IDAT files.");
+      return;
+    } else if (sampleFiles.length % 2 > 0) {
+      setSampleFilesError("Each sample requires two pairs of IDAT files.");
+      return;
+    } else {
+      setSampleFilesError("");
+    }
 
     console.log(sampleFiles);
     try {
       const { ownerInfo, metadata } = await parseMetadata(data.metadataFile[0]);
+      console.log(metadata);
+      const checkInvalid = metadata
+        .map((e) => {
+          const id = e.Sentrix_ID;
+          const pos = e.Sentrix_Position;
+          const name = e.Sample_Name;
+          const count = [...new Set(sampleFiles.filter((s) => s.id == id && s.position == pos).map((s) => s.channel))]
+            .length;
+          console.log(count);
+          if (count != 2)
+            return count < 2
+              ? `${name} (${id}_${pos}): Missing pair of sample files.`
+              : `${name} (${id}_${pos}): Too many sample files.`;
+        })
+        .filter(Boolean);
 
-      const checkInvalid = metadata.map((e) => {
-        const valid = sampleFiles.filter((s) => s.id == e.Sentrix_ID && s.position == e.Sentrix_Position).length == 2;
-        if (!valid) {
-          return e.Sample_Name;
-        }
-      });
       if (checkInvalid.length) {
         setInvalidMetadata(checkInvalid);
       } else {
         setInvalidMetadata([]);
+        setSuccess(true);
       }
     } catch (error) {
       console.log(error);
@@ -130,7 +147,7 @@ export default function SubmissionsForm() {
                   </Col>
                   <Col sm="9">
                     <Form.Control
-                      {...register("sampleName", { required: { value: true, message: "Sample Name required" } })}
+                      {...register("sample", { required: { value: true, message: "Sample Name required" } })}
                       size="sm"
                       isInvalid={errors?.sampleName}
                     />
@@ -185,9 +202,9 @@ export default function SubmissionsForm() {
                   </Col>
                   <Col sm="auto">
                     <Form.Select {...register("sex")} size="sm">
-                      <option>Select</option>
-                      <option value="male">Male</option>
-                      <option value="female">Female</option>
+                      <option value="NA">Select</option>
+                      <option value="Male">Male</option>
+                      <option value="Female">Female</option>
                       <option value="NA">NA</option>
                     </Form.Select>
                   </Col>
@@ -300,20 +317,20 @@ export default function SubmissionsForm() {
             </Form.Group>
           )}
 
+          {success && <p className="text-success">Validated Metadata</p>}
           {invalidMetadata.length > 0 && (
             <div>
-              <p>
-                <b>Metadata validation failed</b>
-                <div>Unable to find matching IDAT files for the samples in the metadata file.</div>
-                <div>Please check the format of your metadata file.</div>
-                <div>
-                  Ensure all included samples are uploaded with a pair of IDAT files with standardized file names in the
-                  following format: <i>[sentrix_id]_[sentrix_position]_[color].idat</i>
-                </div>
-              </p>
+              <b>Metadata validation failed</b>
+              <div>Unable to find matching IDAT files for the samples in the metadata file.</div>
+              <div>Please check the format of your metadata file.</div>
+              <div>
+                Ensure all included samples are uploaded with a pair of IDAT files with standardized file names in the
+                following format: <i>[sentrix_id]_[sentrix_position]_[channel].idat</i>
+              </div>
+
               <ul>
-                {invalidMetadata.map((e) => (
-                  <li>{e}</li>
+                {invalidMetadata.map((e, i) => (
+                  <li key={i}>{e}</li>
                 ))}
               </ul>
             </div>
@@ -326,7 +343,13 @@ export default function SubmissionsForm() {
               </Button>
             </Col>
             <Col sm="auto">
-              <Button variant="secondary" onClick={() => reset()}>
+              <Button
+                variant="secondary"
+                onClick={() => {
+                  reset();
+                  setMetadataFileError("");
+                  setInvalidMetadata("");
+                }}>
                 Reset
               </Button>
             </Col>
