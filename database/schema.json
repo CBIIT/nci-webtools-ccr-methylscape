@@ -188,7 +188,7 @@
       { "name": "investigator", "type": "text", "constraints": ["not null"] },
       { "name": "experiment", "type": "text", "constraints": ["not null"] },
       { "name": "experimentDate", "type": "date" },
-      { "name": "submitDate", "type": "date" },
+      { "name": "submitDate", "type": "text" },
       { "name": "status", "type": "text" },
       { "name": "createdAt", "type": "timestamp", "options": ["default CURRENT_TIMESTAMP"] },
       { "name": "updatedAt", "type": "timestamp", "options": ["default CURRENT_TIMESTAMP"] },
