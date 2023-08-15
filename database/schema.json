@@ -181,9 +181,10 @@
     "table": "submissions",
     "columns": [
       { "name": "id", "type": "serial", "constraints": ["primary key"] },
-      { "name": "userId", "type": "integer", "constraints": ["references user"] },
+      { "name": "uuid", "type": "text", "constraints": ["not null"] },
+      { "name": "userId", "type": "integer" },
       { "name": "organizationId", "type": "integer", "constraints": ["references organization"] },
-      { "name": "name", "type": "text", "constraints": ["not null"] },
+      { "name": "submissionName", "type": "text", "constraints": ["not null"] },
       { "name": "investigator", "type": "text", "constraints": ["not null"] },
       { "name": "experiment", "type": "text", "constraints": ["not null"] },
       { "name": "experimentDate", "type": "date" },
