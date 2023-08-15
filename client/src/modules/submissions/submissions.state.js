@@ -1,20 +1,16 @@
 import { atom, selector } from "recoil";
 import axios from "axios";
 
-export const defaultFormState = {};
-
-export const formState = atom({
-  key: "submissions.form",
-  default: defaultFormState,
-});
-
-export const defaultState = {
-  submissions: [],
-};
-
-export const submissionsState = selector({
-  key: "submissions.state",
-  get: async () => {
-    return defaultState;
+export const submissionsSelector = selector({
+  key: "submissions.list",
+  get: async ({ get }) => {
+    try {
+      const response = await axios.get(`/api/submissions`);
+      const data = response.data;
+      return data;
+    } catch (err) {
+      console.log(err);
+      return [];
+    }
   },
 });

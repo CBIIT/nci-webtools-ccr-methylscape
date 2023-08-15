@@ -1,16 +1,15 @@
 import { Card, Form, Row, Col, Button } from "react-bootstrap";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilValue } from "recoil";
 import { sessionState } from "../session/session.state";
-import { formState } from "./submissions.state";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { parseMetadata } from "./submissions.utils";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 export default function SubmissionsForm() {
   const navigate = useNavigate();
   const session = useRecoilValue(sessionState);
-  const setForm = useSetRecoilState(formState);
   const [success, setSuccess] = useState(false);
   const [invalidMetadata, setInvalidMetadata] = useState([]);
   const [metadataFileError, setMetadataFileError] = useState("");
@@ -48,7 +47,6 @@ export default function SubmissionsForm() {
     console.log(sampleFiles);
     try {
       const { ownerInfo, metadata } = await parseMetadata(data.metadataFile[0]);
-      console.log(metadata);
       const checkInvalid = metadata
         .map((e) => {
           const id = e.Sentrix_ID;
@@ -56,7 +54,7 @@ export default function SubmissionsForm() {
           const name = e.Sample_Name;
           const count = [...new Set(sampleFiles.filter((s) => s.id == id && s.position == pos).map((s) => s.channel))]
             .length;
-          console.log(count);
+
           if (count != 2)
             return count < 2
               ? `${name} (${id}_${pos}): Missing pair of sample files.`
@@ -68,7 +66,35 @@ export default function SubmissionsForm() {
         setInvalidMetadata(checkInvalid);
       } else {
         setInvalidMetadata([]);
-        setSuccess(true);
+
+        const formData = new FormData();
+        const uuid = crypto.randomUUID();
+        const submission = {
+          uuid,
+          userId: session.user.id,
+          organizationId: session.user.organizationId,
+          submissionName: data.submissionName,
+          investigator: ownerInfo.investigator,
+          experiment: ownerInfo.experiment,
+          experimentDate: ownerInfo.date,
+          submitDate: new Date(),
+          status: "Submitted",
+        };
+
+        Array.from(data.sampleFiles).forEach((e) => formData.append("sampleFiles", e));
+        formData.append(
+          "data",
+          JSON.stringify({
+            submission,
+            metadata,
+          })
+        );
+        try {
+          await axios.post(`/api/submissions/${uuid}`, formData);
+          setSuccess(true);
+        } catch (error) {
+          console.log(error);
+        }
       }
     } catch (error) {
       console.log(error);
@@ -317,7 +343,7 @@ export default function SubmissionsForm() {
             </Form.Group>
           )}
 
-          {success && <p className="text-success">Validated Metadata</p>}
+          {success && <p className="text-success">Submitted</p>}
           {invalidMetadata.length > 0 && (
             <div>
               <b>Metadata validation failed</b>
