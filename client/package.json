@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "axios": "^1.4.0",
-    "bootstrap": "^5.3.0",
+    "bootstrap": "^5.3.1",
     "bootstrap-icons": "^1.10.5",
     "classnames": "^2.3.2",
     "file-saver": "^2.0.5",
