@@ -2,6 +2,7 @@ import { Card, Row, Col, Button, Container } from "react-bootstrap";
 import Table from "../components/table";
 import { useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
+import moment from "moment";
 import { submissionsSelector } from "./submissions.state";
 
 export default function SubmissionsList() {
@@ -11,13 +12,20 @@ export default function SubmissionsList() {
     { accessor: "submissionName", Header: "Submission Name" },
     { accessor: "submitter", Header: "Submitter" },
     { accessor: "organizationName", Header: "Organization" },
-    // {
-    //   accessor: "samples",
-    //   Header: "Sample Count",
-    //   Cell: ({ value }) => value.length || 0,
-    // },
+    {
+      accessor: "samples",
+      Header: "Sample Count",
+      Cell: ({ value }) => 0,
+    },
     { accessor: "status", Header: "Status" },
-    { accessor: "submitDate", Header: "Submitted Date" },
+    {
+      accessor: "submitDate",
+      Header: "Submitted Date",
+      Cell: (e) => {
+        const time = moment(e.value);
+        return `${time.format("LLL")} (${time.fromNow()})`;
+      },
+    },
     { Header: "Action", Cell: (e) => <Button type="link">Review</Button> },
   ];
 
