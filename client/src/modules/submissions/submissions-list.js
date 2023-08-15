@@ -26,7 +26,7 @@ export default function SubmissionsList() {
         return `${time.format("LLL")} (${time.fromNow()})`;
       },
     },
-    { Header: "Action", Cell: (e) => <Button type="link">Review</Button> },
+    { Header: "Action", Cell: (e) => <Button variant="link">Review</Button> },
   ];
 
   return (
