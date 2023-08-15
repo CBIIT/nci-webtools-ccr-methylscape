@@ -3,6 +3,7 @@ config.json
 docker.config.json
 database/data
 server/logs
+data
 .DS_Store
 tmp
 .env
