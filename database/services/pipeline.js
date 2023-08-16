@@ -42,7 +42,7 @@ export async function recreateTables({ connection, schema, tables }) {
 
 export async function dropTables({ connection, tables }) {
   for (const table of [...tables.reverse()]) {
-    await connection.query(format("DROP TABLE IF EXISTS %I", table));
+    await connection.query(format("DROP TABLE IF EXISTS %I CASCADE", table));
   }
 }
 
