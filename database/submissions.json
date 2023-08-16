@@ -1,0 +1,7 @@
+[
+  {
+    "command": "recreateTables",
+    "description": "Recreate tables",
+    "tables": ["submissions", "userSamples"]
+  }
+]
