@@ -44,14 +44,14 @@ export default function SubmissionsForm() {
       setSampleFilesError("");
     }
 
-    console.log(sampleFiles);
     try {
       const { ownerInfo, metadata } = await parseMetadata(data.metadataFile[0]);
+      console.log(metadata);
       const checkInvalid = metadata
         .map((e) => {
-          const id = e.Sentrix_ID;
-          const pos = e.Sentrix_Position;
-          const name = e.Sample_Name;
+          const id = e.sentrixId;
+          const pos = e.sentrixPosition;
+          const name = e.sample;
           const count = [...new Set(sampleFiles.filter((s) => s.id == id && s.position == pos).map((s) => s.channel))]
             .length;
 

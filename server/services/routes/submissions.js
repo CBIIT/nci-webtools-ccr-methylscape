@@ -45,8 +45,15 @@ router.post(
     const { submission, metadata, ...rest } = JSON.parse(request.body.data);
     const { uuid } = request.params;
 
-    const results = await connection("submissions").insert(submission).returning("id");
-    response.json(results);
+    const submissionsId = await connection("submissions").insert(submission).returning("id")[0].id;
+    const userSamplesId = metadata.forEach(
+      async (sample) =>
+        await connection("userSamples")
+          .insert({ submissionsId, ...sample })
+          .returning("id")
+    );
+
+    response.json({ submissionsId, userSamplesId });
   }
 );
 
