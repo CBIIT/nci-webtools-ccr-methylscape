@@ -13,9 +13,9 @@ export default function SubmissionsList() {
     { accessor: "submitter", Header: "Submitter" },
     { accessor: "organizationName", Header: "Organization" },
     {
-      accessor: "samples",
+      accessor: "sampleCount",
       Header: "Sample Count",
-      Cell: ({ value }) => 0,
+      Cell: ({ value }) => value || 0,
     },
     { accessor: "status", Header: "Status" },
     {
@@ -26,7 +26,15 @@ export default function SubmissionsList() {
         return `${time.format("LLL")} (${time.fromNow()})`;
       },
     },
-    { Header: "Action", Cell: (e) => <Button variant="link">Review</Button> },
+    {
+      accessor: "id",
+      Header: "Action",
+      Cell: ({ value }) => (
+        <Button variant="link" onClick={() => navigate(`/submissions/details/${value}`)}>
+          Review
+        </Button>
+      ),
+    },
   ];
 
   return (
