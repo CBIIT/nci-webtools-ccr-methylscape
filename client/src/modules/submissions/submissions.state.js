@@ -1,4 +1,4 @@
-import { atom, selector } from "recoil";
+import { selector, selectorFamily } from "recoil";
 import axios from "axios";
 
 export const submissionsSelector = selector({
@@ -13,4 +13,20 @@ export const submissionsSelector = selector({
       return [];
     }
   },
+});
+
+export const detailsSelector = selectorFamily({
+  key: "submissions.details",
+  get:
+    (submissionsId) =>
+    async ({ get }) => {
+      try {
+        const response = await axios.get(`/api/userSamples/${submissionsId}`);
+        const data = response.data;
+        return data;
+      } catch (err) {
+        console.log(err);
+        return [];
+      }
+    },
 });
