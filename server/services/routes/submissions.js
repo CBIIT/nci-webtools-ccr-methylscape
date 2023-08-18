@@ -18,11 +18,14 @@ router.get("/submissions", requiresRouteAccessPolicy("AccessApi"), async (reques
   const query = connection("submissions")
     .leftJoin("user", "submissions.userId", "user.id")
     .leftJoin("organization", "submissions.organizationId", "organization.id")
+    .leftJoin("userSamples", "submissions.id", "userSamples.submissionsId")
     .select(
       "submissions.*",
       "organization.name as organizationName",
-      connection.raw(`"user"."firstName" || ' ' || "user"."lastName" as submitter`)
+      connection.raw(`"user"."firstName" || ' ' || "user"."lastName" as submitter`),
+      connection.raw(`count("userSamples"."id") as "sampleCount"`)
     )
+    .groupBy(["submissions.id", "user.id", "organization.name", "userSamples.submissionsId"])
     .orderBy("submissions.createdAt", "desc");
 
   if (roleName == "Admin") {
