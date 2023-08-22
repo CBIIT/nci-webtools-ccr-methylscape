@@ -59,7 +59,7 @@ router.post(
   }
 );
 
-router.get("/userSamples/:submissionsId", requiresRouteAccessPolicy("AccessApi"), async (request, response) => {
+router.get("/submissions/sample/:submissionsId", requiresRouteAccessPolicy("AccessApi"), async (request, response) => {
   const { connection } = request.app.locals;
   const { submissionsId } = request.params;
 

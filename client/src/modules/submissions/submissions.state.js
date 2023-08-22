@@ -21,7 +21,7 @@ export const detailsSelector = selectorFamily({
     (submissionsId) =>
     async ({ get }) => {
       try {
-        const response = await axios.get(`/api/userSamples/${submissionsId}`);
+        const response = await axios.get(`/api/submissions/sample/${submissionsId}`);
         const data = response.data;
         return data;
       } catch (err) {
