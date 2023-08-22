@@ -31,9 +31,9 @@ router.get("/submissions", requiresRouteAccessPolicy("AccessApi"), async (reques
   if (roleName == "Admin") {
     response.json(await query);
   } else if (roleName == "Data Manager") {
-    response.json(await query.where("organizationId", organizationId));
+    response.json(await query.where("submissions.organizationId", organizationId));
   } else if (roleName == "User") {
-    response.json(await query.where("userId", id));
+    response.json(await query.where("submissions.userId", id));
   } else {
     return [];
   }
