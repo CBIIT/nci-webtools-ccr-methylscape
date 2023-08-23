@@ -11,10 +11,24 @@ export default function SubmissionsDetails() {
 
   const columns = [
     { accessor: "sample", Header: "Sample Name" },
-    { accessor: "surgeryDate", Header: "Surgery Date" },
+    { accessor: "sampleWell", Header: "Sample Well" },
+    { accessor: "samplePlate", Header: "Sample Plate" },
+    { accessor: "sampleGroup", Header: "Sample Group" },
+    { accessor: "poolId", Header: "Pool ID" },
+    { accessor: "sentrixId", Header: "Sentrix ID" },
+    { accessor: "sentrixPosition", Header: "Sentrix Position" },
+    { accessor: "materialType", Header: "Material Type" },
     { accessor: "sex", Header: "Sex" },
-    { accessor: "age", Header: "Age" },
+    { accessor: "surgeryCase", Header: "Surgery Case" },
     { accessor: "diagnosis", Header: "Provided Diagnosis" },
+    { accessor: "age", Header: "Age" },
+    { accessor: "notes", Header: "Notes" },
+    { accessor: "tumorSite", Header: "Tumor Site" },
+    { accessor: "piCollaborator", Header: "PI Collaborator" },
+    { accessor: "outsideId", Header: "Outside ID" },
+    { accessor: "surgeryDate", Header: "Surgery Date" },
+    { accessor: "projectName", Header: "Project Name" },
+    { accessor: "experimentName", Header: "Experiment Name" },
   ];
 
   return (
@@ -56,7 +70,7 @@ export default function SubmissionsDetails() {
 
       <Card className="bg-white mt-3">
         <Card.Body>
-          <Table name="Samples" data={details} columns={columns} options={{}} />
+          <Table name="Samples" data={details} columns={columns} options={{}} customOptions={{ hideColumns: true }} />
           <Button variant="link" onClick={() => navigate("/submissions")}>
             Back to Submissions List
           </Button>
