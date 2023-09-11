@@ -81,16 +81,16 @@ router.get("/submissions/sample/:submissionsId", requiresRouteAccessPolicy("Acce
   response.json(results);
 });
 
-router.get(
-  "/submissions/data/:submissionsId/:filePath",
-  requiresRouteAccessPolicy("AccessApi"),
-  async (request, response) => {
-    const { submissionsId, fileName } = request.params;
-    const { S3_USER_DATA_BUCKET, S3_USER_DATA_BUCKET_KEY_PREFIX } = process.env;
-    const path = ["submissions", submissionsId, fileName].join("/");
+router.get("/submissions/data/:submissionsId", requiresRouteAccessPolicy("AccessApi"), async (request, response) => {
+  const { submissionsId } = request.params;
+  const { filePath } = request.query;
+  const { S3_USER_DATA_BUCKET, S3_USER_DATA_BUCKET_KEY_PREFIX } = process.env;
+  const path = ["submissions", submissionsId, filePath].join("/");
+  try {
     const results = await getFile(path, S3_USER_DATA_BUCKET, S3_USER_DATA_BUCKET_KEY_PREFIX);
     results.Body.pipe(response);
+  } catch (error) {
+    response.status(404).send("Submission data not found");
   }
-);
-
+});
 export default router;
