@@ -1,6 +1,7 @@
 import Router from "express-promise-router";
 import path from "path";
 import { requiresRouteAccessPolicy } from "../auth/policyMiddleware.js";
+import { getFile } from "../aws.js";
 import multer from "multer";
 import DiskStorage from "../storage.js";
 
@@ -79,5 +80,17 @@ router.get("/submissions/sample/:submissionsId", requiresRouteAccessPolicy("Acce
 
   response.json(results);
 });
+
+router.get(
+  "/submissions/data/:submissionsId/:filePath",
+  requiresRouteAccessPolicy("AccessApi"),
+  async (request, response) => {
+    const { submissionsId, fileName } = request.params;
+    const { S3_USER_DATA_BUCKET, S3_USER_DATA_BUCKET_KEY_PREFIX } = process.env;
+    const path = ["submissions", submissionsId, fileName].join("/");
+    const results = await getFile(path, S3_USER_DATA_BUCKET, S3_USER_DATA_BUCKET_KEY_PREFIX);
+    results.Body.pipe(response);
+  }
+);
 
 export default router;
