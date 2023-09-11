@@ -29,6 +29,24 @@ export default function SubmissionsDetails() {
     { accessor: "surgeryDate", Header: "Surgery Date" },
     { accessor: "projectName", Header: "Project Name" },
     { accessor: "experimentName", Header: "Experiment Name" },
+    {
+      accessor: "actions",
+      Header: "Actions",
+      Cell: ({ row }) => {
+        return (
+          <>
+            {details[0].status === "Completed" && (
+              <a
+                href={`/api/submissions/data/${submissionsId}?filePath=output/${row.original.sentrixId}_${row.original.sentrixPosition}/report.html`}
+                download>
+                Download Report
+              </a>
+            )}
+            ,
+          </>
+        );
+      },
+    },
   ];
 
   return (
