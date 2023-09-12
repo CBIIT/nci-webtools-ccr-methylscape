@@ -9,6 +9,7 @@ import sessionRouter from "./routes/session.js";
 import usersRouter from "./routes/users.js";
 import rolesRouter from "./routes/roles.js";
 import submissionsRouter from "./routes/submissions.js";
+import versionRouter from "./routes/version.js";
 
 export const apiRouter = Router();
 
@@ -27,6 +28,7 @@ apiRouter.use(usersRouter);
 apiRouter.use(rolesRouter);
 apiRouter.use(sessionRouter);
 apiRouter.use(submissionsRouter);
+apiRouter.use(versionRouter);
 
 // log errors
 apiRouter.use(logErrors());
