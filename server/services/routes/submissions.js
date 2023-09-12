@@ -15,9 +15,9 @@ const upload = multer({ storage });
 router.get("/submissions", requiresRouteAccessPolicy("AccessApi"), async (request, response) => {
   const { connection } = request.app.locals;
   const { roleName, organizationId, id } = request.user;
-  const { id: submissionsId } = request.params;
+  const { id: submissionsId } = request.query;
 
-  const query = connection("submissions")
+  let query = connection("submissions")
     .leftJoin("user", "submissions.userId", "user.id")
     .leftJoin("organization", "submissions.organizationId", "organization.id")
     .leftJoin("userSamples", "submissions.id", "userSamples.submissionsId")
