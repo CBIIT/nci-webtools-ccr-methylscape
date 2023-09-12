@@ -1,6 +1,6 @@
 import { Card, Row, Col, Button, Container } from "react-bootstrap";
 import Table from "../components/table";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import moment from "moment";
 import { submissionsSelector } from "./submissions.state";
@@ -29,11 +29,7 @@ export default function SubmissionsList() {
     {
       accessor: "id",
       Header: "Action",
-      Cell: ({ value }) => (
-        <Button variant="link" onClick={() => navigate(`/submissions/details/${value}`)}>
-          Review
-        </Button>
-      ),
+      Cell: ({ value }) => <Link to={`/submissions/details/${value}`}>Review</Link>,
     },
   ];
 
