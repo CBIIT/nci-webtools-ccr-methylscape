@@ -1,12 +1,13 @@
 import { Container, Row, Col, Card, Form, Button } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 import { useRecoilValue } from "recoil";
-import { detailsSelector } from "./submissions.state";
+import { submissionSelector, detailsSelector } from "./submissions.state";
 import Table from "../components/table";
 
 export default function SubmissionsDetails() {
   const navigate = useNavigate();
   const { id: submissionsId } = useParams();
+  const submission = useRecoilValue(submissionSelector(submissionsId));
   const details = useRecoilValue(detailsSelector(submissionsId));
 
   const columns = [
@@ -35,14 +36,13 @@ export default function SubmissionsDetails() {
       Cell: ({ row }) => {
         return (
           <>
-            {details[0].status === "Completed" && (
+            {submission[0].status === "Completed" && (
               <a
-                href={`/api/submissions/data/${submissionsId}?filePath=output/${row.original.sentrixId}_${row.original.sentrixPosition}/report.html`}
-                download>
+                target="_blank"
+                href={`/api/submissions/data/${submissionsId}?filePath=output/${row.original.sentrixId}_${row.original.sentrixPosition}/report.html`}>
                 Download Report
               </a>
             )}
-            ,
           </>
         );
       },
