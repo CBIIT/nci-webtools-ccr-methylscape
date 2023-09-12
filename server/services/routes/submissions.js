@@ -15,6 +15,7 @@ const upload = multer({ storage });
 router.get("/submissions", requiresRouteAccessPolicy("AccessApi"), async (request, response) => {
   const { connection } = request.app.locals;
   const { roleName, organizationId, id } = request.user;
+  const { id: submissionsId } = request.params;
 
   const query = connection("submissions")
     .leftJoin("user", "submissions.userId", "user.id")
@@ -28,6 +29,10 @@ router.get("/submissions", requiresRouteAccessPolicy("AccessApi"), async (reques
     )
     .groupBy(["submissions.id", "user.id", "organization.name", "userSamples.submissionsId"])
     .orderBy("submissions.createdAt", "desc");
+
+  if (submissionsId) {
+    query = query.where("submissions.id", submissionsId);
+  }
 
   if (roleName == "Admin") {
     response.json(await query);
@@ -88,9 +93,15 @@ router.get("/submissions/data/:submissionsId", requiresRouteAccessPolicy("Access
   const path = ["submissions", submissionsId, filePath].join("/");
   try {
     const results = await getFile(path, S3_USER_DATA_BUCKET, S3_USER_DATA_BUCKET_KEY_PREFIX);
+    response.setHeader("Content-Type", results.ContentType);
+    response.setHeader("Content-Length", results.ContentLength);
+    response.setHeader("Content-Disposition", `attachment; filename=${filePath.split("/").pop()}`);
+    response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // do not cache the file in the browser
     results.Body.pipe(response);
   } catch (error) {
+    console.log(error);
     response.status(404).send("Submission data not found");
   }
 });
+
 export default router;
