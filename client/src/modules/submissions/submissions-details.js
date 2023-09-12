@@ -39,6 +39,7 @@ export default function SubmissionsDetails() {
             {submission[0].status === "Completed" && (
               <a
                 target="_blank"
+                rel="noreferrer noopener"
                 href={`/api/submissions/data/${submissionsId}?filePath=output/${row.original.sentrixId}_${row.original.sentrixPosition}/report.html`}>
                 Download Report
               </a>
