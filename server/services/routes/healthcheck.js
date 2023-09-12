@@ -9,4 +9,12 @@ router.get("/ping", async (request, response) => {
   response.json(true);
 });
 
+// version route
+router.get("/version", (request, response) => {
+  response.json({
+    version: process.env.VERSION || null,
+    commit: process.env.COMMIT || null,
+  });
+});
+
 export default router;
