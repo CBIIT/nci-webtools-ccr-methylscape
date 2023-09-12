@@ -75,6 +75,7 @@ export default function SubmissionsForm() {
           organizationId: session.user.organizationId,
           submissionName: data.submissionName,
           investigator: ownerInfo.investigator,
+          project: ownerInfo.project,
           experiment: ownerInfo.experiment,
           experimentDate: ownerInfo.date,
           submitDate: new Date(),
