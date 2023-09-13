@@ -9,6 +9,7 @@ export const COMMANDS = {
   dropTables,
   copyTable,
   importTable,
+  upsertTable,
 };
 
 export async function runTask(task, commands = COMMANDS) {
@@ -26,10 +27,13 @@ export async function createSchema({ connection, schema }) {
 }
 
 export async function createTable({ connection, table, columns, type = "" }) {
-  const columnDefs = columns.map((c) =>
-    format("%I %s %s %s", c.name, c.type, c.constraints?.join(" "), c.options?.join(" "))
-  );
-  await connection.query(format("CREATE %s TABLE %I (%s)", type, table, columnDefs));
+  const columnDefs = columns
+    .filter((c) => c.name !== "COMPOSITE_P_KEY")
+    .map((c) => format("%I %s %s %s", c.name, c.type, c.constraints?.join(" "), c.options?.join(" ")));
+  const compositePrimaryKeyDef = columns
+    .filter((c) => c.name === "COMPOSITE_P_KEY")
+    .map((c) => format(", PRIMARY KEY(%I)", c.columns));
+  await connection.query(format("CREATE %s TABLE %I (%s %s)", type, table, columnDefs, compositePrimaryKeyDef));
 }
 
 export async function recreateTables({ connection, schema, tables }) {
@@ -81,6 +85,33 @@ export async function importTable({ connection, schema, source, sourceProvider, 
     target,
     options
   );
+}
+
+export async function upsertTable({ connection, schema, source, target, columns, conflictTarget }) {
+  const tableSchema = schema.find((s) => s.table === target);
+  const columnTypes = Object.fromEntries(tableSchema.columns.map((c) => [c.name, c.type]));
+  const parseSourceValues = (column) => {
+    if (column.sourceExpression) {
+      return column.sourceExpression;
+    } else if (column.sourceValue) {
+      return format("%L", column.sourceValue);
+    } else if (column.sourceName) {
+      return format("CAST(%I as %s)", column.sourceName, columnTypes[column.name]);
+    } else {
+      return "null";
+    }
+  };
+  const columnNames = columns.map((column) => format("%I", column.name));
+  const columnValues = columns.map(parseSourceValues);
+  const upsertStatement = format(
+    "INSERT INTO %I (%s) SELECT %s FROM %I ON CONFLICT (%I) DO NOTHING",
+    target,
+    columnNames,
+    columnValues,
+    source,
+    conflictTarget
+  );
+  return await connection.query(upsertStatement);
 }
 
 export async function getColumns(inputStream, options) {

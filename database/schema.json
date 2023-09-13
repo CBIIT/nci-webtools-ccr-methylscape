@@ -133,14 +133,15 @@
   {
     "table": "rolePolicy",
     "columns": [
-      { "name": "id", "type": "serial", "constraints": ["primary key"] },
+      { "name": "id", "type": "serial" },
       { "name": "roleId", "type": "integer", "constraints": ["not null", "references role"] },
       { "name": "action", "type": "text", "constraints": ["not null"] },
       { "name": "resource", "type": "text" },
       { "name": "createdAt", "type": "timestamp", "options": ["default CURRENT_TIMESTAMP"] },
       { "name": "updatedAt", "type": "timestamp", "options": ["default CURRENT_TIMESTAMP"] },
       { "name": "createdBy", "type": "text", "options": ["default 'system'"] },
-      { "name": "updatedBy", "type": "text", "options": ["default 'system'"] }
+      { "name": "updatedBy", "type": "text", "options": ["default 'system'"] },
+      { "name": "COMPOSITE_P_KEY", "columns": ["roleId", "action", "resource"] }
     ]
   },
   {

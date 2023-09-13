@@ -11,14 +11,15 @@
     "target": "stage.rolePolicy"
   },
   {
-    "command": "copyTable",
-    "description": "Import role policies from staging table",
+    "command": "upsertTable",
+    "description": "Add new role policies from staging table",
     "source": "stage.rolePolicy",
     "target": "rolePolicy",
     "columns": [
       { "sourceName": "roleId", "name": "roleId" },
       { "sourceName": "action", "name": "action" },
       { "sourceName": "resource", "name": "resource" }
-    ]
+    ],
+    "conflictTarget": ["roleId", "action", "resource"]
   }
 ]
