@@ -1,6 +1,7 @@
-import { Card, Form, Row, Col, Button } from "react-bootstrap";
-import { useRecoilValue } from "recoil";
+import { Container, Card, Form, Row, Col, Button } from "react-bootstrap";
+import { useRecoilValue, useRecoilRefresher_UNSTABLE } from "recoil";
 import { sessionState } from "../session/session.state";
+import { submissionsSelector } from "./submissions.state";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { parseMetadata } from "./submissions.utils";
@@ -10,7 +11,9 @@ import axios from "axios";
 export default function SubmissionsForm() {
   const navigate = useNavigate();
   const session = useRecoilValue(sessionState);
+  const refreshSubmissions = useRecoilRefresher_UNSTABLE(submissionsSelector);
   const [success, setSuccess] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [invalidMetadata, setInvalidMetadata] = useState([]);
   const [metadataFileError, setMetadataFileError] = useState("");
   const [sampleFilesError, setSampleFilesError] = useState("");
@@ -79,7 +82,7 @@ export default function SubmissionsForm() {
           experiment: ownerInfo.experiment,
           experimentDate: ownerInfo.date,
           submitDate: new Date(),
-          status: "Submitted",
+          status: "Initializing",
         };
 
         Array.from(data.sampleFiles).forEach((e) => formData.append("sampleFiles", e));
@@ -91,10 +94,14 @@ export default function SubmissionsForm() {
           })
         );
         try {
+          setLoading(true);
           await axios.post(`/api/submissions/${uuid}`, formData);
           setSuccess(true);
+          refreshSubmissions();
         } catch (error) {
           console.log(error);
+        } finally {
+          setLoading(false);
         }
       }
     } catch (error) {
@@ -104,10 +111,10 @@ export default function SubmissionsForm() {
   }
 
   return (
-    <div>
+    <Container fluid="xxl">
       <h3 className="text-white mb-3">Submit Samples</h3>
-      <Card className="bg-light p-3" style={{ width: "700px" }}>
-        <Form onSubmit={handleSubmit(onSubmit)}>
+      <Card className="bg-light p-3 d-flex ">
+        <Form onSubmit={handleSubmit(onSubmit)} className="mx-auto" style={{ width: "700px" }}>
           <Form.Group className="my-2">
             <Row>
               <Col sm="3">
@@ -130,6 +137,7 @@ export default function SubmissionsForm() {
                   {...register("submissionName", { required: { value: true, message: "Submission Name required" } })}
                   size="sm"
                   isInvalid={errors?.submissionName}
+                  maxLength={80}
                 />
                 <Form.Control.Feedback type="invalid">
                   {errors?.submissionName && errors.submissionName.message}
@@ -156,14 +164,33 @@ export default function SubmissionsForm() {
                 <Form.Control.Feedback type="invalid">{sampleFilesError}</Form.Control.Feedback>
               </Col>
             </Row>
+            <Form.Group controlId="metadataFile" className="my-2">
+              <Row>
+                <Col sm="3">
+                  <Form.Label className="me-3">
+                    Metadata File <span style={{ color: "crimson" }}>*</span>
+                  </Form.Label>
+                </Col>
+                <Col sm="9">
+                  <Form.Control
+                    {...register("metadataFile", { required: true })}
+                    size="sm"
+                    type="file"
+                    accept=".csv"
+                    isInvalid={metadataFileError.length || errors.metadataFile}
+                    disabled={manualMetadata}
+                  />
+                  <Form.Control.Feedback type="invalid">{metadataFileError}</Form.Control.Feedback>
+                </Col>
+              </Row>
+            </Form.Group>
           </Form.Group>
           <Form.Group controlId="manualMetadata">
-            <Form.Check {...register("manualMetadata")} type="checkbox" label={"Single Sample Metadata"} />
+            <Form.Check {...register("manualMetadata")} type="checkbox" label={"Enter Sample Metadata here"} />
             <p className="text-muted">Use this option if you are uploading a single sample without a metadata file.</p>
           </Form.Group>
-
           {/* metadata */}
-          {manualMetadata ? (
+          {manualMetadata && (
             <>
               <Form.Group controlId="sampleName" className="my-2">
                 <Row>
@@ -177,6 +204,7 @@ export default function SubmissionsForm() {
                       {...register("sample", { required: { value: true, message: "Sample Name required" } })}
                       size="sm"
                       isInvalid={errors?.sampleName}
+                      maxLength={80}
                     />
                     <Form.Control.Feedback type="invalid">
                       {errors?.sampleName && errors.sampleName.message}
@@ -196,6 +224,7 @@ export default function SubmissionsForm() {
                       {...register("tumorSite", { required: { value: true, message: "Tumor Site required" } })}
                       size="sm"
                       isInvalid={errors?.tumorSite}
+                      maxLength={80}
                     />
                     <Form.Control.Feedback type="invalid">
                       {errors?.tumorSite && errors.tumorSite.message}
@@ -215,6 +244,7 @@ export default function SubmissionsForm() {
                       {...register("diagnosis", { required: { value: true, message: "diagnosis required" } })}
                       size="sm"
                       isInvalid={errors?.diagnosis}
+                      maxLength={80}
                     />
                     <Form.Control.Feedback type="invalid">
                       {errors?.diagnosis && errors.diagnosis.message}
@@ -227,7 +257,7 @@ export default function SubmissionsForm() {
                   <Col sm="3">
                     <Form.Label>Sex</Form.Label>
                   </Col>
-                  <Col sm="auto">
+                  <Col>
                     <Form.Select {...register("sex")} size="sm">
                       <option value="NA">Select</option>
                       <option value="Male">Male</option>
@@ -242,7 +272,7 @@ export default function SubmissionsForm() {
                   <Col sm="3">
                     <Form.Label>Age</Form.Label>
                   </Col>
-                  <Col sm="auto">
+                  <Col>
                     <Form.Control {...register("age")} size="sm" type="number" />
                   </Col>
                 </Row>
@@ -252,18 +282,8 @@ export default function SubmissionsForm() {
                   <Col sm="3">
                     <Form.Label>Surgery Date</Form.Label>
                   </Col>
-                  <Col sm="auto">
+                  <Col>
                     <Form.Control {...register("surgeryDate")} size="sm" type="date" />
-                  </Col>
-                </Row>
-              </Form.Group>
-              <Form.Group controlId="notes" className="my-2">
-                <Row>
-                  <Col sm="3">
-                    <Form.Label>Notes</Form.Label>
-                  </Col>
-                  <Col sm="9">
-                    <Form.Control {...register("notes")} size="sm" as="textarea" rows="3" />
                   </Col>
                 </Row>
               </Form.Group>
@@ -296,7 +316,7 @@ export default function SubmissionsForm() {
                   <Col sm="3">
                     <Form.Label>Sample Group</Form.Label>
                   </Col>
-                  <Col sm="auto">
+                  <Col>
                     <Form.Select {...register("sampleGroup")} size="sm">
                       <option>Select</option>
                       <option value="450K">450K</option>
@@ -311,7 +331,7 @@ export default function SubmissionsForm() {
                   <Col sm="3">
                     <Form.Label>Material Type</Form.Label>
                   </Col>
-                  <Col sm="auto">
+                  <Col>
                     <Form.Select {...register("materialType")} size="sm">
                       <option>Select</option>
                       <option value="Frozen-Fresh">Frozen-Fresh</option>
@@ -321,30 +341,19 @@ export default function SubmissionsForm() {
                   </Col>
                 </Row>
               </Form.Group>
+              <Form.Group controlId="notes" className="my-2">
+                <Row>
+                  <Col sm="3">
+                    <Form.Label>Notes</Form.Label>
+                  </Col>
+                  <Col sm="9">
+                    <Form.Control {...register("notes")} size="sm" as="textarea" rows="3" />
+                  </Col>
+                </Row>
+              </Form.Group>
             </>
-          ) : (
-            <Form.Group controlId="metadataFile" className="my-2">
-              <Row>
-                <Col sm="3">
-                  <Form.Label className="me-3">
-                    Metadata File <span style={{ color: "crimson" }}>*</span>
-                  </Form.Label>
-                </Col>
-                <Col sm="9">
-                  <Form.Control
-                    {...register("metadataFile", { required: true })}
-                    size="sm"
-                    type="file"
-                    accept=".csv"
-                    isInvalid={metadataFileError.length || errors.metadataFile}
-                  />
-                  <Form.Control.Feedback type="invalid">{metadataFileError}</Form.Control.Feedback>
-                </Col>
-              </Row>
-            </Form.Group>
           )}
 
-          {success && <p className="text-success">Submitted</p>}
           {invalidMetadata.length > 0 && (
             <div>
               <b>Metadata validation failed</b>
@@ -363,6 +372,14 @@ export default function SubmissionsForm() {
             </div>
           )}
 
+          <div className="d-flex justify-content-center">
+            {loading && (
+              <div class="spinner-border" role="status">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+            )}
+            {success && <p className="text-success">Successful Sample Submission</p>}
+          </div>
           <Row className="justify-content-center mt-3">
             <Col sm="auto">
               <Button variant="primary" type="submit">
@@ -388,6 +405,6 @@ export default function SubmissionsForm() {
           </Row>
         </Form>
       </Card>
-    </div>
+    </Container>
   );
 }
