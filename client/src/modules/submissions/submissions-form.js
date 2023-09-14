@@ -12,7 +12,6 @@ export default function SubmissionsForm() {
   const navigate = useNavigate();
   const session = useRecoilValue(sessionState);
   const refreshSubmissions = useRecoilRefresher_UNSTABLE(submissionsSelector);
-  const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
   const [invalidMetadata, setInvalidMetadata] = useState([]);
   const [metadataFileError, setMetadataFileError] = useState("");
@@ -96,8 +95,8 @@ export default function SubmissionsForm() {
         try {
           setLoading(true);
           await axios.post(`/api/submissions/${uuid}`, formData);
-          setSuccess(true);
           refreshSubmissions();
+          navigate("/submissions/list#success");
         } catch (error) {
           console.log(error);
         } finally {
@@ -378,7 +377,6 @@ export default function SubmissionsForm() {
                 <span class="visually-hidden">Loading...</span>
               </div>
             )}
-            {success && <p className="text-success">Successful Sample Submission</p>}
           </div>
           <Row className="justify-content-center mt-3">
             <Col sm="auto">
@@ -398,7 +396,12 @@ export default function SubmissionsForm() {
               </Button>
             </Col>
             <Col sm="auto">
-              <Button variant="danger" onClick={() => navigate("/submissions")}>
+              <Button
+                variant="danger"
+                onClick={() => {
+                  refreshSubmissions();
+                  navigate("/submissions");
+                }}>
                 Cancel
               </Button>
             </Col>

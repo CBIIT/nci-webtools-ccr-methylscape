@@ -1,11 +1,13 @@
-import { Card, Row, Col, Button, Container } from "react-bootstrap";
-import Table from "../components/table";
-import { Link, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { Card, Row, Col, Button, Container, Alert } from "react-bootstrap";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import moment from "moment";
+import Table from "../components/table";
 import { submissionsSelector } from "./submissions.state";
 
 export default function SubmissionsList() {
+  const { hash } = useLocation();
   const submissions = useRecoilValue(submissionsSelector);
   const navigate = useNavigate();
   const columns = [
@@ -33,8 +35,20 @@ export default function SubmissionsList() {
     },
   ];
 
+  // automatically hide alert
+  useEffect(() => {
+    if (hash === "#success") {
+      setTimeout(() => {
+        window.location.replace("#");
+      }, 10000);
+    }
+  }, [hash]);
+
   return (
     <Container fluid="xxl">
+      <Alert variant="success" dismissible show={hash === "#success"}>
+        Your samples are successfully uploaded
+      </Alert>
       <Row className="justify-content-between mb-3">
         <Col sm="auto">
           <h3 className="text-white">Submissions</h3>
