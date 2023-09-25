@@ -1,5 +1,5 @@
 import { parse } from "papaparse";
-import { renameKeys } from "lodash";
+import { groupBy } from "lodash";
 
 export async function parseMetadata(file) {
   const infoKeys = {
@@ -54,4 +54,59 @@ export async function parseMetadata(file) {
       }, {});
     return { ownerInfo, metadata: renameMetadata };
   } else throw "Unable to parse meatadata file. Please ensure the file is properly formatted.";
+}
+
+export function parseForm(data, session, sampleFiles) {
+  return {
+    ownerInfo: {
+      investigator: `${session.user.firstName} ${session.user.lastName}`,
+      project: data.project,
+      experiment: data.experiment || sampleFiles[0].id,
+      date: new Date(),
+    },
+    metadata: [
+      {
+        sample: data.sample,
+        sampleWell: data.sampleWell,
+        samplePlate: data.samplePlate,
+        sampleGroup: data.sampleGroup,
+        poolId: data.poolId,
+        sentrixId: sampleFiles[0].id,
+        sentrixPosition: sampleFiles[0].position,
+        materialType: data.materialType,
+        sex: data.sex,
+        surgicalCase: data.surgicalCase,
+        diagnosis: data.diagnosis,
+        age: data.age,
+        notes: data.notes,
+        tumorSite: data.tumorSite,
+        piCollaborator: data.piCollaborator,
+        outsideId: data.outsideId,
+        surgeryDate: data.surgeryDate,
+      },
+    ],
+  };
+}
+
+/**
+ * Filter and parse sentrix info from uploaded files
+ * @param {FileList} sampleFiles
+ * @returns {Array} array of sentrix data parsed from file name
+ */
+export function parseSampleFiles(sampleFiles) {
+  return Array.from(sampleFiles)
+    .map((e) => {
+      const [id, position, channel] = e.name.slice(0, -5).split("_");
+      if (id && position && channel) return { id, position, channel };
+    })
+    .filter(Boolean);
+}
+
+/**
+ * Filter and parse sentrix info from uploaded files
+ * @param {Array} sampleFiles
+ * @returns {Array} array of arrays containing pairs of sentrix data
+ */
+export function sampleFilePairs(files) {
+  return Object.values(groupBy(files, (e) => e.id + e.position)).filter((e) => e.length == 2);
 }

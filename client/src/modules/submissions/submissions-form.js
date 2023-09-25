@@ -4,7 +4,7 @@ import { sessionState } from "../session/session.state";
 import { submissionsSelector } from "./submissions.state";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
-import { parseMetadata } from "./submissions.utils";
+import { parseForm, parseMetadata, parseSampleFiles, sampleFilePairs } from "./submissions.utils";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
@@ -15,7 +15,7 @@ export default function SubmissionsForm() {
   const [loading, setLoading] = useState(false);
   const [invalidMetadata, setInvalidMetadata] = useState([]);
   const [metadataFileError, setMetadataFileError] = useState("");
-  const [sampleFilesError, setSampleFilesError] = useState("");
+
   const {
     register,
     handleSubmit,
@@ -30,24 +30,13 @@ export default function SubmissionsForm() {
   async function onSubmit(data) {
     console.log(data);
     // check sample files
-    const sampleFiles = Array.from(data.sampleFiles)
-      .map((e) => {
-        const [id, position, channel] = e.name.slice(0, -5).split("_");
-        if (id && position && channel) return { id, position, channel };
-      })
-      .filter(Boolean);
-    if (sampleFiles.length == 0) {
-      setSampleFilesError("Improperly named files. Unable to identify Sentrix ID and position.");
-      return;
-    } else if (sampleFiles.length % 2 > 0) {
-      setSampleFilesError("Each sample requires two pairs of IDAT files.");
-      return;
-    } else {
-      setSampleFilesError("");
-    }
+    const sampleFiles = parseSampleFiles(data.sampleFiles);
 
     try {
-      const { ownerInfo, metadata } = await parseMetadata(data.metadataFile[0]);
+      const { ownerInfo, metadata } = !manualMetadata
+        ? await parseMetadata(data.metadataFile[0])
+        : parseForm(data, session, sampleFiles);
+
       console.log(metadata);
       const checkInvalid = metadata
         .map((e) => {
@@ -114,7 +103,7 @@ export default function SubmissionsForm() {
       <h3 className="text-white mb-3">Submit Samples</h3>
       <Card className="bg-light p-3 d-flex ">
         <Form onSubmit={handleSubmit(onSubmit)} className="mx-auto" style={{ width: "700px" }}>
-          <Form.Group className="my-2">
+          <Form.Group className="my-3">
             <Row>
               <Col sm="3">
                 <Form.Label className="me-3">Organization</Form.Label>
@@ -124,7 +113,7 @@ export default function SubmissionsForm() {
               </Col>
             </Row>
           </Form.Group>
-          <Form.Group controlId="submissionName" className="my-2">
+          <Form.Group controlId="submissionName" className="my-3">
             <Row>
               <Col sm="3">
                 <Form.Label>
@@ -144,7 +133,7 @@ export default function SubmissionsForm() {
               </Col>
             </Row>
           </Form.Group>
-          <Form.Group controlId="sampleFiles" className="my-2">
+          <Form.Group controlId="sampleFiles" className="my-3">
             <Row>
               <Col sm="3">
                 <Form.Label className="me-3">
@@ -153,26 +142,51 @@ export default function SubmissionsForm() {
               </Col>
               <Col sm="9">
                 <Form.Control
-                  {...register("sampleFiles", { required: true })}
+                  {...register("sampleFiles", {
+                    required: true,
+                    validate: {
+                      pairs: (v) => {
+                        const sampleFiles = parseSampleFiles(v);
+                        const sampleCount = sampleFilePairs(sampleFiles).length;
+                        return (
+                          (sampleFiles.length % 2 == 0 && sampleCount > 0) ||
+                          "Unable to identify IDAT file pair(s). Each sample requires two pairs of IDAT files with filenames using matching Sentrix ID and position and distinct channel e.g. [id]_[position]_[channel].idat"
+                        );
+                      },
+                      limit: (v) => {
+                        const count = Array.from(v).length;
+                        if (manualMetadata) {
+                          return count == 2 || "Only one sample is allowed when manually inputting metadata.";
+                        } else {
+                          return (
+                            (count > 1 && count <= 200) ||
+                            "Exceeded 100 sample limit. You can only upload 100 samples per submission."
+                          );
+                        }
+                      },
+                    },
+                  })}
                   size="sm"
                   type="file"
                   multiple
                   accept=".idat"
-                  isInvalid={sampleFilesError.length || errors.sampleFiles}
+                  isInvalid={errors?.sampleFiles}
                 />
-                <Form.Control.Feedback type="invalid">{sampleFilesError}</Form.Control.Feedback>
+                <Form.Control.Feedback type="invalid">
+                  {errors?.sampleFiles && errors.sampleFiles.message}
+                </Form.Control.Feedback>
               </Col>
             </Row>
-            <Form.Group controlId="metadataFile" className="my-2">
+            <Form.Group controlId="metadataFile" className="my-3">
               <Row>
                 <Col sm="3">
                   <Form.Label className="me-3">
-                    Metadata File <span style={{ color: "crimson" }}>*</span>
+                    Metadata File {!manualMetadata && <span style={{ color: "crimson" }}>*</span>}
                   </Form.Label>
                 </Col>
                 <Col sm="9">
                   <Form.Control
-                    {...register("metadataFile", { required: true })}
+                    {...register("metadataFile", { required: !manualMetadata })}
                     size="sm"
                     type="file"
                     accept=".csv"
@@ -185,13 +199,20 @@ export default function SubmissionsForm() {
             </Form.Group>
           </Form.Group>
           <Form.Group controlId="manualMetadata">
-            <Form.Check {...register("manualMetadata")} type="checkbox" label={"Enter Sample Metadata here"} />
+            <Form.Check
+              {...register("manualMetadata")}
+              type="checkbox"
+              label={"Enter Sample Metadata here"}
+              // onChange={(e) => {
+              //   e.target.checked ? setValue
+              // }}
+            />
             <p className="text-muted">Use this option if you are uploading a single sample without a metadata file.</p>
           </Form.Group>
           {/* metadata */}
           {manualMetadata && (
             <>
-              <Form.Group controlId="sampleName" className="my-2">
+              <Form.Group controlId="sample" className="my-3">
                 <Row>
                   <Col sm="3">
                     <Form.Label>
@@ -202,16 +223,16 @@ export default function SubmissionsForm() {
                     <Form.Control
                       {...register("sample", { required: { value: true, message: "Sample Name required" } })}
                       size="sm"
-                      isInvalid={errors?.sampleName}
+                      isInvalid={errors?.sample}
                       maxLength={80}
                     />
                     <Form.Control.Feedback type="invalid">
-                      {errors?.sampleName && errors.sampleName.message}
+                      {errors?.sample && errors.sample.message}
                     </Form.Control.Feedback>
                   </Col>
                 </Row>
               </Form.Group>
-              <Form.Group controlId="tumorSite" className="my-2">
+              <Form.Group controlId="tumorSite" className="my-3">
                 <Row>
                   <Col sm="3">
                     <Form.Label>
@@ -231,7 +252,7 @@ export default function SubmissionsForm() {
                   </Col>
                 </Row>
               </Form.Group>
-              <Form.Group controlId="diagnosis" className="my-2">
+              <Form.Group controlId="diagnosis" className="my-3">
                 <Row>
                   <Col sm="3">
                     <Form.Label>
@@ -251,10 +272,34 @@ export default function SubmissionsForm() {
                   </Col>
                 </Row>
               </Form.Group>
-              <Form.Group controlId="sex" className="my-2">
+              <Form.Group controlId="project" className="my-3">
                 <Row>
                   <Col sm="3">
-                    <Form.Label>Sex</Form.Label>
+                    <Form.Label>Project Name</Form.Label>
+                  </Col>
+                  <Col sm="9">
+                    <Form.Control {...register("project")} size="sm" />
+                  </Col>
+                </Row>
+              </Form.Group>
+              <Form.Group controlId="experiment" className="my-3">
+                <Row>
+                  <Col sm="3">
+                    <Form.Label>Experiment Name</Form.Label>
+                  </Col>
+                  <Col sm="9">
+                    <Form.Control
+                      {...register("experiment")}
+                      size="sm"
+                      placeholder="Enter Experiment Name (Will use Sentrix ID if left blank)"
+                    />
+                  </Col>
+                </Row>
+              </Form.Group>
+              <Form.Group controlId="sex" className="my-3">
+                <Row>
+                  <Col sm="3">
+                    <Form.Label>Gender</Form.Label>
                   </Col>
                   <Col>
                     <Form.Select {...register("sex")} size="sm">
@@ -266,7 +311,7 @@ export default function SubmissionsForm() {
                   </Col>
                 </Row>
               </Form.Group>
-              <Form.Group controlId="age" className="my-2">
+              <Form.Group controlId="age" className="my-3">
                 <Row>
                   <Col sm="3">
                     <Form.Label>Age</Form.Label>
@@ -276,7 +321,17 @@ export default function SubmissionsForm() {
                   </Col>
                 </Row>
               </Form.Group>
-              <Form.Group controlId="surgeryDate" className="my-2">
+              <Form.Group controlId="surgicalCase" className="my-3">
+                <Row>
+                  <Col sm="3">
+                    <Form.Label>Surgical Case</Form.Label>
+                  </Col>
+                  <Col sm="9">
+                    <Form.Control {...register("surgicalCase")} size="sm" />
+                  </Col>
+                </Row>
+              </Form.Group>
+              <Form.Group controlId="surgeryDate" className="my-3">
                 <Row>
                   <Col sm="3">
                     <Form.Label>Surgery Date</Form.Label>
@@ -286,31 +341,17 @@ export default function SubmissionsForm() {
                   </Col>
                 </Row>
               </Form.Group>
-              <Form.Group controlId="projectName" className="my-2">
+              <Form.Group controlId="poolId" className="my-3">
                 <Row>
                   <Col sm="3">
-                    <Form.Label>Project Name</Form.Label>
+                    <Form.Label>Pool ID</Form.Label>
                   </Col>
-                  <Col sm="9">
-                    <Form.Control {...register("projectName")} size="sm" />
+                  <Col>
+                    <Form.Control {...register("poolId")} size="sm" type="date" />
                   </Col>
                 </Row>
               </Form.Group>
-              <Form.Group controlId="experimentName" className="my-2">
-                <Row>
-                  <Col sm="3">
-                    <Form.Label>Experiment Name</Form.Label>
-                  </Col>
-                  <Col sm="9">
-                    <Form.Control
-                      {...register("experimentName")}
-                      size="sm"
-                      placeholder="Enter Experiment Name (Will use Sentrix ID if left blank)"
-                    />
-                  </Col>
-                </Row>
-              </Form.Group>
-              <Form.Group controlId="sampleGroup" className="my-2">
+              <Form.Group controlId="sampleGroup" className="my-3">
                 <Row>
                   <Col sm="3">
                     <Form.Label>Sample Group</Form.Label>
@@ -325,7 +366,7 @@ export default function SubmissionsForm() {
                   </Col>
                 </Row>
               </Form.Group>
-              <Form.Group controlId="materialType" className="my-2">
+              <Form.Group controlId="materialType" className="my-3">
                 <Row>
                   <Col sm="3">
                     <Form.Label>Material Type</Form.Label>
@@ -340,7 +381,37 @@ export default function SubmissionsForm() {
                   </Col>
                 </Row>
               </Form.Group>
-              <Form.Group controlId="notes" className="my-2">
+              <Form.Group controlId="samplePlate" className="my-3">
+                <Row>
+                  <Col sm="3">
+                    <Form.Label>Sample Plate</Form.Label>
+                  </Col>
+                  <Col sm="9">
+                    <Form.Control {...register("samplePlate")} size="sm" />
+                  </Col>
+                </Row>
+              </Form.Group>
+              <Form.Group controlId="piCollaborator" className="my-3">
+                <Row>
+                  <Col sm="3">
+                    <Form.Label>PI Collaborator</Form.Label>
+                  </Col>
+                  <Col sm="9">
+                    <Form.Control {...register("piCollaborator")} size="sm" />
+                  </Col>
+                </Row>
+              </Form.Group>
+              <Form.Group controlId="outsideId" className="my-3">
+                <Row>
+                  <Col sm="3">
+                    <Form.Label>Outside ID</Form.Label>
+                  </Col>
+                  <Col sm="9">
+                    <Form.Control {...register("outsideId")} size="sm" />
+                  </Col>
+                </Row>
+              </Form.Group>
+              <Form.Group controlId="notes" className="my-3">
                 <Row>
                   <Col sm="3">
                     <Form.Label>Notes</Form.Label>
