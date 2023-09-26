@@ -68,11 +68,14 @@ export default function SubmissionsForm() {
           investigator: ownerInfo.investigator,
           project: ownerInfo.project,
           experiment: ownerInfo.experiment,
-          experimentDate: ownerInfo.date,
+          date: ownerInfo.date,
           submitDate: new Date(),
           status: "Initializing",
         };
 
+        console.log(Array.from(data.sampleFiles));
+        console.log(submission);
+        console.log(metadata);
         Array.from(data.sampleFiles).forEach((e) => formData.append("sampleFiles", e));
         formData.append(
           "data",
@@ -337,7 +340,7 @@ export default function SubmissionsForm() {
                     <Form.Label>Surgery Date</Form.Label>
                   </Col>
                   <Col>
-                    <Form.Control {...register("surgeryDate")} size="sm" type="date" />
+                    <Form.Control {...register("surgeryDate")} size="sm" type="date" defaultValue={null} />
                   </Col>
                 </Row>
               </Form.Group>
@@ -347,7 +350,7 @@ export default function SubmissionsForm() {
                     <Form.Label>Pool ID</Form.Label>
                   </Col>
                   <Col>
-                    <Form.Control {...register("poolId")} size="sm" type="date" />
+                    <Form.Control {...register("poolId")} size="sm" type="date" defaultValue={null} />
                   </Col>
                 </Row>
               </Form.Group>
@@ -388,6 +391,16 @@ export default function SubmissionsForm() {
                   </Col>
                   <Col sm="9">
                     <Form.Control {...register("samplePlate")} size="sm" />
+                  </Col>
+                </Row>
+              </Form.Group>
+              <Form.Group controlId="sampleWell" className="my-3">
+                <Row>
+                  <Col sm="3">
+                    <Form.Label>Sample Well</Form.Label>
+                  </Col>
+                  <Col sm="9">
+                    <Form.Control {...register("sampleWell")} size="sm" />
                   </Col>
                 </Row>
               </Form.Group>
