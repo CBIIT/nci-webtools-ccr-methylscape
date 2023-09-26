@@ -21,8 +21,16 @@ export default function SubmissionsList() {
     },
     { accessor: "status", Header: "Status" },
     {
+      accessor: "date",
+      Header: "Date",
+      Cell: (e) => {
+        const time = moment(e.value);
+        return `${time.format("LLL")} (${time.fromNow()})`;
+      },
+    },
+    {
       accessor: "submitDate",
-      Header: "Submitted Date",
+      Header: "Submission Date",
       Cell: (e) => {
         const time = moment(e.value);
         return `${time.format("LLL")} (${time.fromNow()})`;
@@ -63,7 +71,13 @@ export default function SubmissionsList() {
         {submissions.length == 0 ? (
           <p>You have no submissions. Click on Create Submission to start a data submission.</p>
         ) : (
-          <Table key="submissions-table" name="Submissions" data={submissions} columns={columns} />
+          <Table
+            key="submissions-table"
+            name="Submissions"
+            data={submissions}
+            columns={columns}
+            customOptions={{ hideColumns: true }}
+          />
         )}
       </Card>
     </Container>

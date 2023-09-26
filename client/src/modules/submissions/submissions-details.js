@@ -45,35 +45,48 @@ export default function SubmissionsDetails() {
 
   return (
     <Container fluid="xxl">
+      <Row className="justify-content-between mb-3">
+        <Col sm="auto">
+          <h3 className="text-white">Submission Samples</h3>
+        </Col>
+      </Row>
       <Card className="bg-white">
-        {details && (
+        {details?.length > 0 && (
           <Card.Body>
             <Row>
-              <Col sm="4" className="d-flex justify-content-between">
+              <Col sm="3">
                 <Form.Label>Submission Name</Form.Label>
-                <div>{details[0].submissionName}</div>
+                <span className="ml-4">{details[0].submissionName}</span>
               </Col>
-              <Col sm="4" className="d-flex justify-content-between">
+              <Col sm="3">
                 <Form.Label>Submitter</Form.Label>
                 <div>{details[0].submitter}</div>
               </Col>
-              <Col sm="4" className="d-flex justify-content-between">
+              <Col sm="3">
                 <Form.Label>Investigator</Form.Label>
                 <div>{details[0].investigator}</div>
               </Col>
+              <Col sm="3">
+                <Form.Label>Date</Form.Label>
+                <div>{submission[0].date}</div>
+              </Col>
             </Row>
             <Row>
-              <Col sm="4" className="d-flex justify-content-between">
+              <Col sm="3">
                 <Form.Label>Organization</Form.Label>
                 <div>{details[0].organizationName}</div>
               </Col>
-              <Col sm="4" className="d-flex justify-content-between">
+              <Col sm="3">
                 <Form.Label>Project</Form.Label>
                 <div>{details[0].projectName}</div>
               </Col>
-              <Col sm="4" className="d-flex justify-content-between">
+              <Col sm="3">
                 <Form.Label>Experiment</Form.Label>
                 <div>{details[0].experiment}</div>
+              </Col>
+              <Col sm="3">
+                <Form.Label>Submission Date</Form.Label>
+                <div>{submission[0].submitDate}</div>
               </Col>
             </Row>
           </Card.Body>
