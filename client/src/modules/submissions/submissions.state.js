@@ -65,8 +65,6 @@ export const submissionDetailsColumns = [
   { accessor: "piCollaborator", Header: "PI Collaborator", show: true },
   { accessor: "outsideId", Header: "Outside ID", show: true },
   { accessor: "surgeryDate", Header: "Surgery Date", show: false },
-  { accessor: "projectName", Header: "Project Name", show: false },
-  { accessor: "experimentName", Header: "Experiment Name", show: true },
 ];
 
 export const defaultSubmissionDetailsTableState = {

@@ -73,9 +73,6 @@ export default function SubmissionsForm() {
           status: "Initializing",
         };
 
-        console.log(Array.from(data.sampleFiles));
-        console.log(submission);
-        console.log(metadata);
         Array.from(data.sampleFiles).forEach((e) => formData.append("sampleFiles", e));
         formData.append(
           "data",
@@ -317,10 +314,16 @@ export default function SubmissionsForm() {
               <Form.Group controlId="age" className="my-3">
                 <Row>
                   <Col sm="3">
-                    <Form.Label>Age</Form.Label>
+                    <Form.Label>
+                      Age <span style={{ color: "crimson" }}>*</span>
+                    </Form.Label>
                   </Col>
                   <Col>
-                    <Form.Control {...register("age")} size="sm" type="number" />
+                    <Form.Control
+                      {...register("age", { required: { value: true, message: "Age required" } })}
+                      size="sm"
+                      type="number"
+                    />
                   </Col>
                 </Row>
               </Form.Group>
