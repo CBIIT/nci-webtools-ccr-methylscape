@@ -60,11 +60,11 @@ export const submissionDetailsColumns = [
   { accessor: "surgeryCase", Header: "Surgery Case", show: true },
   { accessor: "diagnosis", Header: "Provided Diagnosis", show: false },
   { accessor: "age", Header: "Age", show: false },
-  { accessor: "notes", Header: "Notes", show: true },
   { accessor: "tumorSite", Header: "Tumor Site", show: false },
   { accessor: "piCollaborator", Header: "PI Collaborator", show: true },
   { accessor: "outsideId", Header: "Outside ID", show: true },
   { accessor: "surgeryDate", Header: "Surgery Date", show: false },
+  { accessor: "notes", Header: "Notes", show: true },
 ];
 
 export const defaultSubmissionDetailsTableState = {
