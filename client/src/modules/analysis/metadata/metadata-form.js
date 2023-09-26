@@ -1,14 +1,16 @@
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import MultiSearch from "../../components/multi-search";
 import { formState } from "./metadata-plot.state";
 import colorOptions from "./color-options.json";
+import { sessionState } from "../../session/session.state";
 
 export default function MetadataForm({ className, onSelect }) {
   const [form, setForm] = useRecoilState(formState);
   const mergeForm = (state) => setForm({ ...form, ...state });
+  const session = useRecoilValue(sessionState);
 
   function handleChange(event) {
     let { name, value, checked, type } = event.target;
@@ -30,10 +32,14 @@ export default function MetadataForm({ className, onSelect }) {
             <Form.Label>Organ System</Form.Label>
             <Form.Select name="organSystem" value={form.organSystem} onChange={handleChange} className="source">
               <option value="centralNervousSystem">Central Nervous System</option>
-              <option value="boneAndSoftTissue">Bone and Soft Tissue</option>
-              <option value="hematopoietic">Hematopoietic</option>
-              <option value="renal">Renal</option>
-              <option value="panCancer">Pan-Cancer</option>
+              {session?.user.organizationName === "NIH" && (
+                <>
+                  <option value="boneAndSoftTissue">Bone and Soft Tissue</option>
+                  <option value="hematopoietic">Hematopoietic</option>
+                  <option value="renal">Renal</option>
+                  <option value="panCancer">Pan-Cancer</option>
+                </>
+              )}
             </Form.Select>
           </Form.Group>
         </Col>
