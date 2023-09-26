@@ -199,9 +199,9 @@ export default function Table({
 
             {!options.disableFilters &&
               headerGroups.map((headerGroup) => (
-                <tr {...headerGroup.getHeaderGroupProps()} className="search-bg">
+                <tr {...headerGroup.getHeaderGroupProps()}>
                   {headerGroup.headers.map((column) => (
-                    <th {...column.getHeaderProps()}>
+                    <th {...column.getHeaderProps()} className="search-bg">
                       <div className="py-2">{column.canFilter ? column.render("Filter") : null}</div>
                     </th>
                   ))}
