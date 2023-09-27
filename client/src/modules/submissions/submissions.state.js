@@ -76,6 +76,6 @@ export const defaultSubmissionDetailsTableState = {
 };
 
 export const submissionDetailsTableState = atom({
-  key: "samplesTableState",
+  key: "submissionTableState",
   default: defaultSubmissionDetailsTableState,
 });
