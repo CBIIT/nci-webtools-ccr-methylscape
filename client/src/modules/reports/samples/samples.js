@@ -112,55 +112,39 @@ export default function Samples() {
         <Row className="ps-3">
           <Col md className="table table-bordered detail-table detail-table-divider mx-1 my-1">
             <Row>
-              <Col className="text-primary small">
-                <b>DIAGNOSIS:</b>
-              </Col>
+              <Col className="text-primary">DIAGNOSIS:</Col>
               <Col>{original.diagnosisProvided ?? "N/A"}</Col>
             </Row>
             <Row>
-              <Col className="text-primary small">
-                <b>METHYLATION FAMILY (MF):</b>
-              </Col>
+              <Col className="text-primary">METHYLATION FAMILY (MF):</Col>
               <Col>{original.CNSv12b6_family ?? "N/A"}</Col>
             </Row>
             <Row>
-              <Col className="text-primary small">
-                <b>MF CALIBRATED SCORES:</b>
-              </Col>
+              <Col className="text-primary">MF CALIBRATED SCORES:</Col>
               <Col>{original.CNSv12b6_family_score ?? "N/A"}</Col>
             </Row>
             <Row>
-              <Col className="text-primary small">
-                <b>METHYLATION CLASS (MC):</b>
-              </Col>
+              <Col className="text-primary">METHYLATION CLASS (MC):</Col>
               <Col>{original.CNSv12b6_subclass1 ?? "N/A"}</Col>
             </Row>
           </Col>
           <Col md className="table table-bordered detail-table detail-table-divider mx-1 my-1">
             <Row>
-              <Col className="text-primary small">
-                <b>TUMOR SITES:</b>
-              </Col>
+              <Col className="text-primary">TUMOR SITES:</Col>
               <Col>{[original.locationRegion, original.locationSite].filter(Boolean).join(", ") || "N/A"}</Col>
             </Row>
             <Row>
-              <Col className="text-primary small">
-                <b>MC CALIBRATED SCORES:</b>
-              </Col>
+              <Col className="text-primary">MC CALIBRATED SCORES:</Col>
               <Col>{original.CNSv12b6_subclass1_score ?? "N/A"}</Col>
             </Row>
             <Row>
-              <Col className="text-primary small">
-                <b>MGMT SCORES:</b>
-              </Col>
+              <Col className="text-primary">MGMT SCORES:</Col>
               <Col>
                 {original.mgmtEstimated} ({original.mgmtStatus})
               </Col>
             </Row>
             <Row>
-              <Col className="text-primary small">
-                <b>NOTES:</b>
-              </Col>
+              <Col className="text-primary">NOTES:</Col>
               <Col>{original.notes}</Col>
             </Row>
           </Col>
