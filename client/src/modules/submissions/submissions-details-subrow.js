@@ -43,7 +43,7 @@ export default function SubmissionsDetails({ submissionData }) {
   ];
 
   return (
-    <Container fluid="xxl">
+    <Container fluid="xxl" className="p-0">
       <Card className="">
         {details?.length > 0 && (
           <Card.Body>
