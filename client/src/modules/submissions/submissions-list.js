@@ -87,7 +87,7 @@ export default function SubmissionsList() {
                   <div>{organizationName}</div>
                 </Col>
                 <Col sm="1">
-                  <Form.Label>Sample Count</Form.Label>
+                  <Form.Label>Samples #</Form.Label>
                   <div>{sampleCount}</div>
                 </Col>
                 <Col sm>
