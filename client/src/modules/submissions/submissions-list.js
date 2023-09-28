@@ -1,5 +1,5 @@
 import { useEffect, useCallback, useState } from "react";
-import { Card, Row, Col, Button, Container, Alert, Form, Accordion, InputGroup } from "react-bootstrap";
+import { Card, Row, Col, Button, Container, Alert, Form, Accordion, InputGroup, ButtonGroup } from "react-bootstrap";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import moment from "moment";
@@ -146,17 +146,26 @@ export default function SubmissionsList() {
             renderRowSubComponent={renderRowSubComponent}
           />
         ) : (
-          <div>
-            <Form.Group className="m-3 col-sm-4">
-              <InputGroup>
-                <Form.Control placeholder="Search" onChange={(e) => setSearch(e.target.value)} />
-                <InputGroup.Text>
-                  <i class="bi bi-search"></i>
-                </InputGroup.Text>
-              </InputGroup>
-            </Form.Group>
+          <Container fluid>
+            <Row className="my-3">
+              <Col md="4">
+                <InputGroup>
+                  <Form.Control placeholder="Search" onChange={(e) => setSearch(e.target.value)} />
+                  <InputGroup.Text>
+                    <i class="bi bi-search"></i>
+                  </InputGroup.Text>
+                </InputGroup>
+              </Col>
+              <Col className="d-flex">
+                <Form.Label className="me-3">Sort By</Form.Label>
+                <ButtonGroup aria-label="Sort">
+                  <Button variant="secondary">Recent</Button>
+                  <Button variant="secondary">Status</Button>
+                </ButtonGroup>
+              </Col>
+            </Row>
             <Accordion defaultActiveKey="0">{accordions}</Accordion>
-          </div>
+          </Container>
         )}
       </Card>
     </Container>
