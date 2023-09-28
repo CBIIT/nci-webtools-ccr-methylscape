@@ -1,5 +1,5 @@
 import { useEffect, useCallback, useState } from "react";
-import { Card, Row, Col, Button, Container, Alert, Form, Accordion } from "react-bootstrap";
+import { Card, Row, Col, Button, Container, Alert, Form, Accordion, InputGroup } from "react-bootstrap";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import moment from "moment";
@@ -12,6 +12,7 @@ export default function SubmissionsList() {
   const submissions = useRecoilValue(submissionsSelector);
   const navigate = useNavigate();
   const [altView, setToggle] = useState(false);
+  const [search, setSearch] = useState("");
   const columns = [
     {
       Header: () => null,
@@ -62,48 +63,50 @@ export default function SubmissionsList() {
     return <SubmissionsDetailsSubrow submissionData={row.original} />;
   }, []);
 
-  const accordions = submissions.map((submission, i) => {
-    const { submissionName, submitter, organizationName, sampleCount, status, submitDate } = submission;
-    const time = moment(submitDate);
-    const formatDate = `${time.format("LLL")} (${time.fromNow()})`;
-    return (
-      <Accordion.Item eventKey={i}>
-        <Accordion.Header>
-          <Card.Body>
-            <Row>
-              <Col sm="2">
-                <Form.Label>Submission Name</Form.Label>
-                <span className="ml-4">{submissionName}</span>
-              </Col>
-              <Col sm="2">
-                <Form.Label>Submitter</Form.Label>
-                <div>{submitter}</div>
-              </Col>
-              <Col sm="2">
-                <Form.Label>Organization</Form.Label>
-                <div>{organizationName}</div>
-              </Col>
-              <Col sm="1">
-                <Form.Label>Sample Count</Form.Label>
-                <div>{sampleCount}</div>
-              </Col>
-              <Col sm>
-                <Form.Label>Submission Date</Form.Label>
-                <div>{formatDate}</div>
-              </Col>
-              <Col sm="2">
-                <Form.Label>Status</Form.Label>
-                <div>{status}</div>
-              </Col>
-            </Row>
-          </Card.Body>
-        </Accordion.Header>
-        <Accordion.Body>
-          <SubmissionsDetailsSubrow submissionData={submission} />
-        </Accordion.Body>
-      </Accordion.Item>
-    );
-  });
+  const accordions = submissions
+    .filter((s) => Object.values(s).some((e) => new RegExp(search, "gi").test(e)))
+    .map((submission, i) => {
+      const { submissionName, submitter, organizationName, sampleCount, status, submitDate } = submission;
+      const time = moment(submitDate);
+      const formatDate = `${time.format("LLL")} (${time.fromNow()})`;
+      return (
+        <Accordion.Item eventKey={i}>
+          <Accordion.Header>
+            <Card.Body>
+              <Row>
+                <Col sm="2">
+                  <Form.Label>Submission Name</Form.Label>
+                  <span className="ml-4">{submissionName}</span>
+                </Col>
+                <Col sm="2">
+                  <Form.Label>Submitter</Form.Label>
+                  <div>{submitter}</div>
+                </Col>
+                <Col sm="2">
+                  <Form.Label>Organization</Form.Label>
+                  <div>{organizationName}</div>
+                </Col>
+                <Col sm="1">
+                  <Form.Label>Sample Count</Form.Label>
+                  <div>{sampleCount}</div>
+                </Col>
+                <Col sm>
+                  <Form.Label>Submission Date</Form.Label>
+                  <div>{formatDate}</div>
+                </Col>
+                <Col sm="2">
+                  <Form.Label>Status</Form.Label>
+                  <div>{status}</div>
+                </Col>
+              </Row>
+            </Card.Body>
+          </Accordion.Header>
+          <Accordion.Body>
+            <SubmissionsDetailsSubrow submissionData={submission} />
+          </Accordion.Body>
+        </Accordion.Item>
+      );
+    });
 
   return (
     <Container fluid="xxl">
@@ -143,7 +146,17 @@ export default function SubmissionsList() {
             renderRowSubComponent={renderRowSubComponent}
           />
         ) : (
-          <Accordion defaultActiveKey="0">{accordions}</Accordion>
+          <div>
+            <Form.Group className="m-3 col-sm-4">
+              <InputGroup>
+                <Form.Control placeholder="Search" onChange={(e) => setSearch(e.target.value)} />
+                <InputGroup.Text>
+                  <i class="bi bi-search"></i>
+                </InputGroup.Text>
+              </InputGroup>
+            </Form.Group>
+            <Accordion defaultActiveKey="0">{accordions}</Accordion>
+          </div>
         )}
       </Card>
     </Container>
