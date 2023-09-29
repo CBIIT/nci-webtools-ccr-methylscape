@@ -13,6 +13,7 @@ export default function SubmissionsList() {
   const navigate = useNavigate();
   const [altView, setToggle] = useState(false);
   const [search, setSearch] = useState("");
+  const [sortCol, setSort] = useState("recent");
   const columns = [
     {
       Header: () => null,
@@ -65,6 +66,16 @@ export default function SubmissionsList() {
 
   const accordions = submissions
     .filter((s) => Object.values(s).some((e) => new RegExp(search, "gi").test(e)))
+    .sort((a, b) => {
+      if (sortCol == "recent") {
+        return moment(b.submitDate).diff(a.submitDate);
+      } else if (sortCol == "status") {
+        const order = ["Initializing", "Complete"];
+        return order.indexOf(a.status) - order.indexOf(b.status);
+      } else {
+        return 0;
+      }
+    })
     .map((submission, i) => {
       const { submissionName, submitter, organizationName, sampleCount, status, submitDate } = submission;
       const time = moment(submitDate);
@@ -159,8 +170,12 @@ export default function SubmissionsList() {
               <Col className="d-flex">
                 <Form.Label className="me-3">Sort By</Form.Label>
                 <ButtonGroup aria-label="Sort">
-                  <Button variant="secondary">Recent</Button>
-                  <Button variant="secondary">Status</Button>
+                  <Button variant="secondary" onClick={() => setSort("recent")}>
+                    Recent
+                  </Button>
+                  <Button variant="secondary" onClick={() => setSort("status")}>
+                    Status
+                  </Button>
                 </ButtonGroup>
               </Col>
             </Row>
