@@ -112,7 +112,7 @@ export default function SubmissionsList() {
               </Row>
             </Card.Body>
           </Accordion.Header>
-          <Accordion.Body>
+          <Accordion.Body className="bg-light">
             <SubmissionsDetailsSubrow submissionData={submission} />
           </Accordion.Body>
         </Accordion.Item>
@@ -179,7 +179,7 @@ export default function SubmissionsList() {
                 </ButtonGroup>
               </Col>
             </Row>
-            <Accordion defaultActiveKey="0">{accordions}</Accordion>
+            <Accordion alwaysOpen defaultActiveKey="0">{accordions}</Accordion>
           </Container>
         )}
       </Card>
