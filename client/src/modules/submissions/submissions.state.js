@@ -71,7 +71,7 @@ export const defaultSubmissionDetailsTableState = {
   hiddenColumns: submissionDetailsColumns.filter((c) => c.show === false).map((c) => c.accessor),
   filters: [],
   sortBy: [{ id: "surgeryDate", desc: true }],
-  pageSize: 25,
+  pageSize: 100,
   pageIndex: 0,
 };
 

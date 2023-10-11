@@ -73,14 +73,14 @@ export default function SubmissionsDetails({ submissionData }) {
         )}
       </Card>
 
-      <Card className="mt-3">
-        <Card.Body>
+      <Card className="mt-2">
+        <Card.Body className="p-1">
           <Table
             name="Samples"
             data={details}
             columns={columns}
             options={{ initialState, stateReducer }}
-            customOptions={{ hideColumns: true }}
+            customOptions={{ hideColumns: true, hidePagination: true }}
           />
         </Card.Body>
       </Card>

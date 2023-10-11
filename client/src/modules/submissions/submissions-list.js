@@ -112,7 +112,7 @@ export default function SubmissionsList() {
               </Row>
             </Card.Body>
           </Accordion.Header>
-          <Accordion.Body className="bg-light">
+          <Accordion.Body className="bg-light p-2">
             <SubmissionsDetailsSubrow submissionData={submission} />
           </Accordion.Body>
         </Accordion.Item>
