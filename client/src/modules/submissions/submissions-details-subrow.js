@@ -82,6 +82,14 @@ export default function SubmissionsDetails({ submissionData }) {
             options={{ initialState, stateReducer }}
             customOptions={{ hideColumns: true, hidePagination: true }}
           />
+          <Row className="justify-content-center">
+            <Col sm="auto">
+              <Button variant="success">Approve</Button>
+            </Col>
+            <Col sm="auto">
+              <Button variant="danger">Reject</Button>
+            </Col>
+          </Row>
         </Card.Body>
       </Card>
     </Container>
