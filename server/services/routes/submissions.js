@@ -25,7 +25,10 @@ router.get("/submissions", requiresRouteAccessPolicy("AccessApi"), async (reques
       "submissions.*",
       "organization.name as organizationName",
       connection.raw(`"user"."firstName" || ' ' || "user"."lastName" as submitter`),
-      connection.raw(`count("userSamples"."id") as "sampleCount"`)
+      connection.raw(`count("userSamples"."id") as "sampleCount"`),
+      connection.raw(`array_agg("userSamples"."sample") as "samples"`),
+      connection.raw(`array_agg("userSamples"."sentrixId") as "sentrixIds"`),
+      connection.raw(`array_agg("userSamples"."sentrixPosition") as "sentrixPositions"`)
     )
     .groupBy(["submissions.id", "user.id", "organization.name", "userSamples.submissionsId"])
     .orderBy("submissions.createdAt", "desc");
