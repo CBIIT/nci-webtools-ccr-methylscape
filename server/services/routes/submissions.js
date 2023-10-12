@@ -1,5 +1,6 @@
 import Router from "express-promise-router";
 import path from "path";
+import { check } from "express-validator";
 import { requiresRouteAccessPolicy } from "../auth/policyMiddleware.js";
 import { getFile } from "../aws.js";
 import multer from "multer";
@@ -8,9 +9,10 @@ import DiskStorage from "../storage.js";
 const router = Router();
 const storage = new DiskStorage({
   filename: (req, file) => file.originalname,
-  destination: (req) => path.resolve("../data/"),
+  destination: (req) => path.resolve("../data/", req.params.id),
 });
 const upload = multer({ storage });
+const validate = check("id").isUUID();
 
 router.get("/submissions", requiresRouteAccessPolicy("AccessApi"), async (request, response) => {
   const { connection } = request.app.locals;
@@ -49,22 +51,25 @@ router.get("/submissions", requiresRouteAccessPolicy("AccessApi"), async (reques
 });
 
 router.post(
-  "/submissions/:uuid",
+  "/submissions/:id",
   requiresRouteAccessPolicy("AccessApi"),
+  validate,
   upload.array("sampleFiles"),
   async (request, response) => {
     const { connection } = request.app.locals;
-    const { submission, metadata, ...rest } = JSON.parse(request.body.data);
-
-    const submissionsId = (await connection("submissions").insert(submission).returning("id"))[0].id;
-    const userSamplesId = metadata.map(
-      async (sample) =>
-        await connection("userSamples")
-          .insert({ submissionsId, ...sample })
-          .returning("id")
-    );
-
-    response.json({ submissionsId, userSamplesId });
+    if (request.body?.data) {
+      const { submission, metadata } = JSON.parse(request.body.data);
+      const submissionsId = (await connection("submissions").insert(submission).returning("id"))[0].id;
+      const userSamplesId = metadata.map(
+        async (sample) =>
+          await connection("userSamples")
+            .insert({ submissionsId, ...sample })
+            .returning("id")
+      );
+      response.json({ submissionsId, userSamplesId });
+    } else {
+      response.json(true);
+    }
   }
 );
 
