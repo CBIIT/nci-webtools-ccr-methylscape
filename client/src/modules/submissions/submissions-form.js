@@ -1,4 +1,4 @@
-import { Container, Card, Form, Row, Col, Button } from "react-bootstrap";
+import { Container, Card, Form, Row, Col, Button, ProgressBar } from "react-bootstrap";
 import { useRecoilValue, useRecoilRefresher_UNSTABLE } from "recoil";
 import { sessionState } from "../session/session.state";
 import { submissionsSelector } from "./submissions.state";
@@ -12,10 +12,11 @@ export default function SubmissionsForm() {
   const navigate = useNavigate();
   const session = useRecoilValue(sessionState);
   const refreshSubmissions = useRecoilRefresher_UNSTABLE(submissionsSelector);
-  const [loading, setLoading] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [progressLabel, setProgressLabel] = useState("");
   const [invalidMetadata, setInvalidMetadata] = useState([]);
   const [metadataFileError, setMetadataFileError] = useState("");
-
+  console.log(progress);
   const {
     register,
     handleSubmit,
@@ -72,8 +73,6 @@ export default function SubmissionsForm() {
           submitDate: new Date(),
           status: "Initializing",
         };
-
-        Array.from(data.sampleFiles).forEach((e) => formData.append("sampleFiles", e));
         formData.append(
           "data",
           JSON.stringify({
@@ -81,15 +80,27 @@ export default function SubmissionsForm() {
             metadata,
           })
         );
+
         try {
-          setLoading(true);
+          await Array.from(data.sampleFiles).reduce((promise, file, i) => {
+            const fileData = new FormData();
+            const config = {
+              onUploadProgress: function (progressEvent) {
+                const { loaded, total } = progressEvent;
+                const status = Math.round((loaded * 100) / total);
+                setProgress(status);
+                setProgressLabel(`Uploading ${i + 1} of ${data.sampleFiles.length} -- ${status}%`);
+              },
+            };
+            fileData.append("sampleFiles", file);
+            return promise.then(() => axios.post(`/api/submissions/${uuid}`, fileData, config));
+          }, Promise.resolve());
+
           await axios.post(`/api/submissions/${uuid}`, formData);
           refreshSubmissions();
           navigate("/submissions/list#success");
         } catch (error) {
           console.log(error);
-        } finally {
-          setLoading(false);
         }
       }
     } catch (error) {
@@ -458,12 +469,9 @@ export default function SubmissionsForm() {
             </div>
           )}
 
-          <div className="d-flex justify-content-center">
-            {loading && (
-              <div class="spinner-border" role="status">
-                <span class="visually-hidden">Loading...</span>
-              </div>
-            )}
+          <div className="text-center">
+            {progressLabel}
+            {progress > 0 && <ProgressBar className="w-100" now={progress} label={`${progress}%`} />}
           </div>
           <Row className="justify-content-center mt-3">
             <Col sm="auto">
