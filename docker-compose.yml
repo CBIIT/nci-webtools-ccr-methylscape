@@ -20,11 +20,13 @@ services:
       API_BASE_URL: http://backend:10000
       APP_PATH: /
     ports:
-      - "3000:443"
+      - "3000:80"
 
   # to test locally, run:
   # curl -XPOST "http://localhost:8080/2015-03-31/functions/function/invocations" -d '{}'
   data-import:
+    profiles:
+      - data-import
     build:
       context: "."
       dockerfile: "./docker/data-import.dockerfile"
@@ -33,6 +35,19 @@ services:
       - DATABASE_HOST=database
     ports:
       - "8080:8080"
+
+  classifier:
+    profiles:
+      - classifier
+    build:
+      context: "."
+      dockerfile: "./docker/classifier.dockerfile"
+    volumes:
+      - ./data:/data
+    env_file: classifier/.env
+    entrypoint: "node classifier.js 1"
+    environment:
+      - DATABASE_HOST=database
 
   # to start only the database container, run:
   # docker compose up database
