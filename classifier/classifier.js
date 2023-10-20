@@ -1,12 +1,13 @@
-import { writeFile } from "fs/promises";
-import { promisify } from "util";
+import { createReadStream } from "fs";
+import { writeFile, readdir, mkdir } from "fs/promises";
 import { join } from "path";
-import knex from "knex";
+import { execFile } from "child_process";
+import { promisify } from "util";
 import { S3Client, GetObjectCommand, PutObjectCommand, paginateListObjectsV2 } from "@aws-sdk/client-s3";
+import knex from "knex";
 import { config } from "dotenv";
-import { exec } from "child_process";
 
-const execAsync = promisify(exec);
+const execFileAsync = promisify(execFile);
 
 const [jobId] = process.argv.slice(2);
 config();
@@ -18,13 +19,17 @@ if (!jobId) {
 
 try {
   await runClassifier(jobId);
+  process.exit(0);
 } catch (e) {
   console.error(e);
   process.exit(1);
 }
 
 async function runClassifier(jobId, env = process.env) {
-  const s3Client = new S3Client(config);
+  console.log(env);
+  console.log("Running classifier for job", jobId);
+
+  const s3Client = new S3Client();
   const connection = knex({
     client: "pg",
     connection: {
@@ -36,41 +41,65 @@ async function runClassifier(jobId, env = process.env) {
     },
   });
 
-  await connection.update({ status: "RUNNING" }).where({ id: jobId }).into("submissions");
-  await downloadS3Folder(s3Client, env.S3_BUCKET, `jobs/${jobId}/`, env.JOB_INPUT_FOLDER);
-  await execAsync("R", "classifier.R", { cwd: env.JOB_INPUT_FOLDER });
-  await uploadS3Folder(s3Client, env.S3_BUCKET, `jobs/${jobId}/`, env.S3_OUTPUT_FOLDER);
-  await connection.update({ status: "DONE" }).where({ id: jobId }).into("submissions");
+  await connection.update({ status: "Classifying" }).where({ id: jobId }).into("submissions");
+  await downloadS3Folder(
+    s3Client,
+    env.S3_USER_DATA_BUCKET,
+    `${env.S3_USER_DATA_BUCKET_KEY_PREFIX}bethesda_classifier_v2/input/${jobId}/`,
+    "/input"
+  );
+  const { stdout, stderr } = await execFileAsync("Rscript", ["Bv2_light_pipeline.R"], { cwd: env.JOB_INPUT_FOLDER });
+  console.log({ stdout, stderr });
+  await uploadS3Folder(
+    s3Client,
+    env.S3_USER_DATA_BUCKET,
+    `${env.S3_USER_DATA_BUCKET_KEY_PREFIX}bethesda_classifier_v2/output/${jobId}/`,
+    "/output"
+  );
+  await connection.update({ status: "Completed" }).where({ id: jobId }).into("submissions");
 }
 
-async function downloadS3Folder(s3Client, s3Bucket, s3KeyPrefix, folder) {
+export async function downloadS3Folder(s3Client, s3Bucket, s3KeyPrefix, folder) {
+  await mkdir(folder, { recursive: true });
   const s3ListObjectsPaginator = paginateListObjectsV2({ client: s3Client }, { Bucket: s3Bucket, Prefix: s3KeyPrefix });
+
+  // download files from s3
   for await (const page of s3ListObjectsPaginator) {
     const items = page.Contents;
     for (const item of items) {
-      const getObjectCommand = new GetObjectCommand({
-        Bucket: s3Bucket,
-        Key: item.Key,
-      });
-      const { Body } = await s3Client.send(getObjectCommand);
       const fileName = item.Key.replace(s3KeyPrefix, "");
-      await writeFile(join(folder, fileName), Body);
+      const filePath = join(folder, fileName);
+
+      // if the item is a file, download it
+      if (fileName?.length > 0 && item.Size > 0) {
+        const params = {
+          Bucket: s3Bucket,
+          Key: item.Key,
+        };
+        console.log(`Downloading ${item.Key} to ${filePath}`);
+        const { Body } = await s3Client.send(new GetObjectCommand(params));
+        await writeFile(filePath, Body);
+      } else {
+        // if the item is a folder, create it
+        await mkdir(filePath, { recursive: true });
+      }
     }
   }
 }
 
-async function uploadS3Folder(s3Client, s3Bucket, s3KeyPrefix, folder) {
+export async function uploadS3Folder(s3Client, s3Bucket, s3KeyPrefix, folder) {
   // get files in folder
+  await mkdir(folder, { recursive: true });
   const files = await readdir(folder);
 
   // upload files to s3
   for (const file of files) {
     const fileStream = createReadStream(join(folder, file));
-    const putObjectCommand = new PutObjectCommand({
+    const params = {
       Bucket: s3Bucket,
-      Key: `${s3KeyPrefix}/${file}`,
+      Key: `${s3KeyPrefix}${file}`,
       Body: fileStream,
-    });
-    await s3Client.send(putObjectCommand);
+    };
+    await s3Client.send(new PutObjectCommand(params));
   }
 }
