@@ -1,17 +1,13 @@
 import Router from "express-promise-router";
-import path from "path";
+import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import { ECSClient, RunTaskCommand } from "@aws-sdk/client-ecs";
 import { check } from "express-validator";
 import { requiresRouteAccessPolicy } from "../auth/policyMiddleware.js";
 import { getFile } from "../aws.js";
 import multer from "multer";
-import DiskStorage from "../storage.js";
 
 const router = Router();
-const storage = new DiskStorage({
-  filename: (req, file) => file.originalname,
-  destination: (req) => path.resolve("../data/", req.params.id),
-});
-const upload = multer({ storage });
+const upload = multer(); // do not store files on disk
 const validate = check("id").isUUID();
 
 router.get("/submissions", requiresRouteAccessPolicy("AccessApi"), async (request, response) => {
@@ -56,7 +52,28 @@ router.post(
   validate,
   upload.array("sampleFiles"),
   async (request, response) => {
-    const { connection } = request.app.locals;
+    const { files } = request;
+    const { connection, logger } = request.app.locals;
+    console.log;
+    const { S3_USER_DATA_BUCKET, S3_USER_DATA_BUCKET_KEY_PREFIX } = process.env;
+
+    // upload request files to s3 bucket
+    const s3Client = new S3Client();
+
+    for (const file of files) {
+      const [name, extension] = file.originalname.split(".");
+      const s3ObjectName = /\.csv$/i.test(extension) ? "Sample_Sheet.csv" : file.originalname;
+      const s3ObjectKey = `${S3_USER_DATA_BUCKET_KEY_PREFIX}bethesda_classifier_v2/input/${request.body.submissionsId}/${s3ObjectName}`;
+      logger.info(`Uploading ${file.originalname} to s3://${S3_USER_DATA_BUCKET}/${s3ObjectKey}`);
+      await s3Client.send(
+        new PutObjectCommand({
+          Bucket: S3_USER_DATA_BUCKET,
+          Key: s3ObjectKey,
+          Body: file.buffer,
+        })
+      );
+    }
+
     if (request.body?.data) {
       const { submission, metadata } = JSON.parse(request.body.data);
       const submissionsId = (await connection("submissions").insert(submission).returning("id"))[0].id;
@@ -69,6 +86,40 @@ router.post(
       response.json({ submissionsId, userSamplesId });
     } else {
       response.json(true);
+    }
+  }
+);
+
+router.get(
+  "/submissions/run-classifier/:submissionsId",
+  requiresRouteAccessPolicy("AccessApi"),
+  async (request, response) => {
+    const { ECS_CLUSTER, SUBNET_IDS, SECURITY_GROUP_IDS, ECS_CLASSIFIER_TASK } = process.env;
+    if (ECS_CLASSIFIER_TASK) {
+      const ecsClient = new ECSClient();
+      const runTaskCommand = new RunTaskCommand({
+        cluster: ECS_CLUSTER,
+        count: 1,
+        launchType: "FARGATE",
+        networkConfiguration: {
+          awsvpcConfiguration: {
+            securityGroups: SECURITY_GROUP_IDS.split(","),
+            subnets: SUBNET_IDS.split(","),
+          },
+        },
+        taskDefinition: ECS_CLASSIFIER_TASK,
+        overrides: {
+          containerOverrides: [
+            {
+              name: "classifier",
+              command: ["node", "classifier.js", request.params.submissionsId],
+            },
+          ],
+        },
+      });
+      return await ecsClient.send(runTaskCommand);
+    } else {
+      response.status(404).send("Classifier task not found");
     }
   }
 );
