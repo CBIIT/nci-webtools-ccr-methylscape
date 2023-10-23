@@ -56,7 +56,7 @@ COPY classifier ./
 
 ENV TZ=America/New_York
 
-RUN mkdir -p /input /output /data /supplements /classifier/files
+RUN mkdir -p /input /output /data /classifier
 
 RUN ln -s /data/classifier/files /classifier/files
 
