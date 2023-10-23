@@ -29,7 +29,7 @@ export async function parseMetadata(file) {
   };
 
   const text = await (await fetch(URL.createObjectURL(file))).text();
-  const [_, ownerText, metadataText] = text.split(/\[.+\],+/);
+  const [_, ownerText, metadataText] = text.split(/^\[.+\],*$/gm);
   if (ownerText && metadataText) {
     const { data: ownerParse } = parse(ownerText);
     const { data: metadata } = parse(metadataText, {
@@ -53,7 +53,7 @@ export async function parseMetadata(file) {
         }
       }, {});
     return { ownerInfo, metadata: renameMetadata };
-  } else throw "Unable to parse meatadata file. Please ensure the file is properly formatted.";
+  } else throw "Unable to parse metadata file. Please ensure the file is properly formatted.";
 }
 
 export function parseForm(data, session, sampleFiles) {
@@ -96,8 +96,9 @@ export function parseForm(data, session, sampleFiles) {
 export function parseSampleFiles(sampleFiles) {
   return Array.from(sampleFiles)
     .map((e) => {
-      const [id, position, channel] = e.name.slice(0, -5).split("_");
-      if (id && position && channel) return { id, position, channel };
+      const [filename, extension] = e.name.split(".");
+      const [id, position, channel] = filename.split("_");
+      return extension === "idat" && id && position && channel ? { id, position, channel } : null;
     })
     .filter(Boolean);
 }
