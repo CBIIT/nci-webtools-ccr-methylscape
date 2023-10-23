@@ -1,6 +1,6 @@
 import { createReadStream } from "fs";
 import { writeFile, readdir, mkdir } from "fs/promises";
-import { join } from "path";
+import { join, relative, normalize } from "path";
 import { execFile } from "child_process";
 import { promisify } from "util";
 import { S3Client, GetObjectCommand, PutObjectCommand, paginateListObjectsV2 } from "@aws-sdk/client-s3";
@@ -26,9 +26,7 @@ try {
 }
 
 async function runClassifier(jobId, env = process.env) {
-  console.log(env);
   console.log("Running classifier for job", jobId);
-
   const s3Client = new S3Client();
   const connection = knex({
     client: "pg",
@@ -41,22 +39,29 @@ async function runClassifier(jobId, env = process.env) {
     },
   });
 
-  await connection.update({ status: "Classifying" }).where({ id: jobId }).into("submissions");
-  await downloadS3Folder(
-    s3Client,
-    env.S3_USER_DATA_BUCKET,
-    `${env.S3_USER_DATA_BUCKET_KEY_PREFIX}bethesda_classifier_v2/input/${jobId}/`,
-    "/input"
-  );
-  const { stdout, stderr } = await execFileAsync("Rscript", ["Bv2_light_pipeline.R"], { cwd: env.JOB_INPUT_FOLDER });
-  console.log({ stdout, stderr });
-  await uploadS3Folder(
-    s3Client,
-    env.S3_USER_DATA_BUCKET,
-    `${env.S3_USER_DATA_BUCKET_KEY_PREFIX}bethesda_classifier_v2/output/${jobId}/`,
-    "/output"
-  );
-  await connection.update({ status: "Completed" }).where({ id: jobId }).into("submissions");
+  try {
+    await connection.update({ status: "Classifying" }).where({ id: jobId }).into("submissions");
+    await downloadS3Folder(
+      s3Client,
+      env.S3_USER_DATA_BUCKET,
+      `${env.S3_USER_DATA_BUCKET_KEY_PREFIX}bethesda_classifier_v2/input/${jobId}/`,
+      "/input"
+    );
+    const { stdout, stderr } = await execFileAsync("Rscript", ["Bv2_light_pipeline.R"], { cwd: env.JOB_INPUT_FOLDER });
+    console.log(stdout);
+    console.log(stderr);
+    await connection.update({ status: "Completed" }).where({ id: jobId }).into("submissions");
+  } catch (error) {
+    console.error(error);
+    await connection.update({ status: "Failed" }).where({ id: jobId }).into("submissions");
+  } finally {
+    await uploadS3Folder(
+      s3Client,
+      env.S3_USER_DATA_BUCKET,
+      `${env.S3_USER_DATA_BUCKET_KEY_PREFIX}bethesda_classifier_v2/output/${jobId}/`,
+      "/output"
+    );
+  }
 }
 
 export async function downloadS3Folder(s3Client, s3Bucket, s3KeyPrefix, folder) {
@@ -90,14 +95,18 @@ export async function downloadS3Folder(s3Client, s3Bucket, s3KeyPrefix, folder) 
 export async function uploadS3Folder(s3Client, s3Bucket, s3KeyPrefix, folder) {
   // get files in folder
   await mkdir(folder, { recursive: true });
-  const files = await readdir(folder);
+  const files = await readdir(folder, { recursive: true, withFileTypes: true });
 
   // upload files to s3
   for (const file of files) {
-    const fileStream = createReadStream(join(folder, file));
+    if (file.isDirectory()) continue;
+    const filepath = relative(folder, file.path);
+    const s3Key = normalize(s3KeyPrefix + [filepath, file.name].filter(Boolean).join("/"));
+    console.log(`Uploading ${file.name} to ${s3Key}`);
+    const fileStream = createReadStream(join(file.path, file.name));
     const params = {
       Bucket: s3Bucket,
-      Key: `${s3KeyPrefix}${file}`,
+      Key: s3Key,
       Body: fileStream,
     };
     await s3Client.send(new PutObjectCommand(params));
