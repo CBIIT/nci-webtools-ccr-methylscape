@@ -422,6 +422,16 @@
       ],
       "Hash": "f07873fef580506284dc356cda8f43f3"
     },
+    "IlluminaHumanMethylationEPICanno.ilm10b4.hg19": {
+      "Package": "IlluminaHumanMethylationEPICanno.ilm10b4.hg19",
+      "Version": "0.6.0",
+      "Source": "Bioconductor",
+      "Requirements": [
+        "R",
+        "minfi"
+      ],
+      "Hash": "ec220e7a0e01f7167413bb91690e006a"
+    },
     "IlluminaHumanMethylationEPICmanifest": {
       "Package": "IlluminaHumanMethylationEPICmanifest",
       "Version": "0.3.0",

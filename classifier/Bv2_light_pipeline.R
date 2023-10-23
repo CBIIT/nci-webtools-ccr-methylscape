@@ -15,6 +15,7 @@ suppressMessages(library(kableExtra))
 suppressMessages(library(lemon))
 suppressMessages(library(formattable))
 suppressMessages(library(e1071))
+suppressMessages(library(IlluminaHumanMethylationEPICanno.ilm10b4.hg19))
 set.seed(123)
 
 print(renv::status())
