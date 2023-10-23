@@ -25,15 +25,14 @@ RUN dnf -y update \
     zlib-devel \
  && dnf clean all
 
-# install ghcup, cabal
-ENV BOOTSTRAP_HASKELL_NONINTERACTIVE=1
-
-ENV PATH=/root/.ghcup/bin/:/root/.cabal/bin/:$PATH
-
-RUN curl -sSL https://get-ghcup.haskell.org | sh
-
 # install pandoc
-RUN cabal install pandoc-cli
+ENV PANDOC_VERSION=3.1.8
+
+RUN pushd /tmp \
+ && curl -ssL https://github.com/jgm/pandoc/releases/download/${PANDOC_VERSION}/pandoc-${PANDOC_VERSION}-linux-amd64.tar.gz | tar xvz \
+ && cp pandoc-${PANDOC_VERSION}/bin/pandoc* /usr/local/bin \
+ && rm -rf pandoc-${PANDOC_VERSION} \
+ && popd
 
 RUN mkdir -p /classifier
 
@@ -58,5 +57,7 @@ COPY classifier ./
 ENV TZ=America/New_York
 
 RUN ln -s /data/classifier/files /classifier/files
+
+RUN ln -s /data/classifier/supplements /supplements
 
 CMD npm start
