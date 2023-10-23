@@ -98,6 +98,9 @@ export default function SubmissionsForm() {
             setProgressLabel(`Uploaded ${filesUploaded} of ${uploadFiles.length} files`);
           }
 
+          // execute classifier
+          await axios.get(`/api/submissions/run-classifier/${submissionsId}`);
+
           // await Array.from(data.sampleFiles).reduce((promise, file, i) => {
           //   const fileData = new FormData();
           //   const config = {
