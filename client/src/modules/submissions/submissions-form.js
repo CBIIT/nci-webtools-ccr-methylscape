@@ -82,21 +82,36 @@ export default function SubmissionsForm() {
         );
 
         try {
-          await Array.from(data.sampleFiles).reduce((promise, file, i) => {
-            const fileData = new FormData();
-            const config = {
-              onUploadProgress: function (progressEvent) {
-                const { loaded, total } = progressEvent;
-                const status = Math.round((loaded * 100) / total);
-                setProgress(status);
-                setProgressLabel(`Uploading ${i + 1} of ${data.sampleFiles.length} -- ${status}%`);
-              },
-            };
-            fileData.append("sampleFiles", file);
-            return promise.then(() => axios.post(`/api/submissions/${uuid}`, fileData, config));
-          }, Promise.resolve());
+          const response = await axios.post(`/api/submissions/${uuid}`, formData);
+          const { submissionsId } = response.data;
 
-          await axios.post(`/api/submissions/${uuid}`, formData);
+          // do not upload files in parallel (minimize memory usage & time per upload)
+          let filesUploaded = 0;
+          let uploadFiles = [...data.metadataFile, ...data.sampleFiles];
+          for (const file of uploadFiles) {
+            const fileData = new FormData();
+            fileData.append("sampleFiles", file);
+            fileData.append("submissionsId", submissionsId);
+            await axios.post(`/api/submissions/${uuid}`, fileData);
+            filesUploaded++;
+            setProgress(Math.round((filesUploaded * 100) / uploadFiles.length));
+            setProgressLabel(`Uploaded ${filesUploaded} of ${uploadFiles.length} files`);
+          }
+
+          // await Array.from(data.sampleFiles).reduce((promise, file, i) => {
+          //   const fileData = new FormData();
+          //   const config = {
+          //     onUploadProgress: function (progressEvent) {
+          //       const { loaded, total } = progressEvent;
+          //       const status = Math.round((loaded * 100) / total);
+          //       setProgress(status);
+          //     },
+          //   };
+          //   fileData.append("sampleFiles", file);
+          //   fileData.append("submissionsId", submissionsId);
+          //   return promise.then(() => axios.post(`/api/submissions/${uuid}`, fileData, config));
+          // }, Promise.resolve());
+
           refreshSubmissions();
           navigate("/submissions/list#success");
         } catch (error) {
