@@ -32,7 +32,7 @@ export default function SubmissionsDetails({ submissionData }) {
               <a
                 target="_blank"
                 rel="noreferrer noopener"
-                href={`/api/submissions/data/${submissionsId}?filePath=output/${row.original.sentrixId}_${row.original.sentrixPosition}/report.html`}>
+                href={`/api/submissions/data?filePath=/bethesda_classifier_v2/output/${submissionsId}/${row.original.sample}_${row.original.sentrixId}_${row.original.sentrixPosition}/${row.original.sample}_Report-CNS-Bv2_${row.original.sentrixId}_${row.original.sentrixPosition}.html`}>
                 Download Report
               </a>
             )}
