@@ -117,7 +117,8 @@ router.get(
           ],
         },
       });
-      return await ecsClient.send(runTaskCommand);
+      const status = await ecsClient.send(runTaskCommand);
+      response.json(status);
     } else {
       response.status(404).send("Classifier task not found");
     }
