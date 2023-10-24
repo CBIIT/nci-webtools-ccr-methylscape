@@ -146,13 +146,13 @@ router.get("/submissions/sample/:submissionsId", requiresRouteAccessPolicy("Acce
   response.json(results);
 });
 
-router.get("/submissions/data/:submissionsId", requiresRouteAccessPolicy("AccessApi"), async (request, response) => {
+router.get("/submissions/data/", requiresRouteAccessPolicy("AccessApi"), async (request, response) => {
   const { submissionsId } = request.params;
   const { filePath } = request.query;
   const { S3_USER_DATA_BUCKET, S3_USER_DATA_BUCKET_KEY_PREFIX } = process.env;
   const path = ["submissions", submissionsId, filePath].join("/");
   try {
-    const results = await getFile(path, S3_USER_DATA_BUCKET, S3_USER_DATA_BUCKET_KEY_PREFIX);
+    const results = await getFile(filePath, S3_USER_DATA_BUCKET, S3_USER_DATA_BUCKET_KEY_PREFIX);
     response.setHeader("Content-Type", results.ContentType);
     response.setHeader("Content-Length", results.ContentLength);
     response.setHeader("Content-Disposition", `attachment; filename=${filePath.split("/").pop()}`);
