@@ -14,6 +14,7 @@ export default function Header() {
 
   return (
     <header className="flex-grow-0 bg-white">
+      <include-html src="https://cbiit.github.io/nci-softwaresolutions-elements/banners/government-shutdown.html"></include-html>
       <Container fluid>
         <Row className="justify-content-between">
           <Col>
