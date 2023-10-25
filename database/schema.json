@@ -151,6 +151,11 @@
       { "name": "order", "type": "integer" },
       { "name": "name", "type": "text", "constraints": ["not null", "unique"] },
       { "name": "status", "type": "text", "options": ["default 'active'"] },
+      {
+        "name": "organSystem",
+        "type": "json",
+        "options": ["default '[{\"label\":\"Central Nervous System\"}]'"]
+      },
       { "name": "createdAt", "type": "timestamp", "options": ["default CURRENT_TIMESTAMP"] },
       { "name": "updatedAt", "type": "timestamp", "options": ["default CURRENT_TIMESTAMP"] },
       { "name": "createdBy", "type": "text", "options": ["default 'system'"] },
