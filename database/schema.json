@@ -154,7 +154,7 @@
       {
         "name": "organSystem",
         "type": "json",
-        "options": ["default '[{\"label\":\"Central Nervous System\"}]'"]
+        "options": ["default '[{\"label\":\"Central Nervous System\", \"value\":\"centralNervousSystem\"}]'"]
       },
       { "name": "createdAt", "type": "timestamp", "options": ["default CURRENT_TIMESTAMP"] },
       { "name": "updatedAt", "type": "timestamp", "options": ["default CURRENT_TIMESTAMP"] },
