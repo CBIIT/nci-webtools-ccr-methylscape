@@ -39,10 +39,8 @@ router.get("/submissions", requiresRouteAccessPolicy("AccessApi"), async (reques
     response.json(await query);
   } else if (roleName == "Data Manager") {
     response.json(await query.where("submissions.organizationId", organizationId));
-  } else if (roleName == "User") {
-    response.json(await query.where("submissions.userId", id));
   } else {
-    return [];
+    response.json(await query.where("submissions.userId", id));
   }
 });
 
