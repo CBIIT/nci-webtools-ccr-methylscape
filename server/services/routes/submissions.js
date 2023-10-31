@@ -52,7 +52,6 @@ router.post(
   async (request, response) => {
     const { files } = request;
     const { connection, logger } = request.app.locals;
-    console.log;
     const { S3_USER_DATA_BUCKET, S3_USER_DATA_BUCKET_KEY_PREFIX } = process.env;
 
     // upload request files to s3 bucket
