@@ -127,7 +127,7 @@ export default function AdminOrganizationManagement() {
       Header: "Actions",
       id: "actions",
       disableSortBy: true,
-      Cell: (props) => {
+      Cell: (props) =>
         props.row.original.id !== 1 ? (
           <>
             <Button className="me-2" onClick={() => openEditOrgModal(props)}>
@@ -143,8 +143,7 @@ export default function AdminOrganizationManagement() {
           </>
         ) : (
           <div></div>
-        );
-      },
+        ),
     },
   ];
   return (
