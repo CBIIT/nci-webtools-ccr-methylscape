@@ -64,7 +64,12 @@ export default class UserManager {
       .where({ "user.email": email })
       .where({ "user.accountType": accountType })
       .where({ "user.status": "active" })
-      .select("user.*", "role.name as roleName", "organization.name as organizationName")
+      .select(
+        "user.*",
+        "role.name as roleName",
+        "organization.name as organizationName",
+        "organization.organSystem as organizationOrganSystem"
+      )
       .first();
 
     if (user) user.rolePolicies = await this.getUserRolePolicies(user.id);

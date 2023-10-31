@@ -31,14 +31,14 @@ export default function MetadataForm({ className, onSelect }) {
           <Form.Group id="organSystem" className="form-group mb-3">
             <Form.Label>Organ System</Form.Label>
             <Form.Select name="organSystem" value={form.organSystem} onChange={handleChange} className="source">
-              <option value="centralNervousSystem">Central Nervous System</option>
-              {session?.user.organizationName === "NIH" && (
-                <>
-                  <option value="boneAndSoftTissue">Bone and Soft Tissue</option>
-                  <option value="hematopoietic">Hematopoietic</option>
-                  <option value="renal">Renal</option>
-                  <option value="panCancer">Pan-Cancer</option>
-                </>
+              {session?.user.organizationOrganSystem.length ? (
+                session.user.organizationOrganSystem.map((e) => (
+                  <option key={e.value} value={e.value}>
+                    {e.label}
+                  </option>
+                ))
+              ) : (
+                <option value="centralNervousSystem">Central Nervous System</option>
               )}
             </Form.Select>
           </Form.Group>
