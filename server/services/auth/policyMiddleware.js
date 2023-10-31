@@ -15,3 +15,13 @@ export function requiresRouteAccessPolicy(action) {
       : response.status(403).json({ message: "Forbidden" });
   };
 }
+
+export function requiresOrganSystemAccess() {
+  return (request, response, next) => {
+    const { organSystem } = request.query;
+    return organSystem == "centralNervousSystem" ||
+      request.user?.organizationOrganSystem?.map((e) => e.value).includes(organSystem)
+      ? next()
+      : response.status(403).json({ message: "Forbidden" });
+  };
+}

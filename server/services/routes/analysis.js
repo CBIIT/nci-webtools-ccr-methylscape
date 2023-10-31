@@ -1,5 +1,5 @@
 import Router from "express-promise-router";
-import { requiresRouteAccessPolicy } from "../auth/policyMiddleware.js";
+import { requiresRouteAccessPolicy, requiresOrganSystemAccess } from "../auth/policyMiddleware.js";
 import { getSurvivalData } from "../analysis/r.js";
 import {
   getSamples,
@@ -14,11 +14,16 @@ import {
 
 const router = Router();
 
-router.get("/samples", requiresRouteAccessPolicy("AccessApi"), async (request, response) => {
-  const { connection } = request.app.locals;
-  const results = await getSampleCoordinates(connection, request.query);
-  response.json(results);
-});
+router.get(
+  "/samples",
+  requiresRouteAccessPolicy("AccessApi"),
+  requiresOrganSystemAccess(),
+  async (request, response) => {
+    const { connection } = request.app.locals;
+    const results = await getSampleCoordinates(connection, request.query);
+    response.json(results);
+  }
+);
 
 router.post("/samples", requiresRouteAccessPolicy("AccessApi"), async (request, response) => {
   const { connection } = request.app.locals;
