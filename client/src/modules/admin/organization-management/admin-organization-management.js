@@ -5,29 +5,28 @@ import Table from "../../components/table";
 import { organizationsSelector } from "./organization-management.state";
 import axios from "axios";
 import { useForm } from "react-hook-form";
+import SelectForm from "../../components/selectHookForm";
 
 export default function AdminOrganizationManagement() {
   const organizations = useRecoilValue(organizationsSelector);
   const [showAddOrgModal, setShowAddOrgModal] = useState(false);
   const [showRenameOrgModal, setShowRenameOrgModal] = useState(false);
-  const [showOrganSystemModal, setShowOrganSystemModal] = useState(false);
   const refreshOrgs = useRecoilRefresher_UNSTABLE(organizationsSelector);
   const initialForm = {
     name: "",
     organSystem: [],
   };
   const {
+    control,
     register,
-    setValue,
     handleSubmit,
     reset,
-    watch,
     formState: { errors },
   } = useForm({
     defaultValues: initialForm,
   });
-  const selectedOrganSystems = watch("organSystem");
-  const organSystems = [
+
+  const organSystemOptions = [
     { label: "Central Nervous System", value: "centralNervousSystem" },
     { label: "Bone and Soft Tissue", value: "boneAndSoftTissue" },
     { label: "Hematopoietic", value: "hematopoietic" },
@@ -58,7 +57,6 @@ export default function AdminOrganizationManagement() {
 
     await axios.put(`/api/organizations/${data.id}`, data);
     setShowRenameOrgModal(false);
-    setShowOrganSystemModal(false);
     refreshOrgs();
   }
 
@@ -129,18 +127,9 @@ export default function AdminOrganizationManagement() {
       disableSortBy: true,
       Cell: (props) =>
         props.row.original.id !== 1 ? (
-          <>
-            <Button className="me-2" onClick={() => openEditOrgModal(props)}>
-              Edit
-            </Button>
-            <Button
-              onClick={() => {
-                reset(props?.row?.original);
-                setShowOrganSystemModal(true);
-              }}>
-              Organ Systems
-            </Button>
-          </>
+          <Button className="me-2" onClick={() => openEditOrgModal(props)}>
+            Edit
+          </Button>
         ) : (
           <div></div>
         ),
@@ -212,40 +201,15 @@ export default function AdminOrganizationManagement() {
                 />
                 <Form.Control.Feedback type="invalid">{errors?.name && errors.name.message}</Form.Control.Feedback>
               </Form.Group>
-            </Modal.Body>
-            <Modal.Footer>
-              <Button variant="primary" type="submit" className="btn-lg">
-                Rename
-              </Button>
-            </Modal.Footer>
-          </Form>
-        </Modal>
-
-        <Modal show={showOrganSystemModal} onHide={() => setShowOrganSystemModal(false)}>
-          <Form className="bg-light p-3" onSubmit={handleSubmit(handleOrgEditSubmit)}>
-            <Modal.Header closeButton>
-              <Modal.Title>Toggle Visible Organ Systems in UMAP</Modal.Title>
-            </Modal.Header>
-
-            <Modal.Body>
-              {organSystems.map((organSystem) => (
-                <Form.Group key={`toggle-${organSystem.value}`} controlId={organSystem.value}>
-                  <Form.Check
-                    name={organSystem.value}
-                    label={organSystem.label}
-                    type="checkbox"
-                    checked={selectedOrganSystems.map(({ value }) => value).includes(organSystem.value)}
-                    onChange={(e) => {
-                      const checked = e.target.checked;
-                      const updateOrgSys = checked
-                        ? [...selectedOrganSystems, organSystem]
-                        : selectedOrganSystems.filter((e) => e.value != organSystem.value);
-
-                      setValue("organSystem", updateOrgSys);
-                    }}
-                  />
-                </Form.Group>
-              ))}
+              <Form.Group controlId="organSystem">
+                <SelectForm
+                  control={control}
+                  name="organSystem"
+                  label="Select Organ Systems"
+                  options={organSystemOptions}
+                  isMulti
+                />
+              </Form.Group>
             </Modal.Body>
             <Modal.Footer>
               <Button variant="primary" type="submit" className="btn-lg">
