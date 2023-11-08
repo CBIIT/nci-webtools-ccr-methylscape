@@ -1,4 +1,4 @@
-import { Container, Card, Form, Row, Col, Button, ProgressBar } from "react-bootstrap";
+import { Container, Card, Form, Row, Col, Button, ProgressBar, OverlayTrigger, Tooltip } from "react-bootstrap";
 import { useRecoilValue, useRecoilRefresher_UNSTABLE } from "recoil";
 import { sessionState } from "../session/session.state";
 import { submissionsSelector } from "./submissions.state";
@@ -166,7 +166,12 @@ export default function SubmissionsForm() {
             <Row>
               <Col sm="3">
                 <Form.Label className="me-3">
-                  Sample Files <span style={{ color: "crimson" }}>*</span>
+                  Sample Files <span className="text-danger">*</span>
+                  <OverlayTrigger overlay={<Tooltip>Accepts up to 200 sample files</Tooltip>}>
+                    <span className="ms-1">
+                      <i class="bi bi-info-circle-fill"></i>
+                    </span>
+                  </OverlayTrigger>
                 </Form.Label>
               </Col>
               <Col sm="9">
