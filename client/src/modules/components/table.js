@@ -150,7 +150,7 @@ export default function Table({
             </Button>
           </Col>
         )}
-        <Col sm="auto">
+        <Col sm="auto" className="me-3">
           {customOptions.hideColumns && (
             <Dropdown>
               <Dropdown.Toggle variant="success" size="sm" id={`toggle-umap-columns`}>
@@ -176,7 +176,7 @@ export default function Table({
         </Col>
       </Row>
       <div className="table-responsive">
-        <BootstrapTable {...getTableProps()} hover size="sm" responsive className="mt-3">
+        <BootstrapTable {...getTableProps()} hover size="sm" responsive className="mt-3" striped>
           <thead>
             {headerGroups.map((headerGroup) => (
               <tr {...headerGroup.getHeaderGroupProps()} className="h5 sample-title">
