@@ -1,4 +1,4 @@
-import { Container, Row, Col, Card, Form, Button } from "react-bootstrap";
+import { Container, Row, Col, Card, Form } from "react-bootstrap";
 import { useRecoilValue, useRecoilState } from "recoil";
 import moment from "moment";
 import {
@@ -46,8 +46,8 @@ export default function SubmissionsDetails({ submissionData }) {
     <Container fluid="xxl" className="p-0">
       <Card className="">
         {details?.length > 0 && (
-          <Card.Body>
-            <Row>
+          <Card.Body className="p-0">
+            <Row className="p-3">
               <Col sm>
                 <Form.Label>Investigator</Form.Label>
                 <div>{submissionData.investigator}</div>
@@ -69,28 +69,15 @@ export default function SubmissionsDetails({ submissionData }) {
                 <div>{submissionData.experiment}</div>
               </Col>
             </Row>
+            <Table
+              name="Samples"
+              data={details}
+              columns={columns}
+              options={{ initialState, stateReducer }}
+              customOptions={{ hideColumns: true, hidePagination: false }}
+            />
           </Card.Body>
         )}
-      </Card>
-
-      <Card className="mt-2">
-        <Card.Body className="p-1">
-          <Table
-            name="Samples"
-            data={details}
-            columns={columns}
-            options={{ initialState, stateReducer }}
-            customOptions={{ hideColumns: true, hidePagination: true }}
-          />
-          <Row className="justify-content-center">
-            <Col sm="auto">
-              <Button variant="success">Approve</Button>
-            </Col>
-            <Col sm="auto">
-              <Button variant="danger">Reject</Button>
-            </Col>
-          </Row>
-        </Card.Body>
       </Card>
     </Container>
   );
