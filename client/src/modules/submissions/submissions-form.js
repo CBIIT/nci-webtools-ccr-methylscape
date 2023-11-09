@@ -132,13 +132,13 @@ export default function SubmissionsForm() {
       <h3 className="text-white mb-3">Submit Samples</h3>
       <Card className="bg-light p-3 d-flex ">
         <Form onSubmit={handleSubmit(onSubmit)} className="mx-auto" style={{ width: "700px" }}>
-          <Form.Group className="my-3">
+          <Form.Group controlId="organization" className="my-3">
             <Row>
               <Col sm="3">
                 <Form.Label className="me-3">Organization</Form.Label>
               </Col>
               <Col sm="9">
-                <div>{session?.user.organizationName}</div>
+                <Form.Control size="sm" disabled value={session?.user.organizationName} />
               </Col>
             </Row>
           </Form.Group>
@@ -223,7 +223,7 @@ export default function SubmissionsForm() {
                     {...register("metadataFile", { required: !manualMetadata })}
                     size="sm"
                     type="file"
-                    accept=".csv"
+                    accept=".csv,.xlsx"
                     isInvalid={metadataFileError.length || errors.metadataFile}
                     disabled={manualMetadata}
                   />

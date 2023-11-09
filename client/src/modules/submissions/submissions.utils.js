@@ -1,5 +1,6 @@
 import { parse } from "papaparse";
 import { groupBy } from "lodash";
+import Excel from "exceljs";
 
 export async function parseMetadata(file) {
   const infoKeys = {
@@ -28,7 +29,11 @@ export async function parseMetadata(file) {
     Surgery_date: "surgeryDate",
   };
 
-  const text = await (await fetch(URL.createObjectURL(file))).text();
+  const text =
+    file.name.split(".")[1] === "csv"
+      ? await (await fetch(URL.createObjectURL(file))).text()
+      : await parseExcelToCsv(file);
+
   const [_, ownerText, metadataText] = text.split(/^\[.+\],*$/gm);
   if (ownerText && metadataText) {
     const { data: ownerParse } = parse(ownerText);
@@ -110,4 +115,10 @@ export function parseSampleFiles(sampleFiles) {
  */
 export function sampleFilePairs(files) {
   return Object.values(groupBy(files, (e) => e.id + e.position)).filter((e) => e.length == 2);
+}
+
+export async function parseExcelToCsv(file) {
+  const workbook = new Excel.Workbook();
+  await workbook.xlsx.read(file.stream());
+  return (await workbook.csv.writeBuffer()).toString();
 }
