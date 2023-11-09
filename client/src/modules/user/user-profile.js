@@ -13,7 +13,7 @@ export default function UserProfile() {
     <Container>
       <Row className="my-4">
         <Col>
-          <h1 className="text-white">User Profile</h1>
+          <h3 className="text-white">User Profile</h3>
         </Col>
       </Row>
       <Row className="mb-4">

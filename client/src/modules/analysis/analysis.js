@@ -42,7 +42,7 @@ export default function Analysis() {
     <Container fluid>
       <Row className="my-4">
         <Col>
-          <h1 className="text-white">Analysis</h1>
+          <h3 className="text-white">Analysis</h3>
         </Col>
       </Row>
       <Row>

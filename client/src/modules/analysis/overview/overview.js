@@ -7,7 +7,7 @@ import Info from "./info";
 export default function Overview({ className }) {
   return (
     <div className={className}>
-      <h1 className="h4 mb-3 text-primary">NCI DNA Methylation Data Hub and Repository</h1>
+      <h3 className="h4 mb-3 text-primary">NCI DNA Methylation Data Hub and Repository</h3>
       <p>
         The NCI Laboratory of Pathology has implemented a novel clinically-reportable assay that uses genome-wide DNA
         methylation profiling as a diagnostic tool for tumors of the central nervous system. The validated tool is

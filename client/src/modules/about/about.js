@@ -16,7 +16,7 @@ export default function About() {
               {/* <h1>About Methylscape Analysis</h1> */}
             </Col>
             <Col md lg={8}>
-              <h1 className="mb-4">About Methylscape Analysis</h1>
+              <h3 className="mb-4">About Methylscape Analysis</h3>
               <div id="aboutpage-scroll">
                 <p>
                   The NCI Laboratory of Pathology has implemented a novel clinically-reportable assay that uses

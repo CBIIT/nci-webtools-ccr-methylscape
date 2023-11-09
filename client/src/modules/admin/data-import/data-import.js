@@ -88,7 +88,7 @@ export default function DataImport() {
       <Container>
         <Row className="my-4">
           <Col>
-            <h1 className="text-white">Data Import</h1>
+            <h3 className="text-white">Data Import</h3>
           </Col>
           {/* <Col className="d-flex justify-content-end">
             <Button variant="light" onClick={() => runImport(true)}>

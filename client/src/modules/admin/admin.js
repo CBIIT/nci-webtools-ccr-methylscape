@@ -23,7 +23,7 @@ export default function Admin() {
   return (
     <Container>
       <Row className="my-4">
-        <h1 className="text-white">Administrative Tasks</h1>
+        <h3 className="text-white">Administrative Tasks</h3>
       </Row>
       <Row className="mb-4">
         {actions.map((action, index) => (
