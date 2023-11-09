@@ -1,9 +1,8 @@
-import { useEffect, useCallback, useState } from "react";
+import { useEffect, useState } from "react";
 import { Card, Row, Col, Button, Container, Alert, Form, Accordion, InputGroup, ButtonGroup } from "react-bootstrap";
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import moment from "moment";
-import Table from "../components/table";
 import { submissionsSelector } from "./submissions.state";
 import SubmissionsDetailsSubrow from "./submissions-details-subrow";
 
@@ -11,45 +10,8 @@ export default function SubmissionsList() {
   const { hash } = useLocation();
   const submissions = useRecoilValue(submissionsSelector);
   const navigate = useNavigate();
-  const [altView, setToggle] = useState(false);
   const [search, setSearch] = useState("");
   const [sortCol, setSort] = useState("recent");
-  const columns = [
-    {
-      Header: () => null,
-      id: "expander",
-      aria: "Show/Hide Details",
-      disableSortBy: true,
-      disableToggle: true,
-      Cell: ({ row }) => (
-        <span {...row.getToggleRowExpandedProps()}>
-          {row.isExpanded ? <i className="bi bi-plus-square-dotted" /> : <i className="bi bi-plus-square" />}
-        </span>
-      ),
-    },
-    { accessor: "submissionName", Header: "Submission Name" },
-    { accessor: "submitter", Header: "Submitter" },
-    { accessor: "organizationName", Header: "Organization" },
-    {
-      accessor: "sampleCount",
-      Header: "Sample Count",
-      Cell: ({ value }) => value || 0,
-    },
-    { accessor: "status", Header: "Status" },
-    {
-      accessor: "submitDate",
-      Header: "Submission Date",
-      Cell: (e) => {
-        const time = moment(e.value);
-        return `${time.format("LLL")} (${time.fromNow()})`;
-      },
-    },
-    {
-      accessor: "id",
-      Header: "Action",
-      Cell: ({ value }) => <Link to={`/submissions/details/${value}`}>Review</Link>,
-    },
-  ];
 
   // automatically hide alert
   useEffect(() => {
@@ -59,10 +21,6 @@ export default function SubmissionsList() {
       }, 10000);
     }
   }, [hash]);
-
-  const renderRowSubComponent = useCallback(({ row }) => {
-    return <SubmissionsDetailsSubrow submissionData={row.original} />;
-  }, []);
 
   const accordions = submissions
     .filter((s) => Object.values(s).some((e) => new RegExp(search, "gi").test(e)))
@@ -134,28 +92,9 @@ export default function SubmissionsList() {
           </Button>
         </Col>
       </Row>
-      <div>
-        <Form.Check
-          className="m-3 text-white"
-          type="switch"
-          label="Toggle view"
-          onChange={(e) => {
-            setToggle(e.target.checked);
-          }}
-        />
-      </div>
       <Card className="bg-white p-3">
         {submissions.length == 0 ? (
           <p>You have no submissions. Click on Create Submission to start a data submission.</p>
-        ) : altView ? (
-          <Table
-            key="submissions-table"
-            name="Submissions"
-            data={submissions}
-            columns={columns}
-            customOptions={{ expanded: true, hideColumns: true }}
-            renderRowSubComponent={renderRowSubComponent}
-          />
         ) : (
           <Container fluid>
             <Row className="my-3">
@@ -179,7 +118,9 @@ export default function SubmissionsList() {
                 </ButtonGroup>
               </Col>
             </Row>
-            <Accordion alwaysOpen defaultActiveKey="0">{accordions}</Accordion>
+            <Accordion alwaysOpen defaultActiveKey="0">
+              {accordions}
+            </Accordion>
           </Container>
         )}
       </Card>
