@@ -14,7 +14,7 @@ export default function AdminOrganizationManagement() {
   const refreshOrgs = useRecoilRefresher_UNSTABLE(organizationsSelector);
   const initialForm = {
     name: "",
-    organSystem: [],
+    organSystem: [{ label: "Central Nervous System", value: "centralNervousSystem" }],
   };
   const {
     control,
@@ -44,9 +44,10 @@ export default function AdminOrganizationManagement() {
     setShowRenameOrgModal(true);
   }
 
-  async function handleAddOrgSubmit(data) {
+  async function handleAddOrgSubmit(form) {
     await axios.post("/api/organizations", {
-      name: data.name,
+      ...form,
+      organSystem: JSON.stringify(form.organSystem),
     });
     setShowAddOrgModal(false);
     refreshOrgs();
@@ -148,7 +149,6 @@ export default function AdminOrganizationManagement() {
             </Button>
           </Col>
         </Row>
-
         <Row className="mb-4">
           <Col>
             <div className="bg-light py-4 px-2 rounded">
@@ -162,7 +162,6 @@ export default function AdminOrganizationManagement() {
             <Modal.Header closeButton>
               <Modal.Title>Add New Organization/ Institution</Modal.Title>
             </Modal.Header>
-
             <Modal.Body>
               <Form.Group className="mb-3" controlId="name">
                 <Form.Label>Organization Name</Form.Label>
@@ -174,8 +173,16 @@ export default function AdminOrganizationManagement() {
                 />
                 <Form.Control.Feedback type="invalid">{errors?.name && errors.name.message}</Form.Control.Feedback>
               </Form.Group>
+              <Form.Group controlId="organSystem">
+                <SelectForm
+                  control={control}
+                  name="organSystem"
+                  label="Select Organ Systems"
+                  options={organSystemOptions}
+                  isMulti
+                />
+              </Form.Group>
             </Modal.Body>
-
             <Modal.Footer>
               <Button variant="primary" type="submit" className="btn-lg">
                 Add
@@ -189,7 +196,6 @@ export default function AdminOrganizationManagement() {
             <Modal.Header closeButton>
               <Modal.Title>Edit Organization</Modal.Title>
             </Modal.Header>
-
             <Modal.Body>
               <Form.Group className="mb-3" controlId="newOrgName">
                 <Form.Label>New Organization Name</Form.Label>
