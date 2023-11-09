@@ -26,7 +26,9 @@ router.get("/submissions", requiresRouteAccessPolicy("AccessApi"), async (reques
       connection.raw(`count("userSamples"."id") as "sampleCount"`),
       connection.raw(`array_agg("userSamples"."sample") as "samples"`),
       connection.raw(`array_agg("userSamples"."sentrixId") as "sentrixIds"`),
-      connection.raw(`array_agg("userSamples"."sentrixPosition") as "sentrixPositions"`)
+      connection.raw(`array_agg("userSamples"."sentrixPosition") as "sentrixPositions"`),
+      connection.raw(`array_agg("userSamples"."outsideId") as "outsideIds"`),
+      connection.raw(`array_agg("userSamples"."surgicalCase") as "surgicalCases"`)
     )
     .groupBy(["submissions.id", "user.id", "organization.name", "userSamples.submissionsId"])
     .orderBy("submissions.createdAt", "desc");
