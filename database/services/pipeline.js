@@ -82,12 +82,16 @@ export async function importTable({ connection, schema, source, sourceProvider, 
     options
   );
 }
-
 export async function getColumns(inputStream, options) {
-  const parser = inputStream.pipe(parse({ ...options, to_line: 1 }));
+  // bug: to and to_line will both prematurely end the stream
+  const parser = inputStream.pipe(parse({ ...options }));
+  let firstLine;
   for await (const line of parser) {
-    return line.map((v, i) => ({ name: v || i, type: "text" }));
+    firstLine = line.map((v, i) => ({ name: v || i, type: "text" }));
+    break;
   }
+  parser.destroy();
+  return firstLine;
 }
 
 export async function convertStream(inputStream, sourceFormat, targetFormat) {
