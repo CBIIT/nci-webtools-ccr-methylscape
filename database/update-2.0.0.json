@@ -1,0 +1,42 @@
+[
+  {
+    "command": "recreateTables",
+    "description": "Recreate tables",
+    "tables": ["submissions", "userSamples", "organizations"]
+  },
+  {
+    "command": "importTable",
+    "description": "Import rolePolicy.csv to staging table",
+    "source": "rolePolicy.csv",
+    "target": "stage.rolePolicy"
+  },
+  {
+    "command": "importTable",
+    "description": "Import organization.csv to staging table",
+    "source": "organization.csv",
+    "target": "stage.organization"
+  },
+  {
+    "command": "upsertTable",
+    "description": "Add new role policies from staging table",
+    "source": "stage.rolePolicy",
+    "target": "rolePolicy",
+    "columns": [
+      { "sourceName": "roleId", "name": "roleId" },
+      { "sourceName": "action", "name": "action" },
+      { "sourceName": "resource", "name": "resource" }
+    ],
+    "conflictTarget": ["roleId", "action", "resource"]
+  },
+  {
+    "command": "copyTable",
+    "description": "Import organizations from staging table",
+    "source": "stage.organization",
+    "target": "organization",
+    "columns": [
+      { "sourceName": "order", "name": "order" },
+      { "sourceName": "name", "name": "name" },
+      { "sourceName": "organSystem", "name": "organSystem" }
+    ]
+  }
+]
