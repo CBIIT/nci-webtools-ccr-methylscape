@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Container, Button, Row, Col, ButtonGroup, Card } from "react-bootstrap";
+import { Container, Button, Row, Col, ButtonGroup, Card, Form } from "react-bootstrap";
 import { useRecoilValue, useRecoilState } from "recoil";
 import { reportSelector, submissionReportTableState, submissionsReportColumns } from "./report.state";
 import Table from "../../components/table";
@@ -32,7 +32,7 @@ export default function SubmissionsReport() {
         <Card className="bg-white p-3">
           <Row className="my-3">
             <Col>
-              <div className="fw-bold">Group Submissions By</div>
+              <Form.Label>Sort By</Form.Label>
               <ButtonGroup aria-label="report-type">
                 <Button variant="primary" onClick={() => setType("user")}>
                   User
