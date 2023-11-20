@@ -163,4 +163,29 @@ router.get("/submissions/data/", requiresRouteAccessPolicy("AccessApi"), async (
   }
 });
 
+router.get("/submissions/report/:type", requiresRouteAccessPolicy("AccessApi"), async (request, response) => {
+  const { connection } = request.app.locals;
+  const { type } = request.params;
+  console.log(type);
+  if (type === "organization") {
+    const query = connection("submissions")
+      .leftJoin("organization", "submissions.organizationId", "organization.id")
+      .select(
+        "organization.name as organizationName",
+        connection.raw(`count("submissions"."id") as "submissionsCount"`)
+      )
+      .groupBy(["organization.id"]);
+    response.json(await query);
+  } else {
+    const query = connection("submissions")
+      .leftJoin("user", "submissions.userId", "user.id")
+      .select(
+        connection.raw(`"user"."firstName" || ' ' || "user"."lastName" as submitter`),
+        connection.raw(`count("submissions"."id") as "submissionsCount"`)
+      )
+      .groupBy(["submitter", "submissions.userId"]);
+    response.json(await query);
+  }
+});
+
 export default router;

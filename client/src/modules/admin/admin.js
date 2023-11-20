@@ -18,6 +18,11 @@ export default function Admin() {
       icon: "bi-layer-backward",
       link: "/admin/data-import",
     },
+    {
+      title: "Submissions Report",
+      icon: "bi-layer-backward",
+      link: "/admin/submissions-report",
+    },
   ];
 
   return (

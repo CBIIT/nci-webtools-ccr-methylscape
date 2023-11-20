@@ -29,6 +29,7 @@ import UserProfile from "./modules/user/user-profile";
 import Submissions from "./modules/submissions/submissions";
 import SubmissionsForm from "./modules/submissions/submissions-form";
 import SubmissionsList from "./modules/submissions/submissions-list";
+import SubmissionsReport from "./modules/admin/submissions-report/report";
 
 export default function App() {
   const session = useRecoilValue(sessionState);
@@ -216,6 +217,14 @@ export default function App() {
                 element={
                   <RequirePolicy action="GetPage">
                     <DataImport />
+                  </RequirePolicy>
+                }
+              />
+              <Route
+                path="admin/submissions-report"
+                element={
+                  <RequirePolicy action="GetPage">
+                    <SubmissionsReport />
                   </RequirePolicy>
                 }
               />
