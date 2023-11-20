@@ -110,6 +110,7 @@ router.post("/user/approve", requiresRouteAccessPolicy("AccessApi"), async (requ
   const user = {
     id: request.body.id,
     roleId: request.body.roleId,
+    organizationId: request.body.organizationId,
     status: "active",
     updatedAt: new Date(),
   };

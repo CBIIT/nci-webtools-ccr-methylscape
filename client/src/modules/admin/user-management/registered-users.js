@@ -1,20 +1,23 @@
 import { useState } from "react";
-import { Container, Button, Modal } from "react-bootstrap";
+import { Button, Modal } from "react-bootstrap";
 import Table from "../../components/table";
 import axios from "axios";
 import Alert from "react-bootstrap/Alert";
 import Form from "react-bootstrap/Form";
 import { groupBy } from "lodash";
 import { useRecoilValue, useRecoilRefresher_UNSTABLE } from "recoil";
-import { rolesSelector, usersSelector } from "./user-management.state";
+import { organizationsSelector, rolesSelector, usersSelector } from "./user-management.state";
+import { useForm } from "react-hook-form";
+import SelectForm from "../../components/selectHookForm";
 
 export default function RegisterUsers() {
   const [alerts, setAlerts] = useState([]);
   const users = useRecoilValue(usersSelector);
   const roles = useRecoilValue(rolesSelector);
+  const organizations = useRecoilValue(organizationsSelector);
   const [showApprovalModal, setShowApprovalModal] = useState(false);
   const [showRejectionModal, setShowRejectionModal] = useState(false);
-  const [approvalForm, setApprovalForm] = useState({});
+  const [user, setUser] = useState({});
   const [rejectionForm, setRejectionForm] = useState({});
   const refreshUsers = useRecoilRefresher_UNSTABLE(usersSelector);
   const [showRejectedUsers, setShowRejectedUsers] = useState(false);
@@ -23,9 +26,31 @@ export default function RegisterUsers() {
   const rejectedUsers = userGroups["rejected"] || [];
   const visibleUsers = [...pendingUsers, ...(showRejectedUsers ? rejectedUsers : [])];
 
+  const defaultForm = { role: "", organization: "", organizationOther: "", comments: "", addNewOrg: false };
+  const {
+    control,
+    register,
+    watch,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm({ defaultValues: defaultForm });
+  const { addNewOrg, organization } = watch();
+
+  const roleOptions = roles.map((e) => ({ label: `${e.description} (${e.name})`, value: e.id }));
+  const organizationOptions = organizations
+    .filter((e) => e.status === "active")
+    .map((e) => ({ label: e.name, value: e.id }));
+
   function openApprovalModal({ row }) {
     setShowApprovalModal(true);
-    setApprovalForm(row.original);
+    setUser(row.original);
+    const data = row.original;
+    reset({
+      ...defaultForm,
+      organization: { label: data.organizationName, value: data.organizationId },
+      organizationOther: data.organizationOther,
+    });
   }
 
   function openRejectionModal({ row }) {
@@ -33,27 +58,30 @@ export default function RegisterUsers() {
     setRejectionForm(row.original);
   }
 
-  function handleApprovalFormChange(e) {
-    const { name, value } = e.target;
-    setApprovalForm((form) => ({ ...form, [name]: value }));
-  }
-
   function handleRejectionFormChange(e) {
     const { name, value } = e.target;
     setRejectionForm((form) => ({ ...form, [name]: value }));
-  }
-
-  async function handleApprovalFormSubmit(e) {
-    e.preventDefault();
-    setShowApprovalModal(false);
-    await axios.post(`/api/user/approve`, approvalForm);
-    refreshUsers();
   }
 
   async function handleRejectionFormSubmit(e) {
     e.preventDefault();
     setShowRejectionModal(false);
     await axios.post(`/api/user/reject`, rejectionForm);
+    refreshUsers();
+  }
+
+  async function handleApproveSubmit(form) {
+    const organizationId = form.addNewOrg
+      ? (await axios.post("/api/organizations", { name: form.newOrgName })).id
+      : form.organization.value;
+    const data = {
+      ...user,
+      organizationName: form.newOrgName,
+      organizationId,
+      roleName: form.role.label,
+      roleId: form.role.value,
+    };
+    await axios.post(`/api/user/approve`, data);
     refreshUsers();
   }
 
@@ -173,7 +201,6 @@ export default function RegisterUsers() {
   ].filter(Boolean);
   return (
     <>
-      {/* <h1 className="h4 mb-3 text-primary">Registered Users</h1> */}
       {alerts.map(({ type, message }, i) => (
         <Alert key={i} variant={type} onClose={() => setAlerts([])} dismissible>
           {message}
@@ -202,30 +229,67 @@ export default function RegisterUsers() {
 
       {showApprovalModal && (
         <Modal show={showApprovalModal} onHide={() => setShowApprovalModal(false)}>
-          <Form onSubmit={handleApprovalFormSubmit}>
+          <Form onSubmit={handleSubmit(handleApproveSubmit)}>
             <Modal.Header closeButton>
               <Modal.Title>
-                Set User Role: {approvalForm.firstName}, {approvalForm.lastName}
+                Set User Role and Organization: {user.firstName}, {user.lastName}
               </Modal.Title>
             </Modal.Header>
             <Modal.Body>
-              <Form.Group className="mb-3" controlId="approveModalId">
-                <Form.Label>User Role</Form.Label>
-                <Form.Select
-                  name="roleId"
-                  value={approvalForm.roleId || ""}
-                  onChange={handleApprovalFormChange}
-                  required>
-                  <option value="" hidden>
-                    Select Role
-                  </option>
-                  {roles.map((r) => (
-                    <option key={r.id} value={r.id}>
-                      {r.description} ({r.name})
-                    </option>
-                  ))}
-                </Form.Select>
+              <Form.Group className="mb-3" controlId="role">
+                <SelectForm
+                  control={control}
+                  rules={{ required: "Role required" }}
+                  name="role"
+                  label="User Role"
+                  options={roleOptions}
+                />
+                <Form.Control.Feedback className="d-block" type="invalid">
+                  {errors?.role && errors.role.message}
+                </Form.Control.Feedback>
               </Form.Group>
+              <Form.Group className="mb-3" controlId="organization">
+                <SelectForm
+                  control={control}
+                  rules={{ required: "Organization required" }}
+                  name="organization"
+                  label="Organization"
+                  options={organizationOptions}
+                  disabled={addNewOrg}
+                />
+                <Form.Control.Feedback className="d-block" type="invalid">
+                  {errors?.organization && errors?.organization.message}
+                </Form.Control.Feedback>
+                {organization?.value === 1 && (
+                  <Form.Control
+                    {...register("organizationOther")}
+                    type="text"
+                    name="organizationOther"
+                    placeholder="Enter Organization/Instituiton"
+                    disabled={addNewOrg}
+                  />
+                )}
+              </Form.Group>
+              <Form.Group controlId="addNewOrg">
+                <Form.Check type="checkbox">
+                  <Form.Check {...register("addNewOrg")} type="checkbox" label="Add New Organization" />
+                </Form.Check>
+              </Form.Group>
+              {addNewOrg && (
+                <Form.Group controlId="newOrgName">
+                  <Form.Label>New Organization</Form.Label>
+                  <Form.Control
+                    {...register("newOrgName", {
+                      required: { value: addNewOrg, message: "Organization Name Required" },
+                    })}
+                    name="newOrgName"
+                    placeholder="Organization Name"
+                  />
+                  <Form.Control.Feedback className="d-block" type="invalid">
+                    {errors?.newOrgName && errors.newOrgName.message}
+                  </Form.Control.Feedback>
+                </Form.Group>
+              )}
             </Modal.Body>
             <Modal.Footer>
               <Button variant="primary" type="submit" className="btn-lg">
