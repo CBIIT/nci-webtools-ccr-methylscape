@@ -177,7 +177,7 @@ export default function SubmissionsForm() {
               <Col sm="9">
                 <Form.Control
                   {...register("sampleFiles", {
-                    required: true,
+                    required: 'Sample files required',
                     validate: {
                       pairs: (v) => {
                         const sampleFiles = parseSampleFiles(v);
@@ -206,7 +206,7 @@ export default function SubmissionsForm() {
                   accept=".idat"
                   isInvalid={errors?.sampleFiles}
                 />
-                <Form.Control.Feedback type="invalid">
+                <Form.Control.Feedback className="d-block" type="invalid">
                   {errors?.sampleFiles && errors.sampleFiles.message}
                 </Form.Control.Feedback>
               </Col>

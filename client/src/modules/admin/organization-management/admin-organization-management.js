@@ -171,7 +171,9 @@ export default function AdminOrganizationManagement() {
                   placeholder="Add Organization Name"
                   maxLength={255}
                 />
-                <Form.Control.Feedback type="invalid">{errors?.name && errors.name.message}</Form.Control.Feedback>
+                <Form.Control.Feedback className="d-block" type="invalid">
+                  {errors?.name && errors.name.message}
+                </Form.Control.Feedback>
               </Form.Group>
               <Form.Group controlId="organSystem">
                 <SelectForm
@@ -200,12 +202,14 @@ export default function AdminOrganizationManagement() {
               <Form.Group className="mb-3" controlId="newOrgName">
                 <Form.Label>New Organization Name</Form.Label>
                 <FormControl
-                  {...register("name", { required: { value: true, message: "Organization name required" } })}
+                  {...register("name", { required: "Organization name required" })}
                   type="text"
                   placeholder="Organization Name"
                   maxLength={255}
                 />
-                <Form.Control.Feedback type="invalid">{errors?.name && errors.name.message}</Form.Control.Feedback>
+                <Form.Control.Feedback className="d-block" type="invalid">
+                  {errors?.name && errors.name.message}
+                </Form.Control.Feedback>
               </Form.Group>
               <Form.Group controlId="organSystem">
                 <SelectForm
