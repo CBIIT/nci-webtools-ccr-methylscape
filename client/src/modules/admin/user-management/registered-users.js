@@ -71,13 +71,16 @@ export default function RegisterUsers() {
   }
 
   async function handleApproveSubmit(form) {
-    const organizationId = form.addNewOrg
-      ? (await axios.post("/api/organizations", { name: form.newOrgName })).data[0].id
-      : form.organization.value;
+    const orgParams = {
+      organizationName: form.addNewOrg ? form.newOrgName : form.organization.label,
+      organizationId: form.addNewOrg
+        ? (await axios.post("/api/organizations", { name: form.newOrgName })).data[0].id
+        : form.organization.value,
+    };
+
     const data = {
       ...user,
-      organizationName: form.newOrgName,
-      organizationId,
+      ...orgParams,
       roleName: form.role.label,
       roleId: form.role.value,
     };
