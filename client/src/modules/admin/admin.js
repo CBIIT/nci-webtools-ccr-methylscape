@@ -20,7 +20,7 @@ export default function Admin() {
     },
     {
       title: "Submissions Report",
-      icon: "bi-layer-backward",
+      icon: "bi-file-spreadsheet",
       link: "/admin/submissions-report",
     },
   ];
