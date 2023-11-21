@@ -72,7 +72,7 @@ export default function RegisterUsers() {
 
   async function handleApproveSubmit(form) {
     const organizationId = form.addNewOrg
-      ? (await axios.post("/api/organizations", { name: form.newOrgName })).id
+      ? (await axios.post("/api/organizations", { name: form.newOrgName })).data[0].id
       : form.organization.value;
     const data = {
       ...user,
@@ -82,6 +82,7 @@ export default function RegisterUsers() {
       roleId: form.role.value,
     };
     await axios.post(`/api/user/approve`, data);
+    setShowApprovalModal(false);
     refreshUsers();
   }
 
