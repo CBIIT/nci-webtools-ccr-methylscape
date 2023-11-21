@@ -31,13 +31,13 @@ export default function SubmissionsReport() {
         </Row>
         <Card className="bg-white p-3">
           <Row className="my-3">
-            <Col>
-              <Form.Label>Sort By</Form.Label>
+            <Col className="d-flex">
+              <Form.Label className="me-3">Group By</Form.Label>
               <ButtonGroup aria-label="report-type">
-                <Button variant="primary" onClick={() => setType("user")}>
+                <Button variant="secondary" onClick={() => setType("user")} active={type === "user"}>
                   User
                 </Button>
-                <Button variant="primary" onClick={() => setType("organization")}>
+                <Button variant="secondary" onClick={() => setType("organization")} active={type === "organization"}>
                   Organization
                 </Button>
               </ButtonGroup>
