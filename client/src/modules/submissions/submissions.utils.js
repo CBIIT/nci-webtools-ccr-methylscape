@@ -10,23 +10,74 @@ export async function parseMetadata(file) {
     "Date": "date",
   };
   const metadataKeys = {
-    Sample_Name: "sample",
-    Sample_Well: "sampleWell",
-    Sample_Plate: "samplePlate",
-    Sample_Group: "sampleGroup",
-    Pool_ID: "poolId",
-    Sentrix_ID: "sentrixId",
-    Sentrix_Position: "sentrixPosition",
-    Material_Type: "materialType",
-    Gender: "sex",
-    Surgical_Case: "surgicalCase",
-    Diagnosis: "diagnosis",
-    Age: "age",
-    Notes: "notes",
-    Tumor_site: "tumorSite",
-    PI_Collaborator: "piCollaborator",
-    Outside_ID: "outsideId",
-    Surgery_date: "surgeryDate",
+    Sample_Name: {
+      name: "sample",
+      required: true,
+    },
+    Sample_Well: {
+      name: "sampleWell",
+      required: false,
+    },
+    Sample_Plate: {
+      name: "samplePlate",
+      required: false,
+    },
+    Sample_Group: {
+      name: "sampleGroup",
+      required: false,
+    },
+    Pool_ID: {
+      name: "poolId",
+      required: false,
+    },
+    Sentrix_ID: {
+      name: "sentrixId",
+      required: true,
+    },
+    Sentrix_Position: {
+      name: "sentrixPosition",
+      required: true,
+    },
+    Material_Type: {
+      name: "materialType",
+      required: false,
+    },
+    Gender: {
+      name: "sex",
+      required: false,
+    },
+    Surgical_Case: {
+      name: "surgicalCase",
+      required: false,
+    },
+    Diagnosis: {
+      name: "diagnosis",
+      required: true,
+    },
+    Age: {
+      name: "age",
+      required: true,
+    },
+    Notes: {
+      name: "notes",
+      required: false,
+    },
+    Tumor_site: {
+      name: "tumorSite",
+      required: true,
+    },
+    PI_Collaborator: {
+      name: "piCollaborator",
+      required: false,
+    },
+    Outside_ID: {
+      name: "outsideId",
+      required: false,
+    },
+    Surgery_date: {
+      name: "surgeryDate",
+      required: false,
+    },
   };
 
   const text =
@@ -42,7 +93,18 @@ export async function parseMetadata(file) {
       header: true,
     });
     const renameMetadata = metadata.map((e) =>
-      Object.fromEntries(Object.entries(e).map(([key, val]) => [metadataKeys[key], val]))
+      Object.fromEntries(
+        Object.entries(e).map(([key, val]) => {
+          const column = metadataKeys[key];
+          if (!column) {
+            throw `Unknown column: ${key}. Please ensure the metadata columns are named correctly.`;
+          }
+          if (column.required && !val) {
+            throw `Missing required values for column: ${key}. Please update your metadata file to include these values.`;
+          }
+          return [metadataKeys[key].name, val];
+        })
+      )
     );
     const ownerInfo = ownerParse
       .filter((e) => e.length > 1)
