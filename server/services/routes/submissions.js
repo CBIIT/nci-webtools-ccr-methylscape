@@ -1,14 +1,29 @@
 import Router from "express-promise-router";
 import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { ECSClient, RunTaskCommand } from "@aws-sdk/client-ecs";
-import { check } from "express-validator";
+import { check, checkSchema } from "express-validator";
 import { requiresRouteAccessPolicy } from "../auth/policyMiddleware.js";
 import { getFile } from "../aws.js";
 import multer from "multer";
+import { handleValidationErrors } from "../middleware.js";
 
 const router = Router();
 const upload = multer(); // do not store files on disk
-const validate = check("id").isUUID();
+const validateId = check("id").isUUID();
+
+const validateForm = () => {
+  return checkSchema({
+    "metadata.*.sample": { notEmpty: true, errorMessage: "Sample name missing from metadata" },
+    "metadata.*.sentrixId": { notEmpty: true, errorMessage: "Sentrix ID missing from metadata" },
+    "metadata.*.sentrixPosition": { notEmpty: true, errorMessage: "Sentrix position missing from metadata" },
+    "metadata.*.diagnosis": { notEmpty: true, errorMessage: "Diagnosis missing from metadata" },
+    "metadata.*.age": { notEmpty: true, errorMessage: "Age missing from metadata" },
+    "metadata.*.tumorSite": { notEmpty: true, errorMessage: "Tumor site missing from metadata" },
+    "submission.experiment": {
+      customSanitizer: { options: (value, { req }) => value || req.body.metadata?.[0].sentrixId },
+    },
+  });
+};
 
 router.get("/submissions", requiresRouteAccessPolicy("AccessApi"), async (request, response) => {
   const { connection } = request.app.locals;
@@ -49,10 +64,13 @@ router.get("/submissions", requiresRouteAccessPolicy("AccessApi"), async (reques
 router.post(
   "/submissions/:id",
   requiresRouteAccessPolicy("AccessApi"),
-  validate,
+  validateId,
+  validateForm(),
+  handleValidationErrors,
   upload.array("sampleFiles"),
   async (request, response) => {
-    const { files } = request;
+    const { files = [] } = request;
+    const { submission, metadata } = request.body;
     const { connection, logger } = request.app.locals;
     const { S3_USER_DATA_BUCKET, S3_USER_DATA_BUCKET_KEY_PREFIX } = process.env;
 
@@ -73,8 +91,7 @@ router.post(
       );
     }
 
-    if (request.body?.data) {
-      const { submission, metadata } = JSON.parse(request.body.data);
+    if (submission && metadata) {
       const submissionsId = (await connection("submissions").insert(submission).returning("id"))[0].id;
       const userSamplesId = metadata.map(
         async (sample) =>

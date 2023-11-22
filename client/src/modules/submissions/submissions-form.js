@@ -58,8 +58,6 @@ export default function SubmissionsForm() {
         setInvalidMetadata(checkInvalid);
       } else {
         setInvalidMetadata([]);
-
-        const formData = new FormData();
         const uuid = crypto.randomUUID();
         const submission = {
           uuid,
@@ -73,16 +71,10 @@ export default function SubmissionsForm() {
           submitDate: new Date(),
           status: "Initializing",
         };
-        formData.append(
-          "data",
-          JSON.stringify({
-            submission,
-            metadata,
-          })
-        );
+        const submitData = { submission, metadata };
 
         try {
-          const response = await axios.post(`/api/submissions/${uuid}`, formData);
+          const response = await axios.post(`/api/submissions/${uuid}`, submitData);
           const { submissionsId } = response.data;
 
           // do not upload files in parallel (minimize memory usage & time per upload)
@@ -177,7 +169,7 @@ export default function SubmissionsForm() {
               <Col sm="9">
                 <Form.Control
                   {...register("sampleFiles", {
-                    required: 'Sample files required',
+                    required: "Sample files required",
                     validate: {
                       pairs: (v) => {
                         const sampleFiles = parseSampleFiles(v);
