@@ -219,6 +219,16 @@ export default function SubmissionsForm() {
                     isInvalid={metadataFileError.length || errors.metadataFile}
                     disabled={manualMetadata}
                   />
+                  <div>
+                    <div className="text-muted">
+                      Download the sample metadata template to fill in the metadata information related to the sample
+                      files. Only relevant fields are editable. Once completed, upload the file along with the sample
+                      files
+                    </div>
+                    <Button className="p-0" variant="link" href="/assets/data/Sample_metadata_template.xlsx" download>
+                      Download Metadata Template
+                    </Button>
+                  </div>
                   <Form.Control.Feedback type="invalid">{metadataFileError}</Form.Control.Feedback>
                 </Col>
               </Row>
