@@ -88,7 +88,7 @@ router.post("/user/register", async (request, response) => {
   await sendNotification({
     userManager,
     from: EMAIL_SENDER,
-    roleName: "admin",
+    roleName: "Admin",
     subject: "Methylscape User Account - Review Required",
     templateName: "admin-user-registration-review.html",
     params: {
