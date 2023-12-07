@@ -10,6 +10,7 @@ export const formState = atom({
     email: "",
     organizationId: "",
     organizationOther: "",
+    justification: "",
   },
 });
 
