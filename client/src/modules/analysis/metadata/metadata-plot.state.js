@@ -6,7 +6,7 @@ export const defaultFormState = {
   organSystem: "centralNervousSystem",
   embedding: "umap",
   search: [],
-  showAnnotations: true,
+  showAnnotations: false,
   color: "nciMetric",
 };
 
