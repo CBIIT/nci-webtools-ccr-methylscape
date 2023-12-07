@@ -1,4 +1,4 @@
-import { Container, Card, Form, Row, Col, Button, ProgressBar, OverlayTrigger, Tooltip } from "react-bootstrap";
+import { Container, Card, Form, Row, Col, Button, ProgressBar, OverlayTrigger, Tooltip, Alert } from "react-bootstrap";
 import { useRecoilValue, useRecoilRefresher_UNSTABLE } from "recoil";
 import { sessionState } from "../session/session.state";
 import { submissionsSelector } from "./submissions.state";
@@ -498,6 +498,18 @@ export default function SubmissionsForm() {
             {progressLabel}
             {progress > 0 && <ProgressBar className="w-100" now={progress} label={`${progress}%`} />}
           </div>
+
+          <Alert variant="primary">
+            <p>
+              By using this tool I agree that the anonymous methylation and clinical data may be used for future
+              improvement of the classifying algorithm.
+            </p>
+            <p className="mb-0">
+              Classification using methylation profiling is a tool designed to assist with the diagnosis Central Nervous
+              System tumors. Results should be interpreted within the context of the clinical, pathologic, and molecular
+              features in each case by qualified pathologist.
+            </p>
+          </Alert>
           <Row className="justify-content-center mt-3">
             <Col sm="auto">
               <Button variant="primary" type="submit">
