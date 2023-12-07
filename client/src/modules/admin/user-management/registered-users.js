@@ -94,10 +94,7 @@ export default function RegisterUsers() {
       Header: "Name",
       accessor: "firstName",
       Cell: (e) => (
-        <div
-          style={{
-            textAlign: "left",
-          }}>
+        <div style={{ textAlign: "left" }}>
           {e.row.original.lastName}, {e.value}
         </div>
       ),
@@ -105,26 +102,12 @@ export default function RegisterUsers() {
     {
       Header: "Type",
       accessor: "accountType",
-      Cell: (e) => (
-        <div
-          style={{
-            textAlign: "left",
-          }}>
-          {e.value || "NA"}
-        </div>
-      ),
+      Cell: (e) => <div style={{ textAlign: "left" }}>{e.value || "NA"}</div>,
     },
     {
       Header: "Email",
       accessor: "email",
-      Cell: (e) => (
-        <div
-          style={{
-            textAlign: "left",
-          }}>
-          {e.value}
-        </div>
-      ),
+      Cell: (e) => <div style={{ textAlign: "left" }}>{e.value}</div>,
     },
     {
       Header: "Organization",
@@ -134,10 +117,7 @@ export default function RegisterUsers() {
         other: e.organizationOther,
       }),
       Cell: ({ value }) => (
-        <div
-          style={{
-            textAlign: "left",
-          }}>
+        <div style={{ textAlign: "left" }}>
           {value.name} {value.id === 1 && value.other && `(${value.other})`}
         </div>
       ),
@@ -145,38 +125,22 @@ export default function RegisterUsers() {
     {
       Header: "Status",
       accessor: "status",
-      Cell: (e) => (
-        <div
-          style={{
-            textAlign: "left",
-          }}>
-          {e.value}
-        </div>
-      ),
+      Cell: (e) => <div style={{ textAlign: "left" }}>{e.value}</div>,
+    },
+    {
+      Header: "Justification",
+      accessor: "justification",
+      Cell: (e) => <div style={{ textAlign: "left" }}>{e.value}</div>,
     },
     {
       Header: "Submitted Date",
       accessor: "createdAt",
-      Cell: (e) => (
-        <div
-          style={{
-            textAlign: "left",
-          }}>
-          {new Date(e.value).toLocaleDateString()}
-        </div>
-      ),
+      Cell: (e) => <div style={{ textAlign: "left" }}>{new Date(e.value).toLocaleDateString()}</div>,
     },
     showRejectedUsers && {
       Header: "Notes",
       accessor: "notes",
-      Cell: (e) => (
-        <div
-          style={{
-            textAlign: "left",
-          }}>
-          {e.value}
-        </div>
-      ),
+      Cell: (e) => <div style={{ textAlign: "left" }}>{e.value}</div>,
     },
     {
       Header: "Actions",

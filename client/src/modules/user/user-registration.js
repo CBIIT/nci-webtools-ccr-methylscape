@@ -115,7 +115,7 @@ export default function UserRegister() {
           </Form.Group>
 
           <Form.Group className="mb-3" controlId="email">
-            <Form.Label>Email address</Form.Label>
+            <Form.Label>Email Address</Form.Label>
             <Form.Control
               type="email"
               name="email"
@@ -152,17 +152,23 @@ export default function UserRegister() {
                 className="mt-2"
               />
             )}
+          </Form.Group>
 
-            {/* <Form.Control
-              type="text"
-              name="organizationOther"
-              placeholder="Enter Organization/Instituiton"
-              value={form.organizationOther}
+          <Form.Group className="mb-3" controlId="justification">
+            <Form.Label>Justification for Access</Form.Label>
+            <Form.Control
+              as="textarea"
+              name="justification"
+              placeholder="Justification for access"
+              value={form.justification}
               onChange={handleChange}
               required
-              className="mt-2"
-              disabled={+form.organizationId === 1 ? '' : 'disabled'}
-            /> */}
+            />
+            <Form.Text className="text-muted">
+              Please provide justification for access to Methylscape. You may include details such as your referer,
+              organization, or sponsor. Failure to provide detailed justification may delay the approval of your
+              account.
+            </Form.Text>
           </Form.Group>
           <Row className="d-grid gap-2 col-6 mx-auto">
             <Button variant="primary" type="submit" className="btn-lg">

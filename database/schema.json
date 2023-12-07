@@ -177,6 +177,7 @@
       { "name": "status", "type": "text", "options": ["default 'pending'"] },
       { "name": "receiveNotification", "type": "boolean", "options": ["default true"] },
       { "name": "notes", "type": "text" },
+      { "name": "justification", "type": "text" },
       { "name": "createdAt", "type": "timestamp", "options": ["default CURRENT_TIMESTAMP"] },
       { "name": "updatedAt", "type": "timestamp", "options": ["default CURRENT_TIMESTAMP"] },
       { "name": "createdBy", "type": "text", "options": ["default 'system'"] },
@@ -188,7 +189,7 @@
     "columns": [
       { "name": "id", "type": "serial", "constraints": ["primary key"] },
       { "name": "uuid", "type": "text", "constraints": ["not null"] },
-      { "name": "userId", "type": "integer", "constraints": ["references user"] },
+      { "name": "userId", "type": "integer", "constraints": ["references \"user\""] },
       { "name": "organizationId", "type": "integer", "constraints": ["references organization"] },
       { "name": "submissionName", "type": "text", "constraints": ["not null"] },
       { "name": "investigator", "type": "text", "constraints": ["not null"] },

@@ -95,6 +95,7 @@ router.post("/user/register", async (request, response) => {
       userLastName: results.lastName,
       userFirstName: results.firstName,
       userEmail: results.email,
+      userJustification: results.justification,
       organizationName: [results.organizationName, results.organizationId === 1 && `(${results.organizationOther})`]
         .filter(Boolean)
         .join(" "),
