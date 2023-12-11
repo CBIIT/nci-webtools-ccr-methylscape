@@ -1,0 +1,2 @@
+ALTER TABLE "rolePolicy" DROP CONSTRAINT "rolePolicy_pkey", ADD PRIMARY KEY("roleId", "action", "resource");
+ALTER TABLE "organization" ADD COLUMN IF NOT EXISTS "organSystem" JSON DEFAULT '[{"label":"Central Nervous System", "value":"centralNervousSystem"}]'
