@@ -1,6 +1,7 @@
 import { parse } from "csv-parse";
 import copyStreams from "pg-copy-streams";
 import format from "pg-format";
+import fsp from "fs/promises";
 
 export const COMMANDS = {
   createSchema,
@@ -10,6 +11,7 @@ export const COMMANDS = {
   copyTable,
   importTable,
   upsertTable,
+  runSqlScript,
 };
 
 export async function runTask(task, commands = COMMANDS) {
@@ -112,6 +114,12 @@ export async function upsertTable({ connection, schema, source, target, columns,
     conflictTarget
   );
   return await connection.query(upsertStatement);
+}
+
+export async function runSqlScript({ connection, file }) {
+  const sql = await fsp.readFile(file, "utf-8");
+  console.log(sql);
+  return await connection.query(sql);
 }
 
 export async function getColumns(inputStream, options) {

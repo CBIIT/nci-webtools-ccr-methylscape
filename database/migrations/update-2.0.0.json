@@ -1,5 +1,10 @@
 [
   {
+    "command": "runSqlScript",
+    "description": "Alter tables with new columns",
+    "file": "./migrations/update-2.0.0.sql"
+  },
+  {
     "command": "recreateTables",
     "description": "Recreate tables",
     "tables": ["submissions", "userSamples"]
