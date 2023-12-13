@@ -494,7 +494,7 @@ export default function SubmissionsForm() {
             </div>
           )}
 
-          <div className="text-center">
+          <div className="text-center my-3">
             {progressLabel}
             {progress > 0 && <ProgressBar className="w-100" now={progress} label={`${progress}%`} />}
           </div>
