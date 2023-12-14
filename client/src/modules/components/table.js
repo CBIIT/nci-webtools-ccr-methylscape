@@ -1,6 +1,6 @@
 import { useMemo, forwardRef, useRef, useEffect, Fragment } from "react";
 import BootstrapTable from "react-bootstrap/Table";
-import { Form, InputGroup, Pagination, Row, Col, Dropdown, Button } from "react-bootstrap";
+import { Form, InputGroup, Pagination, Container, Row, Col, Dropdown, Button } from "react-bootstrap";
 import { useTable, useFilters, usePagination, useSortBy, useRowSelect, useExpanded } from "react-table";
 import debounce from "lodash/debounce";
 import "./table.scss";
@@ -241,67 +241,64 @@ export default function Table({
         </BootstrapTable>
       </div>
 
-      <div className="d-flex flex-wrap align-items-center justify-content-between p-3">
-        {/* <div>
-          Showing rows {(1 + pageIndex * pageSize).toLocaleString()}-
-          {Math.min(rows.length, (pageIndex + 1) * pageSize).toLocaleString()} of {rows.length.toLocaleString()}
-        </div> */}
-        <div>
-          Total of {rows.length.toLocaleString()} {name || "rows"}
-        </div>
-        {!customOptions?.hidePagination && (
-          <div className="d-flex flex-row justify-content-end my-auto text-primary">
-            <div className="d-flex align-items-center">
-              <Form.Control
-                as="select"
-                className="rounded-0 btn-border-sample-blue px-4"
-                name="select-page-size"
-                aria-label="Select page size"
-                value={pageSize}
-                onChange={(e) => setPageSize(Number(e.target.value))}>
-                {[10, 25, 50, 100].map((pageSize) => (
-                  <option key={pageSize} value={pageSize} defaultValue={25}>
-                    Show {pageSize}
-                  </option>
-                ))}
-              </Form.Control>
-            </div>
-            <div className="d-flex align-items-center">{/* {(1 + pageIndex * pageSize).toLocaleString()} */}</div>
-            <div className="d-flex">
-              <Pagination aria-label="Previous" className="border border-0">
-                <Pagination.First onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
-                  {"<<"}
-                </Pagination.First>
-                <Pagination.Prev onClick={() => previousPage()} disabled={!canPreviousPage} className="border border-0">
-                  Previous
-                </Pagination.Prev>
-                <Pagination.Next onClick={() => nextPage()} disabled={!canNextPage}>
-                  Next
-                </Pagination.Next>
-                <Pagination.Last onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage}>
-                  {">>"}
-                </Pagination.Last>
-              </Pagination>
-            </div>
-            <div className="d-flex ps-2 pb-1 align-items-center">
-              {/* {rows.length.toLocaleString()} */}
-              {/* Page {pageIndex + 1} of {pageOptions.length} */}
-              Page &nbsp;
-              <input
-                type="number"
-                // defaultValue={pageIndex + 1}
-                value={pageIndex + 1}
-                onChange={(e) => {
-                  const page = e.target.value ? Number(e.target.value) - 1 : 0;
-                  gotoPage(page);
-                }}
-                style={paginationInput}
-              />
-              &nbsp; of {pageOptions.length}
-            </div>
-          </div>
-        )}
-      </div>
+      <Container className="p-3">
+        <Row className="align-items-center">
+          <Col sm="auto" className="flex-grow-1 align-self-center">
+            Total of {rows.length.toLocaleString()} {name || "rows"}
+          </Col>
+          {!customOptions?.hidePagination && (
+            <>
+              <Col sm="auto">
+                <Form.Control
+                  as="select"
+                  className="rounded-0 btn-border-sample-blue px-4"
+                  name="select-page-size"
+                  aria-label="Select page size"
+                  value={pageSize}
+                  onChange={(e) => setPageSize(Number(e.target.value))}>
+                  {[10, 25, 50, 100].map((pageSize) => (
+                    <option key={pageSize} value={pageSize} defaultValue={25}>
+                      Show {pageSize}
+                    </option>
+                  ))}
+                </Form.Control>
+              </Col>
+              <Col sm="auto">
+                <Pagination aria-label="Previous" className="border border-0">
+                  <Pagination.First onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
+                    {"<<"}
+                  </Pagination.First>
+                  <Pagination.Prev
+                    onClick={() => previousPage()}
+                    disabled={!canPreviousPage}
+                    className="border border-0">
+                    Previous
+                  </Pagination.Prev>
+                  <Pagination.Next onClick={() => nextPage()} disabled={!canNextPage}>
+                    Next
+                  </Pagination.Next>
+                  <Pagination.Last onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage}>
+                    {">>"}
+                  </Pagination.Last>
+                </Pagination>
+              </Col>
+              <Col sm="auto" className="text-primary">
+                Page{" "}
+                <input
+                  type="number"
+                  value={pageIndex + 1}
+                  onChange={(e) => {
+                    const page = e.target.value ? Number(e.target.value) - 1 : 0;
+                    gotoPage(page);
+                  }}
+                  style={paginationInput}
+                />{" "}
+                of {pageOptions.length}
+              </Col>
+            </>
+          )}
+        </Row>
+      </Container>
     </>
   );
 }

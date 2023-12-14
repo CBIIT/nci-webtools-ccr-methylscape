@@ -123,7 +123,7 @@ export default function SubmissionsForm() {
     <Container fluid="xxl">
       <h3 className="text-white mb-3">Submit Samples</h3>
       <Card className="bg-light p-3 d-flex ">
-        <Form onSubmit={handleSubmit(onSubmit)} className="mx-auto" style={{ width: "700px" }}>
+        <Form onSubmit={handleSubmit(onSubmit)} className="mx-auto" style={{ maxWidth: "700px" }}>
           <Form.Group controlId="organization" className="my-3">
             <Row>
               <Col sm="3">
@@ -511,12 +511,12 @@ export default function SubmissionsForm() {
             </p>
           </Alert>
           <Row className="justify-content-center mt-3">
-            <Col sm="auto">
+            <Col xs="auto">
               <Button variant="primary" type="submit">
                 Submit
               </Button>
             </Col>
-            <Col sm="auto">
+            <Col xs="auto">
               <Button
                 variant="secondary"
                 onClick={() => {
@@ -527,7 +527,7 @@ export default function SubmissionsForm() {
                 Reset
               </Button>
             </Col>
-            <Col sm="auto">
+            <Col xs="auto">
               <Button
                 variant="danger"
                 onClick={() => {
