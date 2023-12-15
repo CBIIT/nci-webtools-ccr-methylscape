@@ -181,6 +181,6 @@ export function sampleFilePairs(files) {
 
 export async function parseExcelToCsv(file) {
   const workbook = new Excel.Workbook();
-  await workbook.xlsx.read(file.stream(), { rawNumbers: true });
+  await workbook.xlsx.load(await file.arrayBuffer());
   return (await workbook.csv.writeBuffer()).toString();
 }
