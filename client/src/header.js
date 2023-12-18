@@ -20,10 +20,10 @@ export default function Header() {
           <Col>
             <a href="https://ccr.cancer.gov/" target="_blank" className="h5 mb-1" rel="noreferrer">
               <img
-                src="/assets/images/nci-ccr-logo.png"
+                src="/assets/images/nci-ccr-logo.svg"
                 className="img-fluid my-3"
                 alt="National Cancer Institute"
-                style={{ height: "auto", maxWidth: "100%" }}
+                style={{ height: "56px", maxWidth: "100%" }}
               />
               <span className="visually-hidden">Center for Cancer Research Methylscape Analysis</span>
             </a>
