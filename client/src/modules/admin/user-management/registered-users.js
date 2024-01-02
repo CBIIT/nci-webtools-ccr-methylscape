@@ -200,7 +200,10 @@ export default function RegisterUsers() {
           <Form onSubmit={handleSubmit(handleApproveSubmit)}>
             <Modal.Header closeButton>
               <Modal.Title>
-                Set User Role and Organization: {user.firstName}, {user.lastName}
+                <div>Set User Role and Organization:</div>
+                <div>
+                  {user.firstName}, {user.lastName}
+                </div>
               </Modal.Title>
             </Modal.Header>
             <Modal.Body>
