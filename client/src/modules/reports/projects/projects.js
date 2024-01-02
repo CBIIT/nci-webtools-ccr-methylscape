@@ -117,7 +117,7 @@ export default function Projects() {
               data={tableData}
               columns={columns}
               options={{ initialState, stateReducer }}
-              customOptions={{ rowSelectRadio: true }}
+              customOptions={{ rowSelectRadio: true, hideColumns: true }}
             />
           )}
         </Col>

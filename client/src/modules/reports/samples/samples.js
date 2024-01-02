@@ -163,7 +163,7 @@ export default function Samples() {
               data={tableData}
               columns={tableColumns}
               options={{ initialState, stateReducer }}
-              customOptions={{ expanded: true, hideColumns: true }}
+              customOptions={{ expanded: true }}
               renderRowSubComponent={renderRowSubComponent}
             />
           )}
