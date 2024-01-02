@@ -196,11 +196,13 @@ router.get("/submissions/report/:type", requiresRouteAccessPolicy("AccessApi"), 
   } else {
     const query = connection("submissions")
       .leftJoin("user", "submissions.userId", "user.id")
+      .leftJoin("organization", "submissions.organizationId", "organization.id")
       .select(
         connection.raw(`"user"."firstName" || ' ' || "user"."lastName" as submitter`),
+        "organization.name as organizationName",
         connection.raw(`count("submissions"."id") as "submissionsCount"`)
       )
-      .groupBy(["submitter", "submissions.userId"]);
+      .groupBy(["submitter", "organizationName", "submissions.userId"]);
     response.json(await query);
   }
 });

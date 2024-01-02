@@ -16,7 +16,10 @@ export const reportSelector = selectorFamily({
     },
 });
 
-export const submissionsReportColumns = [{ accessor: "submissionsCount", Header: "Submissions", show: true }];
+export const submissionsReportColumns = [
+  { accessor: "organizationName", Header: "Organization", show: true },
+  { accessor: "submissionsCount", Header: "Submissions", show: true },
+];
 
 export const defaultReportTableState = {
   hiddenColumns: submissionsReportColumns.filter((c) => c.show === false).map((c) => c.accessor),

@@ -14,13 +14,9 @@ export default function SubmissionsReport() {
     return newState;
   };
   const columns = [
-    ...(type === "user"
-      ? [{ accessor: "submitter", Header: "User", show: true }]
-      : [{ accessor: "organizationName", Header: "Organization", show: true }]),
-
+    ...(type === "user" ? [{ accessor: "submitter", Header: "User", show: true }] : []),
     ...submissionsReportColumns,
   ];
-
   return (
     <>
       <Container>
@@ -34,10 +30,10 @@ export default function SubmissionsReport() {
             <Col className="d-flex">
               <Form.Label className="me-3">Group By</Form.Label>
               <ButtonGroup aria-label="report-type">
-                <Button variant="secondary" onClick={() => setType("user")} active={type === "user"}>
+                <Button variant="success" onClick={() => setType("user")} active={type === "user"}>
                   User
                 </Button>
-                <Button variant="secondary" onClick={() => setType("organization")} active={type === "organization"}>
+                <Button variant="success" onClick={() => setType("organization")} active={type === "organization"}>
                   Organization
                 </Button>
               </ButtonGroup>
