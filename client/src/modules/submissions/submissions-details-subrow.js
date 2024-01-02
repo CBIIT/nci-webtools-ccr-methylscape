@@ -74,7 +74,7 @@ export default function SubmissionsDetails({ submissionData }) {
               data={details}
               columns={columns}
               options={{ initialState, stateReducer }}
-              customOptions={{ hideColumns: true, hidePagination: false }}
+              customOptions={{ hidePagination: false }}
             />
           </Card.Body>
         )}

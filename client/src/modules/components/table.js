@@ -151,7 +151,7 @@ export default function Table({
           </Col>
         )}
         <Col sm="auto" className="me-3">
-          {customOptions.hideColumns && (
+          {!customOptions.hideColumns && (
             <Dropdown>
               <Dropdown.Toggle variant="success" size="sm" id={`toggle-umap-columns`}>
                 Columns
