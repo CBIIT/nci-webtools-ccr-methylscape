@@ -109,10 +109,10 @@ export default function SubmissionsList() {
               <Col className="d-flex">
                 <Form.Label className="me-3">Sort By</Form.Label>
                 <ButtonGroup aria-label="Sort">
-                  <Button variant="secondary" onClick={() => setSort("recent")} active={sortCol === "recent"}>
+                  <Button variant="success" onClick={() => setSort("recent")} active={sortCol === "recent"}>
                     Recent
                   </Button>
-                  <Button variant="secondary" onClick={() => setSort("status")} active={sortCol === "status"}>
+                  <Button variant="success" onClick={() => setSort("status")} active={sortCol === "status"}>
                     Status
                   </Button>
                 </ButtonGroup>
