@@ -19,9 +19,6 @@ const validateForm = () => {
     "metadata.*.diagnosis": { notEmpty: true, errorMessage: "Diagnosis missing from metadata" },
     "metadata.*.age": { notEmpty: true, errorMessage: "Age missing from metadata" },
     "metadata.*.tumorSite": { notEmpty: true, errorMessage: "Tumor site missing from metadata" },
-    "submission.experiment": {
-      customSanitizer: { options: (value, { req }) => value || req.body.metadata?.[0].sentrixId },
-    },
   });
 };
 

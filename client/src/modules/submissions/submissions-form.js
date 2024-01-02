@@ -327,7 +327,7 @@ export default function SubmissionsForm() {
                     <Form.Control
                       {...register("experiment")}
                       size="sm"
-                      placeholder="Enter Experiment Name (Will use Sentrix ID if left blank)"
+                      placeholder="Enter Experiment Name"
                     />
                   </Col>
                 </Row>
