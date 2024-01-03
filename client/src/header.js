@@ -43,6 +43,11 @@ export default function Header() {
             </InputGroup>
           </Col>
         </Row>
+        <Row className="bg-primary text-white py-2">
+          <Col sm="auto">
+            <h5>Methylscape Analysis</h5>
+          </Col>
+        </Row>
       </Container>
     </header>
   );
