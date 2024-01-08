@@ -16,5 +16,5 @@ aws s3api list-objects --bucket $SOURCE_BUCKET --prefix $SOURCE_PREFIX --query "
 
 # copy files from source s3 folder to destination local folder
 while read line; do
-  aws s3 sync s3://$SOURCE_BUCKET/$SOURCE_PREFIX $DESTINATION --exclude "*" --include "$line" --profile $AWS_PROFILE
+  aws s3 sync s3://$SOURCE_BUCKET/$SOURCE_PREFIX $DESTINATION --exclude "*" --include "${line//$SOURCE_PREFIX}" --profile $AWS_PROFILE
 done < include-files.txt
