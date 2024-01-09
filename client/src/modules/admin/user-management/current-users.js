@@ -201,7 +201,10 @@ export default function CurrentUsers() {
           <Form onSubmit={handleFormSubmit}>
             <Modal.Header closeButton>
               <Modal.Title>
-                Edit User: {form.firstName}, {form.lastName}
+                <div>Edit User:</div>
+                <div>
+                  {form.firstName}, {form.lastName}
+                </div>
               </Modal.Title>
             </Modal.Header>
             <Modal.Body>
