@@ -128,7 +128,7 @@ export function parseForm(data, session, sampleFiles) {
     ownerInfo: {
       investigator: `${session.user.firstName} ${session.user.lastName}`,
       project: data.project,
-      experiment: data.experiment || sampleFiles[0].id,
+      experiment: data.experiment,
       date: new Date(),
     },
     metadata: [
