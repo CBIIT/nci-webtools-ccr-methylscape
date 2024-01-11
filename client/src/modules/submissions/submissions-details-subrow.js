@@ -66,7 +66,7 @@ export default function SubmissionsDetails({ submissionData }) {
               </Col>
               <Col sm>
                 <Form.Label>Experiment</Form.Label>
-                <div>{submissionData.experiment}</div>
+                <div>{submissionData.experiment ?? "N/A"}</div>
               </Col>
             </Row>
             <Table
