@@ -18,7 +18,7 @@ suppressMessages(library(e1071))
 suppressMessages(library(IlluminaHumanMethylationEPICanno.ilm10b4.hg19))
 set.seed(123)
 
-print(renv::status())
+# print(renv::status())
 
 source(file.path("files/RSpectra_pca.R"))
 source("files/methylclassifierpackage_source.R")
@@ -95,7 +95,10 @@ if( manifest == "IlluminaHumanMethylationEPICv2" ){
 }else if( manifest == "IlluminaHumanMethylationEPIC"){
   message("EPICv1 is the old friend better than 10 new ones.");
   MSet   <- preprocessNoob(RGset,dyeMethod = "single");
-}else{
+} else if ( manifest == "Unknown" ) {
+  RGset@annotation['array']<-"IlluminaHumanMethylationEPICv2"
+  RGset@annotation['annotation']<-"ilm10b4.hg19"
+} else {
   message("Your chip is may be not quite right: ", manifest);
   MSet   <- preprocessNoob(RGset,dyeMethod = "single");
 };

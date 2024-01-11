@@ -442,6 +442,21 @@
       ],
       "Hash": "ce8b29912b1b14c04f4381d38b22b161"
     },
+    "IlluminaHumanMethylationEPICv2manifest": {
+      "Package": "IlluminaHumanMethylationEPICv2manifest",
+      "Version": "0.1.0",
+      "Source": "GitHub",
+      "RemoteType": "github",
+      "RemoteHost": "api.github.com",
+      "RemoteUsername": "mwsill",
+      "RemoteRepo": "IlluminaHumanMethylationEPICv2manifest",
+      "RemoteRef": "main",
+      "RemoteSha": "c7bec9c790a89ea8671189ef706a336d35e7addf",
+      "Requirements": [
+        "R"
+      ],
+      "Hash": "c4f361d6d7b8d1dd55c796db930363b0"
+    },
     "KEGGREST": {
       "Package": "KEGGREST",
       "Version": "1.34.0",
@@ -954,6 +969,18 @@
         "vctrs"
       ],
       "Hash": "40415719b5a479b87949f3aa0aee737c"
+    },
+    "boot": {
+      "Package": "boot",
+      "Version": "1.3-28",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "R",
+        "graphics",
+        "stats"
+      ],
+      "Hash": "0baa960e3b49c6176a4f42addcbacc59"
     },
     "brglm": {
       "Package": "brglm",
@@ -1593,6 +1620,19 @@
         "utils"
       ],
       "Hash": "618609b42c9406731ead03adf5379850"
+    },
+    "foreign": {
+      "Package": "foreign",
+      "Version": "0.8-82",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "R",
+        "methods",
+        "stats",
+        "utils"
+      ],
+      "Hash": "32b25c97ce306a760c4d9f787991b5d9"
     },
     "formatR": {
       "Package": "formatR",
@@ -2439,8 +2479,14 @@
     },
     "minfi": {
       "Package": "minfi",
-      "Version": "1.40.0",
-      "Source": "Bioconductor",
+      "Version": "1.43.1",
+      "Source": "GitHub",
+      "RemoteType": "github",
+      "RemoteHost": "api.github.com",
+      "RemoteUsername": "mwsill",
+      "RemoteRepo": "minfi",
+      "RemoteRef": "master",
+      "RemoteSha": "a5c555d4669c4abd2f9660858dfe73195e9fa77d",
       "Requirements": [
         "Biobase",
         "BiocGenerics",
@@ -2477,7 +2523,7 @@
         "stats",
         "utils"
       ],
-      "Hash": "fa60bb0961fcc6ea6a550c1fa189059f"
+      "Hash": "7b254975efff709c8f53dcb2ad380394"
     },
     "mlegp": {
       "Package": "mlegp",
@@ -3437,6 +3483,19 @@
         "methods"
       ],
       "Hash": "f8dd82d2581115df0ea380c91ed8b9f6"
+    },
+    "spatial": {
+      "Package": "spatial",
+      "Version": "7.3-15",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "R",
+        "graphics",
+        "stats",
+        "utils"
+      ],
+      "Hash": "c23666fdb7789c8a45e65340bb334607"
     },
     "statmod": {
       "Package": "statmod",
