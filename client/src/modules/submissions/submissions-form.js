@@ -15,13 +15,15 @@ export default function SubmissionsForm() {
   const [progress, setProgress] = useState(0);
   const [progressLabel, setProgressLabel] = useState("");
   const [invalidMetadata, setInvalidMetadata] = useState([]);
-  const [metadataFileError, setMetadataFileError] = useState("");
-  console.log(progress);
+  const [submitError, setSubmitError] = useState(false);
+
   const {
     register,
     handleSubmit,
     watch,
     reset,
+    setError,
+    clearErrors,
     formState: { errors },
   } = useForm();
 
@@ -111,11 +113,16 @@ export default function SubmissionsForm() {
           navigate("/submissions/list#success");
         } catch (error) {
           console.log(error);
+          if (error?.response?.data) {
+            setSubmitError(JSON.stringify(error.response.data, undefined, 2));
+          } else {
+            setSubmitError(error.message);
+          }
         }
       }
     } catch (error) {
       console.log(error);
-      setMetadataFileError(error);
+      setError("metadataFile", { type: "string", message: error });
     }
   }
 
@@ -216,7 +223,7 @@ export default function SubmissionsForm() {
                     size="sm"
                     type="file"
                     accept=".csv,.xlsx"
-                    isInvalid={metadataFileError.length || errors.metadataFile}
+                    isInvalid={errors.metadataFile}
                     disabled={manualMetadata}
                   />
                   <div>
@@ -229,7 +236,7 @@ export default function SubmissionsForm() {
                       Download Metadata Template
                     </Button>
                   </div>
-                  <Form.Control.Feedback type="invalid">{metadataFileError}</Form.Control.Feedback>
+                  <Form.Control.Feedback type="invalid">{errors.metadataFile?.message}</Form.Control.Feedback>
                 </Col>
               </Row>
             </Form.Group>
@@ -324,11 +331,7 @@ export default function SubmissionsForm() {
                     <Form.Label>Experiment Name</Form.Label>
                   </Col>
                   <Col sm="9">
-                    <Form.Control
-                      {...register("experiment")}
-                      size="sm"
-                      placeholder="Enter Experiment Name"
-                    />
+                    <Form.Control {...register("experiment")} size="sm" placeholder="Enter Experiment Name" />
                   </Col>
                 </Row>
               </Form.Group>
@@ -477,7 +480,7 @@ export default function SubmissionsForm() {
           )}
 
           {invalidMetadata.length > 0 && (
-            <div>
+            <Alert variant="danger">
               <b>Metadata validation failed</b>
               <div>Unable to find matching IDAT files for the samples in the metadata file.</div>
               <div>Please check the format of your metadata file.</div>
@@ -491,7 +494,13 @@ export default function SubmissionsForm() {
                   <li key={i}>{e}</li>
                 ))}
               </ul>
-            </div>
+            </Alert>
+          )}
+          {submitError && (
+            <Alert variant="danger">
+              <div>An error occurred during submission:</div>
+              <pre>{submitError}</pre>
+            </Alert>
           )}
 
           <div className="text-center my-3">
@@ -521,8 +530,9 @@ export default function SubmissionsForm() {
                 variant="secondary"
                 onClick={() => {
                   reset();
-                  setMetadataFileError("");
+                  clearErrors();
                   setInvalidMetadata("");
+                  setSubmitError(false);
                 }}>
                 Reset
               </Button>
