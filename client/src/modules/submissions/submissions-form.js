@@ -230,11 +230,18 @@ export default function SubmissionsForm() {
                     <div className="text-muted">
                       Download the sample metadata template to fill in the metadata information related to the sample
                       files. Only relevant fields are editable. Once completed, upload the file along with the sample
-                      files
+                      files. A file containing formatting rules is also provided and recommended for review.
                     </div>
-                    <Button className="p-0" variant="link" href="/assets/data/Sample_metadata_template.xlsx" download>
-                      Download Metadata Template
-                    </Button>
+                    <div>
+                      <Button className="p-0" variant="link" href="/assets/data/Sample_metadata_template.xlsx" download>
+                        Download Metadata Template
+                      </Button>
+                    </div>
+                    <div>
+                      <Button className="p-0" variant="link" href="/assets/data/Sample_sheet_README.xlsx" download>
+                        Download Metadata Format Rules
+                      </Button>
+                    </div>
                   </div>
                   <Form.Control.Feedback type="invalid">{errors.metadataFile?.message}</Form.Control.Feedback>
                 </Col>
