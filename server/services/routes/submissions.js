@@ -17,7 +17,6 @@ const validateForm = () => {
     "metadata.*.sentrixId": { notEmpty: true, errorMessage: "Sentrix ID missing from metadata" },
     "metadata.*.sentrixPosition": { notEmpty: true, errorMessage: "Sentrix position missing from metadata" },
     "metadata.*.diagnosis": { notEmpty: true, errorMessage: "Diagnosis missing from metadata" },
-    "metadata.*.age": { isNumeric: true, errorMessage: "Age must be a numeric value" },
     "metadata.*.tumorSite": { notEmpty: true, errorMessage: "Tumor site missing from metadata" },
   });
 };

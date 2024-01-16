@@ -56,7 +56,7 @@ export async function parseMetadata(file) {
     },
     Age: {
       name: "age",
-      required: true,
+      required: false,
     },
     Notes: {
       name: "notes",

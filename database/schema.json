@@ -220,7 +220,7 @@
       { "name": "sex", "type": "text" },
       { "name": "surgicalCase", "type": "text" },
       { "name": "diagnosis", "type": "text", "constraints": ["not null"] },
-      { "name": "age", "type": "double precision", "constraints": ["not null"] },
+      { "name": "age", "type": "double precision" },
       { "name": "notes", "type": "text" },
       { "name": "tumorSite", "type": "text", "constraints": ["not null"] },
       { "name": "piCollaborator", "type": "text" },
