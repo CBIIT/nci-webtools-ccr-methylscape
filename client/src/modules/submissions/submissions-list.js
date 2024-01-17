@@ -102,7 +102,7 @@ export default function SubmissionsList() {
                 <InputGroup>
                   <Form.Control placeholder="Search" onChange={(e) => setSearch(e.target.value)} />
                   <InputGroup.Text>
-                    <i class="bi bi-search"></i>
+                    <i className="bi bi-search"></i>
                   </InputGroup.Text>
                 </InputGroup>
               </Col>

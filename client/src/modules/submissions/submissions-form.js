@@ -134,7 +134,7 @@ export default function SubmissionsForm() {
                   Sample Files <span className="text-danger">*</span>
                   <OverlayTrigger overlay={<Tooltip>Accepts up to 200 sample files</Tooltip>}>
                     <span className="ms-1">
-                      <i class="bi bi-info-circle-fill"></i>
+                      <i className="bi bi-info-circle-fill"></i>
                     </span>
                   </OverlayTrigger>
                 </Form.Label>
