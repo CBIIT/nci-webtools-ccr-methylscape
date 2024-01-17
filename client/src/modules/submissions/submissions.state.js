@@ -78,4 +78,13 @@ export const defaultSubmissionDetailsTableState = {
 export const submissionDetailsTableState = atom({
   key: "submissionTableState",
   default: defaultSubmissionDetailsTableState,
+  error: "",
+  done: false,
+});
+
+export const defaultSubmissionFormState = { progress: -1, progressLabel: "" };
+
+export const submissionFormState = atom({
+  key: "submissionFormState",
+  default: defaultSubmissionFormState,
 });

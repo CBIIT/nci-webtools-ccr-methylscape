@@ -30,6 +30,7 @@ import Submissions from "./modules/submissions/submissions";
 import SubmissionsForm from "./modules/submissions/submissions-form";
 import SubmissionsList from "./modules/submissions/submissions-list";
 import SubmissionsReport from "./modules/admin/submissions-report/report";
+import TaskQueue from "./background-tasks.js";
 
 export default function App() {
   const session = useRecoilValue(sessionState);
@@ -103,7 +104,7 @@ export default function App() {
         <SessionRefreshModal />
         <Header />
         <Navbar linkGroups={navbarLinks} className="shadow-sm navbar-bottom-line" />
-
+        <TaskQueue />
         <ErrorBoundary
           fallback={
             <Alert variant="danger" className="m-5">

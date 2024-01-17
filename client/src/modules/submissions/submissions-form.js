@@ -1,21 +1,28 @@
 import { Container, Card, Form, Row, Col, Button, ProgressBar, OverlayTrigger, Tooltip, Alert } from "react-bootstrap";
-import { useRecoilValue, useRecoilRefresher_UNSTABLE } from "recoil";
+import { useRecoilValue, useRecoilState, useRecoilRefresher_UNSTABLE } from "recoil";
 import { sessionState } from "../session/session.state";
-import { submissionsSelector } from "./submissions.state";
+import { submissionsSelector, submissionFormState, defaultSubmissionFormState } from "./submissions.state";
+import { taskQueueState } from "../../background-tasks.state";
 import { useForm } from "react-hook-form";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { parseForm, parseMetadata, parseSampleFiles, sampleFilePairs } from "./submissions.utils";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 
 export default function SubmissionsForm() {
   const navigate = useNavigate();
   const session = useRecoilValue(sessionState);
   const refreshSubmissions = useRecoilRefresher_UNSTABLE(submissionsSelector);
-  const [progress, setProgress] = useState(0);
-  const [progressLabel, setProgressLabel] = useState("");
+  const [formState, setFormState] = useRecoilState(submissionFormState);
   const [invalidMetadata, setInvalidMetadata] = useState([]);
-  const [submitError, setSubmitError] = useState(false);
+  const [taskState, setTaskState] = useRecoilState(taskQueueState);
+
+  useEffect(() => {
+    if (formState.done) {
+      setFormState(defaultSubmissionFormState);
+      refreshSubmissions();
+      navigate("/submissions/list#success");
+    }
+  }, [formState.done]);
 
   const {
     register,
@@ -30,8 +37,11 @@ export default function SubmissionsForm() {
   const { manualMetadata } = watch();
 
   if (Object.keys(errors).length) console.log("errors", errors);
+
+  function addTask(params) {
+    setTaskState({ queue: [...taskState.queue, { task: "submission", params }] });
+  }
   async function onSubmit(data) {
-    console.log(data);
     // check sample files
     const sampleFiles = parseSampleFiles(data.sampleFiles);
 
@@ -40,7 +50,6 @@ export default function SubmissionsForm() {
         ? await parseMetadata(data.metadataFile[0])
         : parseForm(data, session, sampleFiles);
 
-      console.log(metadata);
       const checkInvalid = metadata
         .map((e) => {
           const id = e.sentrixId;
@@ -74,51 +83,8 @@ export default function SubmissionsForm() {
           status: "Initializing",
         };
         const submitData = { submission, metadata };
-
-        try {
-          const response = await axios.post(`/api/submissions/${uuid}`, submitData);
-          const { submissionsId } = response.data;
-
-          // do not upload files in parallel (minimize memory usage & time per upload)
-          let filesUploaded = 0;
-          let uploadFiles = [...data.metadataFile, ...data.sampleFiles];
-          for (const file of uploadFiles) {
-            const fileData = new FormData();
-            fileData.append("sampleFiles", file);
-            fileData.append("submissionsId", submissionsId);
-            await axios.post(`/api/submissions/${uuid}`, fileData);
-            filesUploaded++;
-            setProgress(Math.round((filesUploaded * 100) / uploadFiles.length));
-            setProgressLabel(`Uploaded ${filesUploaded} of ${uploadFiles.length} files`);
-          }
-
-          // execute classifier
-          await axios.get(`/api/submissions/run-classifier/${submissionsId}`);
-
-          // await Array.from(data.sampleFiles).reduce((promise, file, i) => {
-          //   const fileData = new FormData();
-          //   const config = {
-          //     onUploadProgress: function (progressEvent) {
-          //       const { loaded, total } = progressEvent;
-          //       const status = Math.round((loaded * 100) / total);
-          //       setProgress(status);
-          //     },
-          //   };
-          //   fileData.append("sampleFiles", file);
-          //   fileData.append("submissionsId", submissionsId);
-          //   return promise.then(() => axios.post(`/api/submissions/${uuid}`, fileData, config));
-          // }, Promise.resolve());
-
-          refreshSubmissions();
-          navigate("/submissions/list#success");
-        } catch (error) {
-          console.log(error);
-          if (error?.response?.data) {
-            setSubmitError(JSON.stringify(error.response.data, undefined, 2));
-          } else {
-            setSubmitError(error.message);
-          }
-        }
+        let uploadFiles = [...data.metadataFile, ...data.sampleFiles];
+        addTask({ submitData, uploadFiles });
       }
     } catch (error) {
       console.log(error);
@@ -503,16 +469,18 @@ export default function SubmissionsForm() {
               </ul>
             </Alert>
           )}
-          {submitError && (
+          {formState.error && (
             <Alert variant="danger">
               <div>An error occurred during submission:</div>
-              <pre>{submitError}</pre>
+              <pre>{formState.error}</pre>
             </Alert>
           )}
 
           <div className="text-center my-3">
-            {progressLabel}
-            {progress > 0 && <ProgressBar className="w-100" now={progress} label={`${progress}%`} />}
+            {formState.progressLabel}
+            {formState.progress > 0 && (
+              <ProgressBar className="w-100" now={formState.progress} label={`${formState.progress}%`} />
+            )}
           </div>
 
           <Alert variant="primary">
@@ -539,7 +507,6 @@ export default function SubmissionsForm() {
                   reset();
                   clearErrors();
                   setInvalidMetadata("");
-                  setSubmitError(false);
                 }}>
                 Reset
               </Button>
