@@ -480,7 +480,10 @@ export default function SubmissionsForm() {
           <div className="text-center my-3">
             {formState.progressLabel}
             {formState.progress > 0 && (
-              <ProgressBar className="w-100" now={formState.progress} label={`${formState.progress}%`} />
+              <>
+                <div>Please do not close this page while your upload is in progress.</div>
+                <ProgressBar className="w-100" now={formState.progress} label={`${formState.progress}%`} />
+              </>
             )}
           </div>
 
