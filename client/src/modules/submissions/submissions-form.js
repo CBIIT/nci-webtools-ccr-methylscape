@@ -41,6 +41,7 @@ export default function SubmissionsForm() {
   function addTask(params) {
     setTaskState({ queue: [...taskState.queue, { task: "submission", params }] });
   }
+
   async function onSubmit(data) {
     // check sample files
     const sampleFiles = parseSampleFiles(data.sampleFiles);
@@ -83,7 +84,7 @@ export default function SubmissionsForm() {
           status: "Initializing",
         };
         const submitData = { submission, metadata };
-        let uploadFiles = [...data.metadataFile, ...data.sampleFiles];
+        const uploadFiles = [...data.metadataFile, ...data.sampleFiles];
         addTask({ submitData, uploadFiles });
       }
     } catch (error) {

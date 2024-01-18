@@ -1,6 +1,7 @@
 import { parse } from "papaparse";
 import { groupBy } from "lodash";
 import Excel from "exceljs";
+import moment from "moment";
 
 export async function parseMetadata(file) {
   const infoKeys = {
@@ -29,6 +30,7 @@ export async function parseMetadata(file) {
     Pool_ID: {
       name: "poolId",
       required: false,
+      validate: invalidDate,
     },
     Sentrix_ID: {
       name: "sentrixId",
@@ -77,8 +79,17 @@ export async function parseMetadata(file) {
     Surgery_date: {
       name: "surgeryDate",
       required: false,
+      validate: invalidDate,
     },
   };
+
+  function invalidDate(date) {
+    if (!moment(date, "MM-DD-YYYY", true).isValid()) {
+      return `${date} is not a valid date format. Dates must be recorded in MM-DD-YYYY`;
+    } else {
+      return false;
+    }
+  }
 
   const text =
     file.name.split(".")[1] === "csv"
@@ -101,6 +112,10 @@ export async function parseMetadata(file) {
           }
           if (column.required && !val) {
             throw `Missing required values for column: ${key}. Please update your metadata file to include these values.`;
+          }
+          if (column.validate) {
+            const status = column.validate(val);
+            if (status) throw status;
           }
           return [metadataKeys[key].name, val];
         })
@@ -129,7 +144,7 @@ export function parseForm(data, session, sampleFiles) {
       investigator: `${session.user.firstName} ${session.user.lastName}`,
       project: data.project,
       experiment: data.experiment,
-      date: new Date(),
+      date: moment().format("MM-DD-YYYY"),
     },
     metadata: [
       {
@@ -137,7 +152,7 @@ export function parseForm(data, session, sampleFiles) {
         sampleWell: data.sampleWell,
         samplePlate: data.samplePlate,
         sampleGroup: data.sampleGroup,
-        poolId: data.poolId,
+        poolId: moment(data.poolId).format("MM-DD-YYYY"),
         sentrixId: sampleFiles[0].id,
         sentrixPosition: sampleFiles[0].position,
         materialType: data.materialType,
@@ -149,7 +164,7 @@ export function parseForm(data, session, sampleFiles) {
         tumorSite: data.tumorSite,
         piCollaborator: data.piCollaborator,
         outsideId: data.outsideId,
-        surgeryDate: data.surgeryDate,
+        surgeryDate: moment(data.surgeryDate).format("MM-DD-YYYY"),
       },
     ],
   };
@@ -181,6 +196,7 @@ export function sampleFilePairs(files) {
 
 export async function parseExcelToCsv(file) {
   const workbook = new Excel.Workbook();
-  await workbook.xlsx.load(await file.arrayBuffer());
-  return (await workbook.csv.writeBuffer()).toString();
+  const options = { dateFormats: ["MM-DD-YYYY"], dateFormat: "MM-DD-YYYY" };
+  await workbook.xlsx.load(await file.arrayBuffer(), options);
+  return (await workbook.csv.writeBuffer(options)).toString();
 }
