@@ -169,7 +169,7 @@ export default function SubmissionsForm() {
           </div>
           <div>
             <h4>Example</h4>
-            <Table striped bordered responsive size="sm">
+            <Table bordered responsive size="sm">
               <thead>
                 <tr>
                   <th>[Header]</th>
