@@ -22,6 +22,7 @@ export default function TaskQueue() {
     const { submitData, uploadFiles } = params;
     const { uuid } = submitData.submission;
     try {
+      updateForm({ status: "IN_PROGRESS" });
       const response = await axios.post(`/api/submissions/${uuid}`, submitData);
       const { submissionsId } = response.data;
 
@@ -40,15 +41,15 @@ export default function TaskQueue() {
       }
       // execute classifier
       await axios.get(`/api/submissions/run-classifier/${submissionsId}`);
-      updateForm({ done: true });
+      updateForm({ status: "COMPLETED" });
     } catch (error) {
       console.log(error);
       if (error?.response?.data) {
-        updateForm({ error: JSON.stringify(error.response.data, undefined, 2) });
+        updateForm({ error: JSON.stringify(error.response.data, undefined, 2), status: "" });
       } else if (error?.message) {
-        updateForm({ error: error.message });
+        updateForm({ error: error.message, status: "" });
       } else {
-        updateForm({ error: "Unknown error" });
+        updateForm({ error: "Unknown error", status: "" });
       }
     }
   }

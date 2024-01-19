@@ -17,12 +17,12 @@ export default function SubmissionsForm() {
   const [taskState, setTaskState] = useRecoilState(taskQueueState);
 
   useEffect(() => {
-    if (formState.done) {
+    if (formState.status === "COMPLETED") {
       setFormState(defaultSubmissionFormState);
       refreshSubmissions();
       navigate("/submissions/list#success");
     }
-  }, [formState.done]);
+  }, [formState.status]);
 
   const {
     register,
@@ -40,6 +40,12 @@ export default function SubmissionsForm() {
 
   function addTask(params) {
     setTaskState({ queue: [...taskState.queue, { task: "submission", params }] });
+  }
+
+  function handleReset() {
+    reset();
+    clearErrors();
+    setInvalidMetadata("");
   }
 
   async function onSubmit(data) {
@@ -121,6 +127,7 @@ export default function SubmissionsForm() {
                   size="sm"
                   isInvalid={errors?.submissionName}
                   maxLength={80}
+                  disabled={formState.status}
                 />
                 <Form.Control.Feedback type="invalid">
                   {errors?.submissionName && errors.submissionName.message}
@@ -171,6 +178,7 @@ export default function SubmissionsForm() {
                   multiple
                   accept=".idat"
                   isInvalid={errors?.sampleFiles}
+                  disabled={formState.status}
                 />
                 <Form.Control.Feedback className="d-block" type="invalid">
                   {errors?.sampleFiles && errors.sampleFiles.message}
@@ -191,7 +199,7 @@ export default function SubmissionsForm() {
                     type="file"
                     accept=".csv,.xlsx"
                     isInvalid={errors.metadataFile}
-                    disabled={manualMetadata}
+                    disabled={manualMetadata || formState.status}
                   />
                   <Button
                     className="p-0"
@@ -209,9 +217,7 @@ export default function SubmissionsForm() {
               {...register("manualMetadata")}
               type="checkbox"
               label={"Enter Sample Metadata here"}
-              // onChange={(e) => {
-              //   e.target.checked ? setValue
-              // }}
+              disabled={formState.status}
             />
             <p className="text-muted">Use this option if you are uploading a single sample without a metadata file.</p>
           </Form.Group>
@@ -231,6 +237,7 @@ export default function SubmissionsForm() {
                       size="sm"
                       isInvalid={errors?.sample}
                       maxLength={80}
+                      disabled={formState.status}
                     />
                     <Form.Control.Feedback type="invalid">
                       {errors?.sample && errors.sample.message}
@@ -251,6 +258,7 @@ export default function SubmissionsForm() {
                       size="sm"
                       isInvalid={errors?.tumorSite}
                       maxLength={80}
+                      disabled={formState.status}
                     />
                     <Form.Control.Feedback type="invalid">
                       {errors?.tumorSite && errors.tumorSite.message}
@@ -271,6 +279,7 @@ export default function SubmissionsForm() {
                       size="sm"
                       isInvalid={errors?.diagnosis}
                       maxLength={80}
+                      disabled={formState.status}
                     />
                     <Form.Control.Feedback type="invalid">
                       {errors?.diagnosis && errors.diagnosis.message}
@@ -284,7 +293,7 @@ export default function SubmissionsForm() {
                     <Form.Label>Project Name</Form.Label>
                   </Col>
                   <Col sm="9">
-                    <Form.Control {...register("project")} size="sm" />
+                    <Form.Control {...register("project")} size="sm" disabled={formState.status} />
                   </Col>
                 </Row>
               </Form.Group>
@@ -294,7 +303,12 @@ export default function SubmissionsForm() {
                     <Form.Label>Experiment Name</Form.Label>
                   </Col>
                   <Col sm="9">
-                    <Form.Control {...register("experiment")} size="sm" placeholder="Enter Experiment Name" />
+                    <Form.Control
+                      {...register("experiment")}
+                      size="sm"
+                      placeholder="Enter Experiment Name"
+                      disabled={formState.status}
+                    />
                   </Col>
                 </Row>
               </Form.Group>
@@ -304,7 +318,7 @@ export default function SubmissionsForm() {
                     <Form.Label>Gender</Form.Label>
                   </Col>
                   <Col>
-                    <Form.Select {...register("sex")} size="sm">
+                    <Form.Select {...register("sex")} size="sm" disabled={formState.status}>
                       <option value="NA">Select</option>
                       <option value="Male">Male</option>
                       <option value="Female">Female</option>
@@ -325,6 +339,7 @@ export default function SubmissionsForm() {
                       {...register("age", { required: { value: true, message: "Age required" } })}
                       size="sm"
                       type="number"
+                      disabled={formState.status}
                     />
                   </Col>
                 </Row>
@@ -335,7 +350,7 @@ export default function SubmissionsForm() {
                     <Form.Label>Surgical Case</Form.Label>
                   </Col>
                   <Col sm="9">
-                    <Form.Control {...register("surgicalCase")} size="sm" />
+                    <Form.Control {...register("surgicalCase")} size="sm" disabled={formState.status} />
                   </Col>
                 </Row>
               </Form.Group>
@@ -345,7 +360,13 @@ export default function SubmissionsForm() {
                     <Form.Label>Surgery Date</Form.Label>
                   </Col>
                   <Col>
-                    <Form.Control {...register("surgeryDate")} size="sm" type="date" defaultValue={null} />
+                    <Form.Control
+                      {...register("surgeryDate")}
+                      size="sm"
+                      type="date"
+                      defaultValue={null}
+                      disabled={formState.status}
+                    />
                   </Col>
                 </Row>
               </Form.Group>
@@ -355,7 +376,13 @@ export default function SubmissionsForm() {
                     <Form.Label>Pool ID</Form.Label>
                   </Col>
                   <Col>
-                    <Form.Control {...register("poolId")} size="sm" type="date" defaultValue={null} />
+                    <Form.Control
+                      {...register("poolId")}
+                      size="sm"
+                      type="date"
+                      defaultValue={null}
+                      disabled={formState.status}
+                    />
                   </Col>
                 </Row>
               </Form.Group>
@@ -365,7 +392,7 @@ export default function SubmissionsForm() {
                     <Form.Label>Sample Group</Form.Label>
                   </Col>
                   <Col>
-                    <Form.Select {...register("sampleGroup")} size="sm">
+                    <Form.Select {...register("sampleGroup")} size="sm" disabled={formState.status}>
                       <option>Select</option>
                       <option value="450K">450K</option>
                       <option value="EPIC">EPIC</option>
@@ -380,7 +407,7 @@ export default function SubmissionsForm() {
                     <Form.Label>Material Type</Form.Label>
                   </Col>
                   <Col>
-                    <Form.Select {...register("materialType")} size="sm">
+                    <Form.Select {...register("materialType")} size="sm" disabled={formState.status}>
                       <option>Select</option>
                       <option value="Frozen-Fresh">Frozen-Fresh</option>
                       <option value="FFPE">FFPE</option>
@@ -395,7 +422,7 @@ export default function SubmissionsForm() {
                     <Form.Label>Sample Plate</Form.Label>
                   </Col>
                   <Col sm="9">
-                    <Form.Control {...register("samplePlate")} size="sm" />
+                    <Form.Control {...register("samplePlate")} size="sm" disabled={formState.status} />
                   </Col>
                 </Row>
               </Form.Group>
@@ -405,7 +432,7 @@ export default function SubmissionsForm() {
                     <Form.Label>Sample Well</Form.Label>
                   </Col>
                   <Col sm="9">
-                    <Form.Control {...register("sampleWell")} size="sm" />
+                    <Form.Control {...register("sampleWell")} size="sm" disabled={formState.status} />
                   </Col>
                 </Row>
               </Form.Group>
@@ -415,7 +442,7 @@ export default function SubmissionsForm() {
                     <Form.Label>PI Collaborator</Form.Label>
                   </Col>
                   <Col sm="9">
-                    <Form.Control {...register("piCollaborator")} size="sm" />
+                    <Form.Control {...register("piCollaborator")} size="sm" disabled={formState.status} />
                   </Col>
                 </Row>
               </Form.Group>
@@ -425,7 +452,7 @@ export default function SubmissionsForm() {
                     <Form.Label>Outside ID</Form.Label>
                   </Col>
                   <Col sm="9">
-                    <Form.Control {...register("outsideId")} size="sm" />
+                    <Form.Control {...register("outsideId")} size="sm" disabled={formState.status} />
                   </Col>
                 </Row>
               </Form.Group>
@@ -435,7 +462,7 @@ export default function SubmissionsForm() {
                     <Form.Label>Notes</Form.Label>
                   </Col>
                   <Col sm="9">
-                    <Form.Control {...register("notes")} size="sm" as="textarea" rows="3" />
+                    <Form.Control {...register("notes")} size="sm" as="textarea" rows="3" disabled={formState.status} />
                   </Col>
                 </Row>
               </Form.Group>
@@ -489,18 +516,12 @@ export default function SubmissionsForm() {
           </Alert>
           <Row className="justify-content-center mt-3">
             <Col xs="auto">
-              <Button variant="primary" type="submit">
+              <Button variant="primary" type="submit" disabled={formState.status}>
                 Submit
               </Button>
             </Col>
             <Col xs="auto">
-              <Button
-                variant="secondary"
-                onClick={() => {
-                  reset();
-                  clearErrors();
-                  setInvalidMetadata("");
-                }}>
+              <Button variant="secondary" onClick={() => handleReset()}>
                 Reset
               </Button>
             </Col>
