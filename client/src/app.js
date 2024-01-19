@@ -28,6 +28,7 @@ import { sessionState } from "./modules/session/session.state";
 import UserProfile from "./modules/user/user-profile";
 import Submissions from "./modules/submissions/submissions";
 import SubmissionsForm from "./modules/submissions/submissions-form";
+import SubmissionsInfo from "./modules/submissions/submissions-info";
 import SubmissionsList from "./modules/submissions/submissions-list";
 import SubmissionsReport from "./modules/admin/submissions-report/report";
 import TaskQueue from "./background-tasks.js";
@@ -184,6 +185,14 @@ export default function App() {
                   element={
                     <RequirePolicy action="GetPage">
                       <SubmissionsList />
+                    </RequirePolicy>
+                  }
+                />
+                <Route
+                  path="info"
+                  element={
+                    <RequirePolicy action="GetPage">
+                      <SubmissionsInfo />
                     </RequirePolicy>
                   }
                 />
