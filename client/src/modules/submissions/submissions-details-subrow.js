@@ -62,7 +62,7 @@ export default function SubmissionsDetails({ submissionData }) {
               </Col>
               <Col sm>
                 <Form.Label>Project</Form.Label>
-                <div>{submissionData.projectName ?? "N/A"}</div>
+                <div>{submissionData.project ?? "N/A"}</div>
               </Col>
               <Col sm>
                 <Form.Label>Experiment</Form.Label>
