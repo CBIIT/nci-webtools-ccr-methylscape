@@ -62,13 +62,18 @@ export default function SubmissionsForm() {
           const id = e.sentrixId;
           const pos = e.sentrixPosition;
           const name = e.sample;
-          const count = [...new Set(sampleFiles.filter((s) => s.id == id && s.position == pos).map((s) => s.channel))]
-            .length;
-
-          if (count != 2)
-            return count < 2
+          const countSamples = metadata.filter(
+            (e) => e.sentrixId == id && e.sentrixPosition == pos && e.sample == name
+          ).length;
+          if (countSamples > 1) {
+            return `${name} (${id}_${pos}): Found duplicate sample entries in metadata. Please ensure all samples are unique.`;
+          }
+          const countFiles = sampleFiles.filter((s) => s.id == id && s.position == pos).map((s) => s.channel).length;
+          if (countFiles != 2) {
+            return countFiles < 2
               ? `${name} (${id}_${pos}): Missing pair of sample files.`
               : `${name} (${id}_${pos}): Too many sample files.`;
+          }
         })
         .filter(Boolean);
 
@@ -91,7 +96,7 @@ export default function SubmissionsForm() {
         };
         const submitData = { submission, metadata };
         const uploadFiles = [...data.metadataFile, ...data.sampleFiles];
-        addTask({ submitData, uploadFiles });
+        // addTask({ submitData, uploadFiles });
       }
     } catch (error) {
       console.log(error);
