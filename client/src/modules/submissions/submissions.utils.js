@@ -26,6 +26,17 @@ export async function parseMetadata(file) {
     Sample_Group: {
       name: "sampleGroup",
       required: false,
+      validate: (e) => {
+        if (!e) {
+          return false;
+        } else {
+          if (!["450k", "EPIC", "EPICv2"].includes(e)) {
+            return `Sample_Group: ${e} is invalid. Must be one of the following: [450k/EPIC/EPICv2]`;
+          } else {
+            return false;
+          }
+        }
+      },
     },
     Pool_ID: {
       name: "poolId",
@@ -43,6 +54,17 @@ export async function parseMetadata(file) {
     Material_Type: {
       name: "materialType",
       required: false,
+      validate: (e) => {
+        if (!e) {
+          return false;
+        } else {
+          if (!["FFPE", "Frozen", "Fresh"].includes(e)) {
+            return `Material_Type: ${e} is invalid. Must be one of the following: [FFPE/Frozen/Fresh]`;
+          } else {
+            return false;
+          }
+        }
+      },
     },
     Gender: {
       name: "sex",
@@ -59,6 +81,7 @@ export async function parseMetadata(file) {
     Age: {
       name: "age",
       required: false,
+      validate: invalidAge,
     },
     Notes: {
       name: "notes",
@@ -85,7 +108,15 @@ export async function parseMetadata(file) {
 
   function invalidDate(date) {
     if (!moment(date, "MM-DD-YYYY", true).isValid()) {
-      return `${date} is not a valid date format. Dates must be recorded in MM-DD-YYYY`;
+      return `Date: ${date} is not a valid date format. Dates must be recorded in MM-DD-YYYY`;
+    } else {
+      return false;
+    }
+  }
+
+  function invalidAge(age) {
+    if (Number.isNaN(Number.parseFloat(age))) {
+      return `Age: ${age} is not a valid age value. Please enter a numeric value`;
     } else {
       return false;
     }

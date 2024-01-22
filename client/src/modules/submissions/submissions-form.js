@@ -96,7 +96,7 @@ export default function SubmissionsForm() {
         };
         const submitData = { submission, metadata };
         const uploadFiles = [...data.metadataFile, ...data.sampleFiles];
-        // addTask({ submitData, uploadFiles });
+        addTask({ submitData, uploadFiles });
       }
     } catch (error) {
       console.log(error);
