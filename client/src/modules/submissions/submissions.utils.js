@@ -27,14 +27,11 @@ export async function parseMetadata(file) {
       name: "sampleGroup",
       required: false,
       validate: (e) => {
-        if (!e) {
-          return false;
+        if (!e) return false;
+        if (!["450k", "EPIC", "EPICv2"].includes(e)) {
+          return `Sample_Group: ${e} is invalid. Must be one of the following: [450k/EPIC/EPICv2]`;
         } else {
-          if (!["450k", "EPIC", "EPICv2"].includes(e)) {
-            return `Sample_Group: ${e} is invalid. Must be one of the following: [450k/EPIC/EPICv2]`;
-          } else {
-            return false;
-          }
+          return false;
         }
       },
     },
@@ -55,14 +52,11 @@ export async function parseMetadata(file) {
       name: "materialType",
       required: false,
       validate: (e) => {
-        if (!e) {
-          return false;
+        if (!e) return false;
+        if (!["FFPE", "Frozen", "Fresh"].includes(e)) {
+          return `Material_Type: ${e} is invalid. Must be one of the following: [FFPE/Frozen/Fresh]`;
         } else {
-          if (!["FFPE", "Frozen", "Fresh"].includes(e)) {
-            return `Material_Type: ${e} is invalid. Must be one of the following: [FFPE/Frozen/Fresh]`;
-          } else {
-            return false;
-          }
+          return false;
         }
       },
     },
@@ -107,6 +101,7 @@ export async function parseMetadata(file) {
   };
 
   function invalidDate(date) {
+    if (!date) return false;
     if (!moment(date, "MM-DD-YYYY", true).isValid()) {
       return `Date: ${date} is not a valid date format. Dates must be recorded in MM-DD-YYYY`;
     } else {
