@@ -190,7 +190,7 @@ export default function SubmissionsForm() {
                 </tr>
                 <tr>
                   <td>Date</td>
-                  <td>9-25-2023</td>
+                  <td>09-25-2023</td>
                 </tr>
                 <tr>
                   <td></td>
