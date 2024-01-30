@@ -67,7 +67,7 @@ export default function SubmissionsForm() {
                 <tr>
                   <td>Date</td>
                   <td>(optional)</td>
-                  <td>MM-DD-YYYY</td>
+                  <td>MM/DD/YYYY</td>
                 </tr>
                 <tr>
                   <td></td>
@@ -102,7 +102,7 @@ export default function SubmissionsForm() {
                 <tr>
                   <td>Pool_ID</td>
                   <td>sample processing date, optional</td>
-                  <td>MM-DD-YYYY</td>
+                  <td>MM/DD/YYYY</td>
                 </tr>
                 <tr>
                   <td>Sentrix_ID</td>
@@ -137,7 +137,7 @@ export default function SubmissionsForm() {
                 <tr>
                   <td>Age</td>
                   <td>mandatory</td>
-                  <td>integer</td>
+                  <td>free-text</td>
                 </tr>
                 <tr>
                   <td>Notes</td>
@@ -162,7 +162,7 @@ export default function SubmissionsForm() {
                 <tr>
                   <td>Surgery_date</td>
                   <td>optional</td>
-                  <td>MM-DD-YYYY</td>
+                  <td>MM/DD/YYYY</td>
                 </tr>
               </tbody>
             </Table>
@@ -190,7 +190,7 @@ export default function SubmissionsForm() {
                 </tr>
                 <tr>
                   <td>Date</td>
-                  <td>09-25-2023</td>
+                  <td>09/25/2023</td>
                 </tr>
                 <tr>
                   <td></td>

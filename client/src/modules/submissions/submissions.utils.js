@@ -38,7 +38,7 @@ export async function parseMetadata(file) {
     Pool_ID: {
       name: "poolId",
       required: false,
-      validate: invalidDate,
+      // validate: invalidDate,
     },
     Sentrix_ID: {
       name: "sentrixId",
@@ -74,8 +74,8 @@ export async function parseMetadata(file) {
     },
     Age: {
       name: "age",
-      required: false,
-      validate: invalidAge,
+      required: true,
+      // validate: invalidAge,
     },
     Notes: {
       name: "notes",
@@ -96,26 +96,26 @@ export async function parseMetadata(file) {
     Surgery_date: {
       name: "surgeryDate",
       required: false,
-      validate: invalidDate,
+      // validate: invalidDate,
     },
   };
 
-  function invalidDate(date) {
-    if (!date) return false;
-    if (!moment(date, "MM-DD-YYYY", true).isValid()) {
-      return `Date: ${date} is not a valid date format. Dates must be recorded in MM-DD-YYYY`;
-    } else {
-      return false;
-    }
-  }
+  // function invalidDate(date) {
+  //   if (!date) return false;
+  //   if (!moment(date, "MM-DD-YYYY", true).isValid()) {
+  //     return `Date: ${date} is not a valid date format. Dates must be recorded in MM-DD-YYYY`;
+  //   } else {
+  //     return false;
+  //   }
+  // }
 
-  function invalidAge(age) {
-    if (Number.isNaN(Number.parseFloat(age))) {
-      return `Age: ${age} is not a valid age value. Please enter a numeric value`;
-    } else {
-      return false;
-    }
-  }
+  // function invalidAge(age) {
+  //   if (Number.isNaN(Number.parseFloat(age))) {
+  //     return `Age: ${age} is not a valid age value. Please enter a numeric value`;
+  //   } else {
+  //     return false;
+  //   }
+  // }
 
   const text =
     file.name.split(".")[1] === "csv"
