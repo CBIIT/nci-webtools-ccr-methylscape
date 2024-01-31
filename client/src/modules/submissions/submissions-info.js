@@ -70,9 +70,9 @@ export default function SubmissionsForm() {
                   <td>MM/DD/YYYY</td>
                 </tr>
                 <tr>
-                  <td></td>
-                  <td></td>
-                  <td></td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
                 </tr>
                 <tr>
                   <td>[Data]</td>
@@ -193,8 +193,8 @@ export default function SubmissionsForm() {
                   <td>09/25/2023</td>
                 </tr>
                 <tr>
-                  <td></td>
-                  <td></td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
                 </tr>
               </tbody>
               <thead>
@@ -227,7 +227,7 @@ export default function SubmissionsForm() {
                   <td>F02</td>
                   <td>Clinical Testing</td>
                   <td>EPIC</td>
-                  <td>09-25-2023</td>
+                  <td>09/25/2023</td>
                   <td align="right">207534240050</td>
                   <td>R06C01</td>
                   <td>FFPE</td>
@@ -239,14 +239,14 @@ export default function SubmissionsForm() {
                   <td>Brain, left cerebellar, biopsy</td>
                   <td>GAMPEL</td>
                   <td>US23-24243,D/1</td>
-                  <td>08-25-2023</td>
+                  <td>08/25/2023</td>
                 </tr>
                 <tr>
                   <td>EY47</td>
                   <td>G02</td>
                   <td>Clinical Testing</td>
                   <td>EPIC</td>
-                  <td>09-25-2023</td>
+                  <td>09/25/2023</td>
                   <td align="right">207534240050</td>
                   <td>R07C01</td>
                   <td>FFPE</td>
@@ -258,14 +258,14 @@ export default function SubmissionsForm() {
                   <td>Brain, 4th ventricular mass. excision</td>
                   <td>YONG</td>
                   <td>S23-15045,A1</td>
-                  <td>08-28-2023</td>
+                  <td>08/28/2023</td>
                 </tr>
                 <tr>
                   <td>EY48</td>
                   <td>H02</td>
                   <td>Clinical Testing</td>
                   <td>EPIC</td>
-                  <td>09-25-2023</td>
+                  <td>09/25/2023</td>
                   <td align="right">207534240050</td>
                   <td>R08C01</td>
                   <td>FFPE</td>
@@ -277,7 +277,7 @@ export default function SubmissionsForm() {
                   <td>Brain, left stereotactic biopsy</td>
                   <td>HURTH</td>
                   <td>30-SP-23-3338,B1</td>
-                  <td>03-30-2023</td>
+                  <td>03/30/2023</td>
                 </tr>
               </tbody>
             </Table>
