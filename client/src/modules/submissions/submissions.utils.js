@@ -124,9 +124,9 @@ export async function parseMetadata(file) {
 
   const [_, ownerText, metadataText] = text.split(/^\[.+\],*$/gm);
   if (ownerText && metadataText) {
-    const { data: ownerParse } = parse(ownerText);
+    const { data: ownerParse } = parse(ownerText, { skipEmptyLines: "greedy" });
     const { data: metadata } = parse(metadataText, {
-      skipEmptyLines: true,
+      skipEmptyLines: "greedy",
       header: true,
     });
     const renameMetadata = metadata.map((e) =>
