@@ -9,12 +9,15 @@ import { useRecoilValue, useRecoilRefresher_UNSTABLE } from "recoil";
 import { organizationsSelector, rolesSelector, usersSelector } from "./user-management.state";
 import { useForm } from "react-hook-form";
 import SelectForm from "../../components/selectHookForm";
+import { sessionState } from "../../session/session.state";
 
 export default function RegisterUsers() {
   const [alerts, setAlerts] = useState([]);
   const users = useRecoilValue(usersSelector);
   const roles = useRecoilValue(rolesSelector);
   const organizations = useRecoilValue(organizationsSelector);
+  const session = useRecoilValue(sessionState);
+  const currentUser = `${session.user.firstName}, ${session.user.lastName}`;
   const [showApprovalModal, setShowApprovalModal] = useState(false);
   const [showRejectionModal, setShowRejectionModal] = useState(false);
   const [user, setUser] = useState({});
@@ -74,7 +77,13 @@ export default function RegisterUsers() {
     const orgParams = {
       organizationName: form.addNewOrg ? form.newOrgName : form.organization.label,
       organizationId: form.addNewOrg
-        ? (await axios.post("/api/organizations", { name: form.newOrgName })).data[0].id
+        ? (
+            await axios.post("/api/organizations", {
+              name: form.newOrgName,
+              createdBy: currentUser,
+              updatedBy: currentUser,
+            })
+          ).data[0].id
         : form.organization.value,
     };
 
@@ -222,7 +231,17 @@ export default function RegisterUsers() {
               <Form.Group className="mb-3" controlId="organization">
                 <SelectForm
                   control={control}
-                  rules={{ required: "Organization required" }}
+                  rules={{
+                    validate: {
+                      required: (e) => {
+                        if (!addNewOrg) {
+                          if (e.label === "Other")
+                            return "Please select a real organization or create a new one (not Other)";
+                          else if (!e) return "Organization required";
+                        }
+                      },
+                    },
+                  }}
                   name="organization"
                   label="Organization"
                   options={organizationOptions}

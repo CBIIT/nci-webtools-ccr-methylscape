@@ -5,11 +5,14 @@ import { groupBy } from "lodash";
 import axios from "axios";
 import Table from "../../components/table";
 import { rolesSelector, usersSelector, organizationsSelector } from "./user-management.state";
+import { sessionState } from "../../session/session.state";
 
 export default function CurrentUsers() {
   const [alerts, setAlerts] = useState([]);
   const roles = useRecoilValue(rolesSelector);
   const users = useRecoilValue(usersSelector);
+  const session = useRecoilValue(sessionState);
+  const currentUser = `${session.user.firstName}, ${session.user.lastName}`;
   const refreshUsers = useRecoilRefresher_UNSTABLE(usersSelector);
   const [showInactiveUsers, setShowInactiveUsers] = useState(false);
   const [form, setForm] = useState({});
@@ -37,7 +40,7 @@ export default function CurrentUsers() {
   async function handleFormSubmit(e) {
     e.preventDefault();
     setShowEditModal(false);
-    await axios.put(`/api/user/${form.id}`, form);
+    await axios.put(`/api/user/${form.id}`, { ...form, updatedBy: currentUser });
     refreshUsers();
   }
 
@@ -228,11 +231,13 @@ export default function CurrentUsers() {
                   <option value="" hidden>
                     Select Organization/Instituiton
                   </option>
-                  {organizations.map((o) => (
-                    <option key={`organization-${o.name}`} value={o.id}>
-                      {o.name}
-                    </option>
-                  ))}
+                  {organizations
+                    .filter((o) => o.name !== "Other")
+                    .map((o) => (
+                      <option key={`organization-${o.name}`} value={o.id}>
+                        {o.name}
+                      </option>
+                    ))}
                 </Form.Select>
                 {+form.organizationId === 1 && (
                   <Form.Control

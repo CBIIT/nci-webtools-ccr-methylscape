@@ -6,9 +6,12 @@ import { organizationsSelector } from "./organization-management.state";
 import axios from "axios";
 import { useForm } from "react-hook-form";
 import SelectForm from "../../components/selectHookForm";
+import { sessionState } from "../../session/session.state";
 
 export default function AdminOrganizationManagement() {
   const organizations = useRecoilValue(organizationsSelector);
+  const session = useRecoilValue(sessionState);
+  const currentUser = `${session.user.firstName}, ${session.user.lastName}`;
   const [showAddOrgModal, setShowAddOrgModal] = useState(false);
   const [showRenameOrgModal, setShowRenameOrgModal] = useState(false);
   const refreshOrgs = useRecoilRefresher_UNSTABLE(organizationsSelector);
@@ -48,15 +51,17 @@ export default function AdminOrganizationManagement() {
     await axios.post("/api/organizations", {
       ...form,
       organSystem: JSON.stringify(form.organSystem),
+      createdBy: currentUser,
+      updatedBy: currentUser,
     });
     setShowAddOrgModal(false);
     refreshOrgs();
   }
 
   async function handleOrgEditSubmit(form) {
-    const data = { ...form, organSystem: JSON.stringify(form.organSystem) };
+    const data = { ...form, organSystem: JSON.stringify(form.organSystem), updatedBy: "" };
 
-    await axios.put(`/api/organizations/${data.id}`, data);
+    await axios.put(`/api/organizations/${data.id}`, { ...data, updatedBy: currentUser });
     setShowRenameOrgModal(false);
     refreshOrgs();
   }
