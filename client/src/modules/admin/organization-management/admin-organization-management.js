@@ -157,7 +157,13 @@ export default function AdminOrganizationManagement() {
         <Row className="mb-4">
           <Col>
             <div className="bg-light py-4 px-2 rounded">
-              <Table responsive data={organizations} columns={cols} options={{ disableFilters: true }} />
+              <Table
+                responsive
+                data={organizations}
+                columns={cols}
+                options={{ disableFilters: true }}
+                customOptions={{ hideColumns: true }}
+              />
             </div>
           </Col>
         </Row>
