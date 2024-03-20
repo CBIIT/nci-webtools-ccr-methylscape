@@ -26,6 +26,12 @@ import RequireRole from "./modules/require-policy/require-role";
 import { isAuthorized } from "./modules/require-policy/require-policy.utils";
 import { sessionState } from "./modules/session/session.state";
 import UserProfile from "./modules/user/user-profile";
+import Submissions from "./modules/submissions/submissions";
+import SubmissionsForm from "./modules/submissions/submissions-form";
+import SubmissionsInfo from "./modules/submissions/submissions-info";
+import SubmissionsList from "./modules/submissions/submissions-list";
+import SubmissionsReport from "./modules/admin/submissions-report/report";
+import TaskQueue from "./background-tasks.js";
 
 export default function App() {
   const session = useRecoilValue(sessionState);
@@ -41,6 +47,11 @@ export default function App() {
         path: "reports",
         title: "Samples",
         show: (session) => isAuthorized(session, "GetPage", "/reports"),
+      },
+      {
+        path: "submissions",
+        title: "Submissions",
+        show: (session) => isAuthorized(session, "GetPage", "/submissions"),
       },
       { path: "about", title: "About" },
     ],
@@ -94,7 +105,7 @@ export default function App() {
         <SessionRefreshModal />
         <Header />
         <Navbar linkGroups={navbarLinks} className="shadow-sm navbar-bottom-line" />
-
+        <TaskQueue />
         <ErrorBoundary
           fallback={
             <Alert variant="danger" className="m-5">
@@ -154,6 +165,38 @@ export default function App() {
                   }
                 />
               </Route>
+              <Route
+                path="submissions"
+                element={
+                  <RequirePolicy action="GetPage">
+                    <Submissions />
+                  </RequirePolicy>
+                }>
+                <Route
+                  path="create"
+                  element={
+                    <RequirePolicy action="GetPage">
+                      <SubmissionsForm />
+                    </RequirePolicy>
+                  }
+                />
+                <Route
+                  path="list"
+                  element={
+                    <RequirePolicy action="GetPage">
+                      <SubmissionsList />
+                    </RequirePolicy>
+                  }
+                />
+                <Route
+                  path="info"
+                  element={
+                    <RequirePolicy action="GetPage">
+                      <SubmissionsInfo />
+                    </RequirePolicy>
+                  }
+                />
+              </Route>
               <Route path="about" element={<About />} />
               <Route
                 path="admin"
@@ -184,6 +227,14 @@ export default function App() {
                 element={
                   <RequirePolicy action="GetPage">
                     <DataImport />
+                  </RequirePolicy>
+                }
+              />
+              <Route
+                path="admin/submissions-report"
+                element={
+                  <RequirePolicy action="GetPage">
+                    <SubmissionsReport />
                   </RequirePolicy>
                 }
               />

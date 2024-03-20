@@ -45,7 +45,7 @@ export default function GroupTables({ showTable = true }) {
                 columns={columns}
                 options={{ initialState, stateReducer }}
                 customOptions={{
-                  hideColumns: true,
+                  // hideColumns: true,
                   download: `Methylscape_GP${i + 1}_${getTimestamp()}.csv`,
                 }}
               />

@@ -60,7 +60,13 @@ export default function Experiments() {
       <Row>
         <Col>
           {tableData && tableData.length > 0 && (
-            <Table name="Experiments" data={tableData} columns={columns} options={{ initialState, stateReducer }} />
+            <Table
+              name="Experiments"
+              data={tableData}
+              columns={columns}
+              options={{ initialState, stateReducer }}
+              customOptions={{ hideColumns: true }}
+            />
           )}
         </Col>
       </Row>

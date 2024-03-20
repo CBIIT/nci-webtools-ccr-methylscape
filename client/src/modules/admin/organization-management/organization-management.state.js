@@ -6,7 +6,7 @@ export const organizationsSelector = selector({
   get: async ({ get }) => {
     try {
       const response = await axios.get("/api/organizations");
-      const data = response.data;
+      const data = response.data.filter((org) => org.name !== "Other");
       return data;
     } catch (err) {
       console.log(err);

@@ -8,7 +8,7 @@ export default function AdminUserManagement() {
       <Container>
         <Row className="my-4">
           <Col>
-            <h1 className="text-white">Manage Users</h1>
+            <h3 className="text-white">Manage Users</h3>
           </Col>
         </Row>
 

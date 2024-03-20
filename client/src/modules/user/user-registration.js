@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Form from "react-bootstrap/Form";
 import Container from "react-bootstrap/Container";
+import Card from "react-bootstrap/Card";
 import Alert from "react-bootstrap/Alert";
 import { FormControl, Row, Button } from "react-bootstrap";
 import axios from "axios";
@@ -41,14 +42,10 @@ export default function UserRegister() {
   }
 
   return (
-    <>
-      <Container fluid="xxl" className="d-flex justify-content-center">
-        <Row className="text-white my-3">
-          <h1>User Registration</h1>
-        </Row>
-      </Container>
-      <Container fluid="xxl" className="d-inline-flex justify-content-center mb-2 p-2">
-        <Form className="bg-light p-3" onSubmit={handleSubmit}>
+    <Container fluid="xxl">
+      <h3 className="text-white my-3">User Registration</h3>
+      <Card className="bg-light p-3 d-flex">
+        <Form className="mx-auto" onSubmit={handleSubmit} style={{ width: "400px" }}>
           {alerts.map(({ type, message }, i) => (
             <Alert key={i} variant={type} onClose={() => setAlerts([])} dismissible>
               {message}
@@ -118,7 +115,7 @@ export default function UserRegister() {
           </Form.Group>
 
           <Form.Group className="mb-3" controlId="email">
-            <Form.Label>Email address</Form.Label>
+            <Form.Label>Email Address</Form.Label>
             <Form.Control
               type="email"
               name="email"
@@ -155,17 +152,23 @@ export default function UserRegister() {
                 className="mt-2"
               />
             )}
+          </Form.Group>
 
-            {/* <Form.Control
-              type="text"
-              name="organizationOther"
-              placeholder="Enter Organization/Instituiton"
-              value={form.organizationOther}
+          <Form.Group className="mb-3" controlId="justification">
+            <Form.Label>Justification for Access</Form.Label>
+            <Form.Control
+              as="textarea"
+              name="justification"
+              placeholder="Justification for access"
+              value={form.justification}
               onChange={handleChange}
               required
-              className="mt-2"
-              disabled={+form.organizationId === 1 ? '' : 'disabled'}
-            /> */}
+            />
+            <Form.Text className="text-muted">
+              Please provide justification for access to Methylscape. You may include details such as your referer,
+              organization, or sponsor. Failure to provide detailed justification may delay the approval of your
+              account.
+            </Form.Text>
           </Form.Group>
           <Row className="d-grid gap-2 col-6 mx-auto">
             <Button variant="primary" type="submit" className="btn-lg">
@@ -173,7 +176,7 @@ export default function UserRegister() {
             </Button>
           </Row>
         </Form>
-      </Container>
-    </>
+      </Card>
+    </Container>
   );
 }

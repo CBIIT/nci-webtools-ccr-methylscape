@@ -1,0 +1,30 @@
+[
+  {
+    "command": "runSqlScript",
+    "description": "Alter tables with new columns",
+    "file": "./migrations/update-2.0.0.sql"
+  },
+  {
+    "command": "recreateTables",
+    "description": "Recreate tables",
+    "tables": ["submissions", "userSamples"]
+  },
+  {
+    "command": "importTable",
+    "description": "Import rolePolicy.csv to staging table",
+    "source": "rolePolicy.csv",
+    "target": "stage.rolePolicy"
+  },
+  {
+    "command": "upsertTable",
+    "description": "Add new role policies from staging table",
+    "source": "stage.rolePolicy",
+    "target": "rolePolicy",
+    "columns": [
+      { "sourceName": "roleId", "name": "roleId" },
+      { "sourceName": "action", "name": "action" },
+      { "sourceName": "resource", "name": "resource" }
+    ],
+    "conflictTarget": ["roleId", "action", "resource"]
+  }
+]

@@ -1,4 +1,5 @@
 import { formatObject } from "./logger.js";
+import { validationResult } from "express-validator";
 
 const isProduction = process.env.NODE_ENV === "production";
 
@@ -34,4 +35,16 @@ export function withAsync(fn) {
       next(error);
     }
   };
+}
+
+export function handleValidationErrors(request, response, next) {
+  const { logger } = request.app.locals;
+  const result = validationResult(request);
+  if (!result.isEmpty()) {
+    const errors = result.mapped();
+    logger.error(errors);
+    response.status(400).json(errors);
+  } else {
+    next();
+  }
 }

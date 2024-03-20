@@ -1,14 +1,16 @@
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import MultiSearch from "../../components/multi-search";
 import { formState } from "./metadata-plot.state";
 import colorOptions from "./color-options.json";
+import { sessionState } from "../../session/session.state";
 
 export default function MetadataForm({ className, onSelect }) {
   const [form, setForm] = useRecoilState(formState);
   const mergeForm = (state) => setForm({ ...form, ...state });
+  const session = useRecoilValue(sessionState);
 
   function handleChange(event) {
     let { name, value, checked, type } = event.target;
@@ -29,11 +31,15 @@ export default function MetadataForm({ className, onSelect }) {
           <Form.Group id="organSystem" className="form-group mb-3">
             <Form.Label>Organ System</Form.Label>
             <Form.Select name="organSystem" value={form.organSystem} onChange={handleChange} className="source">
-              <option value="centralNervousSystem">Central Nervous System</option>
-              <option value="boneAndSoftTissue">Bone and Soft Tissue</option>
-              <option value="hematopoietic">Hematopoietic</option>
-              <option value="renal">Renal</option>
-              <option value="panCancer">Pan-Cancer</option>
+              {session?.user.organizationOrganSystem.length ? (
+                session.user.organizationOrganSystem.map((e) => (
+                  <option key={e.value} value={e.value}>
+                    {e.label}
+                  </option>
+                ))
+              ) : (
+                <option value="centralNervousSystem">Central Nervous System</option>
+              )}
             </Form.Select>
           </Form.Group>
         </Col>
@@ -71,7 +77,7 @@ export default function MetadataForm({ className, onSelect }) {
         <Col md="auto">
           <Form.Group controlId="showAnnotations" className="mb-3">
             <Form.Check
-              label="Show most recent clinical samples"
+              label="Annotate Most Recent Samples"
               type="switch"
               name="showAnnotations"
               checked={form.showAnnotations}

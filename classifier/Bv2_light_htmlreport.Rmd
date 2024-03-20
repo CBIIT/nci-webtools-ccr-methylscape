@@ -1,0 +1,295 @@
+
+---
+title: ' ![NIH:NCI:LP `r gsub("_$","", dna, perl=T)`](Methylation_header.png){width=100%}'
+date:  "METHYLATION PROFILING REPORT  :: `r paste(samplereportdir[[dna]])` "
+output: html_document
+---
+<style type="text/css">
+
+body, td {
+   font-size: 10px;
+}
+code.r{
+  font-size: 8px;
+}
+pre {
+  font-size: 10px
+}
+</style>
+
+
+```{r umap1 code, echo=F,error=F,message=F,warning=F}
+
+umapids <- row.names(umap)[grep(i, row.names(umap))]
+vec1    <- umap[c(rownames(umap1), umapids),]
+
+p1 = plot_ly(x = vec1$V1, y  = vec1$V2, 
+		   text = paste0(vec1$Sample, " : ",vec1$new.class," : ", vec1$idat_filename), 
+		   color = vec1$new.class, colors = my.col, width = 900, height = 600,
+		   type="scatter", mode = "markers", marker = list(size = 8, line = list(width=0.1, color="black")), 
+		   symbols = c('dot')) %>%
+       layout(showlegend = TRUE, legend = list(font = list(size = 9)),
+	       annotations = xy1_annotations,
+	       xaxis = list(title = "umap 1", zeroline = FALSE, titlefont  = list(size = 8), tickfont = list(size = 7)),
+	       yaxis = list(title = "umap 2", zeroline = FALSE, titlefont  = list(size = 8), tickfont = list(size = 7))) %>%
+       add_annotations(x = vec1[vec1$new.class == "tst", "V1"],
+				y = vec1[vec1$new.class == "tst", "V2"],
+				text = vec1[vec1$new.class == "tst", "Sample"],
+				showarrow = TRUE,
+				arrowcolor='black',
+				arrowhead = 6,
+				arrowsize = 1,
+				xref = "V1",
+				yref = "V2",
+                bgcolor = alpha("white", 0.3),
+				font = list(color = 'Red',
+							family = 'arial',
+							size = 12));
+  
+
+```
+
+### {.tabset}
+
+#### Summary
+
+**\ \ \ Top hit Bethesda v2 classifier results**
+
+<div style="float: left; width: 100%; background-color: aliceblue">
+```{r bento, warning=F, message=F, echo=F}
+
+# get some rules Bv2
+thehit <- data.frame(t(ss[i,])) ;
+thehit$Comment <- " " ;
+thehit <- tibble::rownames_to_column(thehit, " . ")
+colnames(thehit)[2] <- as.character(samplereportdir[[dna]]);
+thehit <- as.matrix(thehit[-1,])
+
+if(thehit[2,2]>0.9){
+   thehit[1,3] <- "Matched";
+   if(thehit[5,2]>0.9){
+	   thehit[4,3] <- "Matched";
+   }else if((thehit[5,2]>0.5) & (thehit[5,2]<0.9)){
+	   thehit[4,3] <- "Suggested";
+   }else{
+	   thehit[4,3] <- "No match";
+   };
+}else if((thehit[2,2]<0.9) & (thehit[2,2]>0.5)){
+  thehit[1,3] <- "Suggested";
+   if((thehit[5,2]>0.5) & (thehit[5,2]<1)){
+	   thehit[4,3] <- "Suggested"
+   }else if(thehit[5,2]<= 0.5){
+       thehit[4,3] <- "No match";
+   };
+}else{
+  thehit[1,3] <- "No match";
+  thehit[4,3] <- "No match";
+};
+
+
+BENTOTAB <- data.frame("Best match" =c(as.vector(t(gsub("Methylation_class_", "", ss[i, c("Superfamily",  "Class")])))),
+                       "Scores"     =c(as.vector(t(ss[i, c("Superfamily_mean_score",  "Class_mean_score")]))), 
+					   "Comment"    =c(thehit[1,3], thehit[4,3]));
+rownames(BENTOTAB) <- c("Family", "Class");
+
+
+BENTOTAB <- as.data.frame(BENTOTAB) %>%
+  mutate(
+    Scores = color_bar("#DEE0E0")(Scores)
+  );
+
+BENTOTAB %>%
+  kable("html", escape = F, align = c("l", "l")) %>%
+  column_spec(c(1,2,3), bold = T, monospace = T ) %>%
+  kable_styling("hover", full_width = F, position = "left") 
+
+```
+</div>
+
+<p> </p>
+
+---
+
+<p> </p>
+
+<p>**Copy Number Variation Profile**</p> 
+
+```{r toptab, warning=F, message=F, echo=F, fig.width = 18}
+suppressMessages(library(conumee))
+suppressMessages(library(minfi))
+
+MsetI  <- Mset_raw[,i];
+
+# load conumee annoatation object according to array type
+if(dim(MsetI)[1] > 800000 ){
+    load(file.path("/supplements/CNV","conumee_annotation_EPIC_B6.2019-11-29.RData"))
+    # load conumee reference male ( female needs different file)
+    load(file.path("/supplements/CNV","CNanalysis6_conumee_REF_M.2018-09-19.RData"))
+    cndata <- CNV.load(MsetI)
+    
+    cnmissedprobes <-  setdiff(rownames(refM_epic@intensity), rownames(cndata@intensity));
+    if(length(cnmissedprobes)>0){
+      fff   <- median(cndata@intensity[,1])
+	  fkcnv <- data.frame(matrix(nrow = length(cnmissedprobes), ncol = 1));
+	  row.names(fkcnv)   <- cnmissedprobes; 
+	  colnames(fkcnv)    <- colnames(cndata@intensity);
+	  fkcnv[,1]          <- rep(fff, nrow(fkcnv));
+	  cndata@intensity   <- rbind(cndata@intensity, fkcnv);
+    }  
+    x <- CNV.fit(cndata, refM_epic, annoEPICxy);
+}else{
+	load(file.path("/supplements/CNV","CNanalysis4_conumee_ANNO.vh20150715.RData"))
+	load(file.path("/supplements/CNV","CNanalysis4_conumee_REF-M.vh20150715.RData"))
+	cndata <- CNV.load(MsetI)
+	x <- CNV.fit(cndata, refM.data, annoXY)
+}
+x <- CNV.bin(x)
+x <- CNV.detail(x)
+x <- CNV.segment(x)
+
+
+  CNV.genomeplot(x, chrX=F, chrY=F );
+
+
+kableExtra::kbl(" ", col.names = gsub("[.]", " ", paste0(targets[which(targets$idat==i), "Sample_Name"], " has no copy number for sex chromosomes calculated."))) %>%
+  kableExtra::kable_styling(bootstrap_options = "condensed", font_size = 8)
+
+```
+
+<p> </p>
+<div style="float: left; width: 100%; background-color: aliceblue">
+
+**\ \ \ Information provided in samplesheet **
+
+
+```{r samplesheetbox, warning=F, message=T, echo=F}
+if(is.null(samplesheets)){
+  message(" No samplesheet was provided for: ", i);
+}else{
+ column_patterns <- c("Sample_Name", "Gender", "Surgical", "Diagnosis", "Age", "Notes", "Tumor", "PI", "Outside", "Surgery");
+ # Use regular expressions to match and select columns because samplesheets are full of surprises
+ selected_columns <- names(samplesheets)[grep(paste(column_patterns, collapse = "|"), names(samplesheets), ignore.case = TRUE)]
+ SSINFO <- samplesheets[which(samplesheets$idat == i), selected_columns]
+ SSINFO %>%
+ kable("html", escape = F, align = c("l"), row.names=FALSE) %>%
+ column_spec(c(1), bold = T, monospace = T ) %>%
+ kable_styling("hover", full_width = T, position = "left") 
+};  
+
+```
+</div>
+
+
+```{r toptab_miscbox, warning=F, message=F, echo=F}
+
+kableExtra::kbl(c("Classification using methylation profiling is a research tool under development, it is not verified and has not been clinically validated. Implementation of the results in a clinical setting is in the sole responsibility of the treating physician.", paste("  Created on:", Sys.Date(), " with Bethesda Brain tumor classifier v2.0 and the light reporter pipeline v2.0 on docker container [ trust1/bethesda:light ](https://hub.docker.com/repository/docker/trust1/bethesda/general)" )), col.names = NULL) %>%
+  kableExtra::kable_styling(bootstrap_options = "condensed", font_size = 8) %>%
+  row_spec(1,  italic = TRUE )
+
+```
+
+
+#### UMAP 
+UMAP of the reference dataset used for training eNeural network model for the Bethesda classifier.
+
+```{r umap figure1 page render, echo=F, error=F, message=T, warning=F}
+p1
+
+```
+
+#### Bethesda Classifier v2
+Bethesda CNS tumor classifier : [v2.0](https://methylscape.ccr.cancer.gov/analysis)
+```{r thehit, warning=F, message=F, echo=F}
+
+row.names(thehit)   <- NULL;
+
+kbl( thehit ) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = F, position = "left");
+
+#bethesdamanifest <- read.csv("/supplements/classes_descriptions.csv"); 
+bethesdamanifest <- openxlsx::read.xlsx("/classifier/Tumor_groups_descriptions.xlsx");
+
+abbr <- ss[i,"Class"];
+if(abbr %in% bethesdamanifest$Class){
+     ABBR  <- t(bethesdamanifest[which(bethesdamanifest$Class == abbr), c(3,2,5,6)]);
+	 rownames(ABBR) <- c("Abbreviation", "Tumor group",	"Short name", "Description");
+	 colnames(ABBR) <- "Class details";
+  }else{
+     ABBR <- c("Class with no information provided");
+	 colnames(ABBR)    <- "Class details";
+};
+
+kbl( ABBR ) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = T, position = "left");
+
+
+```
+
+
+```{r bigtable, warning=F, message=F, echo=F}
+
+detail_df<-rbind(all_probes_results[i,],body_results[i,],shelf_results[i,],ogr_results[i,],shore_results[i,],opensea_results[i,],island_results[i,],utr5_results[i,],ocec_results[i,],tss_results[i,]);
+vec<-c("all_probes","Gene_body","Shelf","Other_genomic_regions","Shore","OpenSea","Island","5'UTR","Open_chromatin_probes","TSS");
+detail_df$Regions<-vec;
+ff<-rss[,i,drop=FALSE ];
+
+twiks <- detail_df[,c("Regions", "super_family","super_family_score","class","class_Score")];  
+twiks$super_family_score <- round(as.numeric(twiks$super_family_score), digits = 2);
+twiks$class_Score        <- round(as.numeric(twiks$class_Score), digits = 2);
+twiks$class              <- gsub("Methylation_class_", "", twiks$class) 
+twiks[1,1]               <- "ALL PROBES";
+
+TWIKS <- twiks %>%
+  mutate(                   # color gradient for label    
+    super_family = color_tile("azure", "azure3")(as.factor(twiks$super_family)), 
+    class        = color_tile("honeydew", "honeydew3")(as.factor(twiks$class)),
+    Regions = ifelse(super_family_score > 0.5,
+                  cell_spec(Regions, "html", color = "black", bold = T),
+                  cell_spec(Regions, "html", color = "navy",  bold = T, italic = T)),
+    super_family_score = color_bar("#DEE0E0")(super_family_score),
+    class_Score = color_bar("#DEE0E0")(class_Score)
+  );
+row.names(TWIKS) <- NULL;
+
+#  select(twik2, everything()) %>%
+  TWIKS %>%
+  kable("html", escape = F, align = c("r", "c", "l",   "c","l")) %>%
+  column_spec(c(2,4), bold = T, monospace = T ) %>%
+  kable_styling("hover", full_width = T) 
+
+tabletext <- data.frame( " " = c("\nBethesda V2 classifier based on stratified ensemble classification approach which includes two level classification, superfamily, and class. Each level of classification has multiple classifiers (n=10) based on functional/genomic regions related to methylation annotation: transcription start site (TSS), gene-body, shore and island etc. Mean calibrated score calculated at superfamily and class levels are most important scores as they display the average performance of all classifiers. Here is an interpretation guide for the scores in the Bethesda V2 classifier:\n", 
+
+"\n\n1. Mean Calibrated Score at Superfamily Level: This score represents the average performance of all the classifiers at the superfamily level. It indicates how well the model predicts the superfamily taxonomy. A higher score indicates better performance, with 1 being the highest possible score.\n
+
+2. Mean Calibrated Score at Class Level: Similar to the superfamily level, this score represents the average performance of all the classifiers at the class level. It measures the accuracy of the model in predicting the class taxonomy. Again, a higher score indicates better performance, with 1 being the highest possible score.\n
+
+3. Consistency Score: This score reflects the overall consistency across all the classifiers at both the superfamily and class levels. It indicates how well the individual classifiers agree with each other. A higher consistency score implies that the classifiers are in agreement, while a lower score suggests disagreement among the classifiers.\n
+
+4. Interpretation Guidelines: When interpreting the scores, it's important to consider the relationship between the superfamily and class levels. The class score should be interpreted carefully, especially if the superfamily score is below 0.9. If the superfamily score is below 0.5, regardless of how high the class score may be, it should not be considered reliable.\n",
+
+"It's worth noting that the superfamily and class models are not statistically connected, so the scores between these levels are not directly related. Therefore, the class score should always be assessed in conjunction with the superfamily score to ensure reliable predictions.\n\tPlease refer to the table below for a detailed interpretation of the scores:\n"
+));
+
+row.names(tabletext) <- NULL;
+names(tabletext) <- "Interpretation\ of\ Classifier\ Scores";
+kbl(tabletext) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
+
+interpretationtable <- data.frame(
+           Condition      = c(" Condition 1",  " Condition 2",  " Condition 3",  " Condition 4",  " Condition 5"),
+		   'super_family_score' = c("  > 0.9", "  > 0.9", " 0.5 - 0.9", " 0.5 - 0.9", " < 0.5"),
+		   'class_Score'  = c(" > 0.9", " 0.5 - 0.9", " 0.5 - 1", "  < 0.5", " any"),
+		   Interpretation = c(" Superfamily - match / Class - match", " Superfamily - match / Class - suggestive", " Superfamily - suggestive / Class - suggestive", " Superfamily - suggestive / Class - no match", " Superfamily - no match / Class - no match")
+	);
+row.names(interpretationtable) <- NULL;
+kbl(interpretationtable) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"));
+
+
+
+kableExtra::kbl(c("Classification using methylation profiling is a research tool under development, it is not verified and has not been clinically validated. Implementation of the results in a clinical setting is in the sole responsibility of the treating physician.", paste("  Created on:", Sys.Date(), " with Bethesda Brain tumor classifier v2.0 and the light reporter pipeline v2.0 on docker container [ trust1/bethesda:light ](https://hub.docker.com/repository/docker/trust1/bethesda/general)" )), col.names = NULL) %>%
+  kableExtra::kable_styling(bootstrap_options = "condensed", font_size = 8)  %>%
+  row_spec(1, italic = TRUE)
+
+```
+

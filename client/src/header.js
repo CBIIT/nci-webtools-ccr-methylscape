@@ -20,10 +20,10 @@ export default function Header() {
           <Col>
             <a href="https://ccr.cancer.gov/" target="_blank" className="h5 mb-1" rel="noreferrer">
               <img
-                src="/assets/images/nci-ccr-logo.png"
+                src="/assets/images/nci-ccr-logo.svg"
                 className="img-fluid my-3"
                 alt="National Cancer Institute"
-                style={{ height: "auto", maxWidth: "100%" }}
+                style={{ height: "56px", maxWidth: "100%" }}
               />
               <span className="visually-hidden">Center for Cancer Research Methylscape Analysis</span>
             </a>
@@ -41,6 +41,11 @@ export default function Header() {
                 <i className="bi bi-search" />
               </InputGroup.Text>
             </InputGroup>
+          </Col>
+        </Row>
+        <Row className="bg-primary text-white py-2">
+          <Col sm="auto">
+            <h5>Methylscape Analysis</h5>
           </Col>
         </Row>
       </Container>

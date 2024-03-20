@@ -30,7 +30,7 @@ export default function Data() {
     <Container>
       <Row className="my-4">
         <Col>
-          <h1 className="text-white text-capitalize">{location}</h1>
+          <h3 className="text-white text-capitalize">{location}</h3>
         </Col>
       </Row>
 

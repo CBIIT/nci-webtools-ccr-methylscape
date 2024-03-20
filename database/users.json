@@ -35,7 +35,8 @@
     "target": "organization",
     "columns": [
       { "sourceName": "order", "name": "order" },
-      { "sourceName": "name", "name": "name" }
+      { "sourceName": "name", "name": "name" },
+      { "sourceName": "organSystem", "name": "organSystem" }
     ]
   },
   {

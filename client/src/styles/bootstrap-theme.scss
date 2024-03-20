@@ -25,7 +25,7 @@ a,
   &.active {
     color: $body-color;
     border-color: transparent;
-    border-bottom-color: $secondary;
+    border-bottom-color: $green;
   }
 }
 
@@ -87,6 +87,7 @@ legend {
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
+  min-height: 1100px;
 }
 
 .loader {

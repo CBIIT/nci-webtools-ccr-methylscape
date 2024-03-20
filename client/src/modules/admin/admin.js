@@ -18,12 +18,17 @@ export default function Admin() {
       icon: "bi-layer-backward",
       link: "/admin/data-import",
     },
+    {
+      title: "Submissions Report",
+      icon: "bi-file-spreadsheet",
+      link: "/admin/submissions-report",
+    },
   ];
 
   return (
     <Container>
       <Row className="my-4">
-        <h1 className="text-white">Administrative Tasks</h1>
+        <h3 className="text-white">Administrative Tasks</h3>
       </Row>
       <Row className="mb-4">
         {actions.map((action, index) => (

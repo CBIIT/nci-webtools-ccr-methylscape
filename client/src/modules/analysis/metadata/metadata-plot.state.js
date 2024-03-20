@@ -1,17 +1,27 @@
 import { atom, selector } from "recoil";
 import { getMetadataPlot, getSampleCoordinates } from "./metadata-plot.utils";
+import { sessionState } from "../../session/session.state";
 
 export const defaultFormState = {
   organSystem: "centralNervousSystem",
   embedding: "umap",
   search: [],
-  showAnnotations: true,
+  showAnnotations: false,
   color: "nciMetric",
 };
 
 export const formState = atom({
   key: "metadataPlot.formState",
-  default: defaultFormState,
+  default: selector({
+    key: "sessionDefaultOrganSystem",
+    get: async ({ get }) => {
+      const { user } = get(sessionState);
+      const organSystem = user?.organizationOrganSystem.length
+        ? user.organizationOrganSystem[0].value
+        : defaultFormState.organSystem;
+      return { ...defaultFormState, organSystem };
+    },
+  }),
 });
 
 export const defaultSelectedPoints = {

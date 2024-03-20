@@ -88,13 +88,14 @@ router.post("/user/register", async (request, response) => {
   await sendNotification({
     userManager,
     from: EMAIL_SENDER,
-    roleName: "admin",
+    roleName: "Admin",
     subject: "Methylscape User Account - Review Required",
     templateName: "admin-user-registration-review.html",
     params: {
       userLastName: results.lastName,
       userFirstName: results.firstName,
       userEmail: results.email,
+      userJustification: results.justification,
       organizationName: [results.organizationName, results.organizationId === 1 && `(${results.organizationOther})`]
         .filter(Boolean)
         .join(" "),
@@ -110,6 +111,7 @@ router.post("/user/approve", requiresRouteAccessPolicy("AccessApi"), async (requ
   const user = {
     id: request.body.id,
     roleId: request.body.roleId,
+    organizationId: request.body.organizationId,
     status: "active",
     updatedAt: new Date(),
   };

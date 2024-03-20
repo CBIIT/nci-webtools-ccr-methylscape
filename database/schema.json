@@ -133,14 +133,15 @@
   {
     "table": "rolePolicy",
     "columns": [
-      { "name": "id", "type": "serial", "constraints": ["primary key"] },
+      { "name": "id", "type": "serial" },
       { "name": "roleId", "type": "integer", "constraints": ["not null", "references role"] },
       { "name": "action", "type": "text", "constraints": ["not null"] },
       { "name": "resource", "type": "text" },
       { "name": "createdAt", "type": "timestamp", "options": ["default CURRENT_TIMESTAMP"] },
       { "name": "updatedAt", "type": "timestamp", "options": ["default CURRENT_TIMESTAMP"] },
       { "name": "createdBy", "type": "text", "options": ["default 'system'"] },
-      { "name": "updatedBy", "type": "text", "options": ["default 'system'"] }
+      { "name": "updatedBy", "type": "text", "options": ["default 'system'"] },
+      { "name": "COMPOSITE_P_KEY", "columns": ["roleId", "action", "resource"] }
     ]
   },
   {
@@ -150,6 +151,11 @@
       { "name": "order", "type": "integer" },
       { "name": "name", "type": "text", "constraints": ["not null", "unique"] },
       { "name": "status", "type": "text", "options": ["default 'active'"] },
+      {
+        "name": "organSystem",
+        "type": "json",
+        "options": ["default '[{\"label\":\"Central Nervous System\", \"value\":\"centralNervousSystem\"}]'"]
+      },
       { "name": "createdAt", "type": "timestamp", "options": ["default CURRENT_TIMESTAMP"] },
       { "name": "updatedAt", "type": "timestamp", "options": ["default CURRENT_TIMESTAMP"] },
       { "name": "createdBy", "type": "text", "options": ["default 'system'"] },
@@ -171,6 +177,55 @@
       { "name": "status", "type": "text", "options": ["default 'pending'"] },
       { "name": "receiveNotification", "type": "boolean", "options": ["default true"] },
       { "name": "notes", "type": "text" },
+      { "name": "justification", "type": "text" },
+      { "name": "createdAt", "type": "timestamp", "options": ["default CURRENT_TIMESTAMP"] },
+      { "name": "updatedAt", "type": "timestamp", "options": ["default CURRENT_TIMESTAMP"] },
+      { "name": "createdBy", "type": "text", "options": ["default 'system'"] },
+      { "name": "updatedBy", "type": "text", "options": ["default 'system'"] }
+    ]
+  },
+  {
+    "table": "submissions",
+    "columns": [
+      { "name": "id", "type": "serial", "constraints": ["primary key"] },
+      { "name": "uuid", "type": "text", "constraints": ["not null"] },
+      { "name": "userId", "type": "integer", "constraints": ["references \"user\""] },
+      { "name": "organizationId", "type": "integer", "constraints": ["references organization"] },
+      { "name": "submissionName", "type": "text", "constraints": ["not null"] },
+      { "name": "investigator", "type": "text", "constraints": ["not null"] },
+      { "name": "project", "type": "text" },
+      { "name": "experiment", "type": "text" },
+      { "name": "date", "type": "date" },
+      { "name": "submitDate", "type": "text" },
+      { "name": "status", "type": "text" },
+      { "name": "createdAt", "type": "timestamp", "options": ["default CURRENT_TIMESTAMP"] },
+      { "name": "updatedAt", "type": "timestamp", "options": ["default CURRENT_TIMESTAMP"] },
+      { "name": "createdBy", "type": "text", "options": ["default 'system'"] },
+      { "name": "updatedBy", "type": "text", "options": ["default 'system'"] }
+    ]
+  },
+  {
+    "table": "userSamples",
+    "columns": [
+      { "name": "id", "type": "serial", "constraints": ["primary key"] },
+      { "name": "submissionsId", "type": "integer", "constraints": ["references submissions"] },
+      { "name": "sample", "type": "text", "constraints": ["not null"] },
+      { "name": "sampleWell", "type": "text" },
+      { "name": "samplePlate", "type": "text" },
+      { "name": "sampleGroup", "type": "text" },
+      { "name": "poolId", "type": "text" },
+      { "name": "sentrixId", "type": "text", "constraints": ["not null"] },
+      { "name": "sentrixPosition", "type": "text", "constraints": ["not null"] },
+      { "name": "materialType", "type": "text" },
+      { "name": "sex", "type": "text" },
+      { "name": "surgicalCase", "type": "text" },
+      { "name": "diagnosis", "type": "text", "constraints": ["not null"] },
+      { "name": "age", "type": "double precision" },
+      { "name": "notes", "type": "text" },
+      { "name": "tumorSite", "type": "text", "constraints": ["not null"] },
+      { "name": "piCollaborator", "type": "text" },
+      { "name": "outsideId", "type": "text" },
+      { "name": "surgeryDate", "type": "text" },
       { "name": "createdAt", "type": "timestamp", "options": ["default CURRENT_TIMESTAMP"] },
       { "name": "updatedAt", "type": "timestamp", "options": ["default CURRENT_TIMESTAMP"] },
       { "name": "createdBy", "type": "text", "options": ["default 'system'"] },

@@ -59,26 +59,55 @@ export default function Navbar({ linkGroups = [[]], className, children }) {
   }
 
   return (
-    <BootstrapNavbar bg="dark" variant="dark" className={className}>
-      <Container fluid className="justify-content-strech">
-        <Nav></Nav>
-        {children}
-        {linkGroups.map((links, index) => (
-          <Nav key={`navbar-nav-${index}`}>
-            {links
-              ?.filter(shouldShowLink)
-              .map((link, linkIndex) =>
-                link.childLinks ? (
-                  <NavbarDropdown key={`navbar-nav-dropdown-${index}-${linkIndex}`} {...link} />
-                ) : link.native ? (
-                  <NavbarNativeLink key={`navbar-nav-native-link-${index}-${linkIndex}`} {...link} />
-                ) : (
-                  <NavbarRouterLink key={`navbar-nav-link-${index}-${linkIndex}`} {...link} />
-                )
-              )}
-          </Nav>
-        ))}
-      </Container>
-    </BootstrapNavbar>
+    <>
+      <BootstrapNavbar bg="dark" variant="dark" className={className + " d-none d-md-block"}>
+        <Container fluid className="justify-content-strech">
+          <Nav></Nav>
+          {children}
+          {linkGroups.map((links, index) => (
+            <Nav key={`navbar-nav-${index}`}>
+              {links
+                ?.filter(shouldShowLink)
+                .map((link, linkIndex) =>
+                  link.childLinks ? (
+                    <NavbarDropdown key={`navbar-nav-dropdown-${index}-${linkIndex}`} {...link} />
+                  ) : link.native ? (
+                    <NavbarNativeLink key={`navbar-nav-native-link-${index}-${linkIndex}`} {...link} />
+                  ) : (
+                    <NavbarRouterLink key={`navbar-nav-link-${index}-${linkIndex}`} {...link} />
+                  )
+                )}
+            </Nav>
+          ))}
+        </Container>
+      </BootstrapNavbar>
+
+      {/* Mobile view*/}
+      <BootstrapNavbar bg="dark" variant="dark" expand="lg" className={className + " d-block d-md-none"}>
+        <Container fluid className="justify-content-strech">
+          {children}
+          <BootstrapNavbar.Toggle />
+          <BootstrapNavbar.Collapse>
+            <Nav>
+              {linkGroups.map((links, index) => (
+                <>
+                  {links
+                    ?.filter(shouldShowLink)
+                    .map((link, linkIndex) =>
+                      link.childLinks ? (
+                        <NavbarDropdown key={`navbar-nav-dropdown-${index}-${linkIndex}`} {...link} />
+                      ) : link.native ? (
+                        <NavbarNativeLink key={`navbar-nav-native-link-${index}-${linkIndex}`} {...link} />
+                      ) : (
+                        <NavbarRouterLink key={`navbar-nav-link-${index}-${linkIndex}`} {...link} />
+                      )
+                    )}
+                </>
+              ))}
+            </Nav>
+          </BootstrapNavbar.Collapse>
+        </Container>
+      </BootstrapNavbar>
+    </>
   );
 }

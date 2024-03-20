@@ -1,0 +1,11 @@
+[Header],,,,,,,,,,,,,,,,
+Investigator Name,firstName lastName,,,,,,,,,,,,,,,
+Project Name,My Project,,,,,,,,,,,,,,,
+Experiment Name,My Experiment,,,,,,,,,,,,,,,
+Date,09-25-2023,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,
+[Data],,,,,,,,,,,,,,,,
+Sample_Name,Sample_Well,Sample_Plate,Sample_Group,Pool_ID,Sentrix_ID,Sentrix_Position,Material_Type,Gender,Surgical_Case,Diagnosis,Age,Notes,Tumor_Site,PI_Collaborator,Outside_ID,Surgery_date
+EY46,F02,Clinical Testing,EPIC,09-25-2023,207534240050,R06C01,FFPE,Male,ST-23-7213,"Diffuse Astrocytoma, Grade 2",22,LYC,"Brain, left cerebellar, biopsy",GAMPEL,"US23-24243,D/1",08-25-2023
+EY47,G02,Clinical Testing,EPIC,09-25-2023,207534240050,R07C01,FFPE,Male,ST-23-7216,High-grade glioma,23,LYC,"Brain, 4th ventricular mass. excision",YONG,"S23-15045,A1",08-28-2023
+EY48,H02,Clinical Testing,EPIC,09-25-2023,207534240050,R08C01,FFPE,Female,ST-23-7231,Glial neoplasm,33,LYC,"Brain, left stereotactic biopsy",HURTH,"30-SP-23-3338,B1",03-30-2023
