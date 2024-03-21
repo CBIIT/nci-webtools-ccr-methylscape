@@ -81,7 +81,7 @@ export async function parseMetadata(file) {
       name: "notes",
       required: false,
     },
-    Tumor_Site: {
+    Tumor_site: {
       name: "tumorSite",
       required: true,
     },

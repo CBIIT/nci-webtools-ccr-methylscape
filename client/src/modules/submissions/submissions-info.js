@@ -145,7 +145,7 @@ export default function SubmissionsForm() {
                   <td>free-text</td>
                 </tr>
                 <tr>
-                  <td>Tumor_Site</td>
+                  <td>Tumor_site</td>
                   <td>mandatory</td>
                   <td>free-text</td>
                 </tr>
@@ -215,7 +215,7 @@ export default function SubmissionsForm() {
                   <th>Diagnosis</th>
                   <th>Age</th>
                   <th>Notes</th>
-                  <th>Tumor_Site</th>
+                  <th>Tumor_site</th>
                   <th>PI_Collaborator</th>
                   <th>Outside_ID</th>
                   <th>Surgery_date</th>
