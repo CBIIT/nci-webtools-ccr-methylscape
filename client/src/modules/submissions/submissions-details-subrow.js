@@ -26,13 +26,17 @@ export default function SubmissionsDetails({ submissionData }) {
       accessor: "actions",
       Header: "Actions",
       Cell: ({ row }) => {
+        const sample = row.original.sample;
+        const idat = `${row.original.sentrixId}_${row.original.sentrixPosition}`;
+        const sampleDir = sample === idat ? sample : `${sample}_${idat}`;
+        const report = `${sample}_Report-CNS-Bv2_${idat}.html`;
         return (
           <>
             {submission[0].status === "Completed" && (
               <a
                 target="_blank"
                 rel="noreferrer noopener"
-                href={`/api/submissions/data?filePath=bethesda_classifier_v2/output/${submissionsId}/${row.original.sample}_${row.original.sentrixId}_${row.original.sentrixPosition}/${row.original.sample}_Report-CNS-Bv2_${row.original.sentrixId}_${row.original.sentrixPosition}.html`}>
+                href={`/api/submissions/data?filePath=bethesda_classifier_v2/output/${submissionsId}/${sampleDir}/${report}`}>
                 Download Report
               </a>
             )}
