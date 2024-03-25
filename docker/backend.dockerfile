@@ -20,13 +20,12 @@ RUN mkdir -p /app/server
 
 WORKDIR /app/server
 
-COPY server/renv.lock ./
+COPY server/renv.lock /app/server/
+COPY server/.Rprofile /app/server/
+COPY server/renv/activate.R /app/server/renv/
+COPY server/renv/settings.dcf /app/server/renv/
 
-RUN R -e "\
-    options(Ncpus=parallel::detectCores());\
-    install.packages('renv', repos = 'https://cloud.r-project.org/');\
-    renv::init(bare = T);\
-    renv::restore();"
+RUN R -e "options(Ncpus=parallel::detectCores()); renv::restore()"
 
 COPY server/package.json server/package-lock.json ./
 
