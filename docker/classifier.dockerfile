@@ -19,7 +19,7 @@ RUN dnf -y update \
     nodejs \
     npm \    
     python3-devel \
-    R \
+    R-4.1.3 \
     tar \
     xz \
     zlib-devel \
